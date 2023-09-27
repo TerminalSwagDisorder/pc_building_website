@@ -7,4 +7,8 @@
  npm run server <br>
  npm start <br>
  <br>
+ Or alternatively to run the server concurrently: <br>
+ npm install <br>
+ npm run dev <br>
+ <br>
  To access the API data go to localhost:4000/api/{whatever you want to access} <br>
