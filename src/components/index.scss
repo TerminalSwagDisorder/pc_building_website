@@ -1,0 +1,158 @@
+//coloring
+$backgroundFo: #2A2438;
+$color: #ccc;
+$align: center;
+
+
+footer{
+  background-color: $backgroundFo;
+  bottom: 0;
+  position:fixed;
+  width: 100%;
+  margin: 10px;
+}
+
+.footer {
+  display: flex;
+  align-items: $align;
+  color: $color;
+  bottom: 0;
+
+}
+
+.footer .separator {
+  border-left: 1px solid $color;
+  height: 40px;
+  margin: 0 10px;
+}
+
+.footer div {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+.footer .right-align {
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.firstP {
+    position: relative;
+    background-color: #2A2438;
+    height: fit-content;
+}
+
+.write{
+ width: 500px;
+ border-radius: 10px;
+ height: 50px;
+ margin: 5px;
+}
+.search{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 30vh;
+    color: #ccc;
+
+}
+.app-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 10vh;
+    border-radius: 10px;
+  }
+  
+  .box-container {
+    display: flex;
+  }
+  
+  .box {
+    width: 200px;
+    height: 200px;
+    background-color: #ccc;
+    margin-right: 10px;
+    border-radius: 10px;
+    padding: 10px;
+
+  }
+  
+  .box-full {
+    width: 200px;
+    height: 200px;
+    background-color: #ccc;
+    margin-top: 10px;
+  }
+
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 50vh;
+      margin: 20px;
+
+      
+    .upper-part {
+        background-color: #5C5470;
+        color: #ccc;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        width: 700px;
+
+      }
+    
+    
+    .contact-info {
+      h2 {
+        margin: 0;
+        padding: 0;
+        font-size: 24px;
+        font-weight: bold;
+      }
+    }
+    
+    .logo {
+      margin-left: auto;
+      
+      img {
+        max-width: 100px;
+        height: auto;
+      }
+    }
+    
+    .form-container {
+      background-color: #DBD8E3;
+      padding: 20px;
+      width: 700px;
+      margin: 20px;
+      
+      form {
+        display: flex;
+        flex-direction: column;
+        
+        input, button {
+          margin-bottom: 10px;
+        }
+        
+        button {
+          padding: 10px;
+          background-color: none;
+          color: #fff;
+          cursor: pointer;
+        }
+      }
+
+    }
+    .drop{
+        float: left;
+    }
+    .drop1{
+        float: left;
+    }
+  }
+  

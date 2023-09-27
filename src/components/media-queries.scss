@@ -1,0 +1,727 @@
+@media (max-width: 320px) {
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .footer div {
+    width: 100%;
+  }
+
+  .footer .separator {
+    display: none;
+  }
+
+  //nav pages
+  div {
+
+  .container {
+    justify-content: flex-start;
+    height: 25px;
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  .logo {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+
+//contactUs page
+.main {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.search {
+  text-align: center;
+  margin-top: 0;
+  padding-top: 0%;
+  display: block;
+
+}
+.firstP {
+  margin-top: 0px;
+}
+.nav {
+  margin-bottom: 0;
+}
+.search h2 {
+  font-size: 10px;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0px;
+}
+.search-container1{
+  display: none;
+}
+
+.search-container input[type="text"] {
+  width: 80%;
+  padding-left: 30px;
+}
+
+.search-container .search-icon {
+  position: absolute;
+  left: 15px; 
+  color: black; 
+  padding-bottom: 5px;
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* Safari and iOS */
+  .search-container input[type="text"]::-webkit-input-placeholder {
+    color: transparent;
+  }
+
+  
+}
+
+@supports not (-webkit-touch-callout: none) {
+  /* Other browsers */
+  .search-container input[type="text"]::placeholder {
+    color: transparent;
+  }
+}
+
+
+.app-container {
+  display: block;
+  align-items: center;
+}
+
+.box-container {
+  display: block;
+}
+
+.box {
+  width: 250px;
+  height: 80px;
+  background-color: #f2f2f2;
+  margin: 8px;
+  padding-top: 5px;
+  display: grid;
+  font-size: small;
+}
+
+.box-full {
+  width: 250px;
+  height: 80px;
+  background-color: #f2f2f2;
+  margin: 8px;
+  padding-top: 15px;
+}
+//contact us
+
+  .contact-form {
+    margin: 25px;
+  }
+
+  .upper-part {
+    flex-direction: column;
+    max-width: 100%;
+    
+
+  }
+  .contact-info{
+    width: 100px;
+    height: fit-content;
+    margin: 0px;
+    
+  }
+  .logo{
+    font-size: smaller;
+  }
+
+  .form-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  select {
+    width: 100%;
+  }
+  label{
+    font-size: small;
+    float: left;
+  }
+  button{
+
+  } 
+}
+
+
+
+
+
+
+  
+  
+
+
+
+ 
+
+  
+
+
+
+  
+  @media (max-width: 480px) {
+    .footer {
+      flex-wrap: wrap;
+    }
+  
+    .footer div {
+      width: 100%;
+    }
+  
+    .footer .separator {
+      display: none;
+    }
+  
+    //nav pages
+    div {
+  
+    .container {
+      justify-content: flex-start;
+      height: auto;
+    }
+  
+    .main-nav {
+      display: none;
+    }
+  
+    .logo {
+      width: 100%;
+      height: auto;
+      margin: 0 auto;
+    }
+  }
+  
+  //contactUs page
+  .main {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+  .search {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 0%;
+    display: block;
+  
+  }
+  .firstP {
+    margin-top: 0px;
+  }
+  .nav {
+    margin-bottom: 0;
+  }
+  .search h2 {
+    font-size: 10px;
+  }
+  
+  .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0px;
+  }
+  .search-container1{
+    display: none;
+  }
+  
+  .search-container input[type="text"] {
+    width: 80%;
+    padding-left: 30px;
+  }
+  
+  .search-container .search-icon {
+    position: absolute;
+    left: 35px; 
+    color: black; 
+    padding-bottom: 15px;
+    margin: 10px;
+  }
+  
+  @supports (-webkit-touch-callout: none) {
+    /* Safari and iOS */
+    .search-container input[type="text"]::-webkit-input-placeholder {
+      color: transparent;
+    }
+  
+    
+  }
+  
+  @supports not (-webkit-touch-callout: none) {
+    /* Other browsers */
+    .search-container input[type="text"]::placeholder {
+      color: transparent;
+    }
+  }
+  
+  
+  .app-container {
+    display: block;
+    align-items: center;
+    max-width: 100%;
+  }
+  
+  .box-container {
+    display: grid;
+  }
+  
+  .box {
+    width: auto;
+    height: auto;
+    background-color: #f2f2f2;
+    margin: 8px;
+    padding-top: 5px;
+    display: grid;
+    font-size: small;
+  }
+  
+  .box-full {
+    width: 250px;
+    height: 80px;
+    background-color: #f2f2f2;
+    margin: 8px;
+    padding-top: 15px;
+    width: auto;
+    height: auto;
+  }
+  //contact us
+  
+    .contact-form {
+      margin: 25px;
+    }
+  
+    .upper-part {
+      flex-direction: column;
+      max-width: 100%;
+      
+  
+    }
+    .contact-info{
+      width: 100px;
+      height: fit-content;
+      margin: 0px;
+      
+    }
+    .logo{
+      font-size: smaller;
+    }
+  
+    .form-container {
+      width: 100%;
+      max-width: 100%;
+      padding: 10px;
+    }
+  
+    input[type="text"],
+    input[type="email"],
+    select {
+      width: 100%;
+    }
+    label{
+      font-size: small;
+      float: left;
+    }
+    button{
+  
+    } 
+  
+  }
+  
+  @media (max-width: 600px) {
+    .footer {
+      flex-wrap: wrap;
+    }
+  
+    .footer div {
+      width: 100%;
+    }
+  
+    .footer .separator {
+      display: none;
+    }
+  
+    //nav pages
+    div {
+  
+    .container {
+      justify-content: flex-start;
+      height: auto;
+    }
+  
+    .main-nav {
+      display: none;
+    }
+  
+    .logo {
+      width: 100%;
+      height: auto;
+      margin: 0 auto;
+    }
+  }
+  
+  //contactUs page
+  .main {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+  .search {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 0%;
+    display: block;
+    margin-bottom: 0;
+  
+  }
+  .firstP {
+    margin-top: 0px;
+  }
+  .nav {
+    margin-bottom: 0;
+  }
+  .search h2 {
+    font-size: 10px;
+  }
+  
+  .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0px;
+  }
+  .search-container1{
+    display: none;
+  }
+  
+  .search-container input[type="text"] {
+    width: 80%;
+    padding-left: 39px;
+  }
+  
+  .search-container .search-icon {
+    position: absolute;
+    left: 35px; 
+    color: black; 
+    padding-bottom: 15px;
+    margin: 10px;
+  }
+  
+  @supports (-webkit-touch-callout: none) {
+    /* Safari and iOS */
+    .search-container input[type="text"]::-webkit-input-placeholder {
+      color: transparent;
+    }
+  
+    
+  }
+  
+  @supports not (-webkit-touch-callout: none) {
+    /* Other browsers */
+    .search-container input[type="text"]::placeholder {
+      color: transparent;
+    }
+  }
+  
+  
+  .app-container {
+    display: block;
+    align-items: center;
+    max-width: 100%;
+    margin-top: 0;
+  }
+  
+  .box-container {
+    display: grid;
+  }
+  
+  .box {
+    width: auto;
+    height: auto;
+    background-color: #f2f2f2;
+    margin: 8px;
+    padding-top: 5px;
+    display: grid;
+    font-size: small;
+  }
+  
+  .box-full {
+    width: 250px;
+    height: 80px;
+    background-color: #f2f2f2;
+    margin: 8px;
+    padding-top: 15px;
+    width: auto;
+    height: auto;
+  }
+  //contact us
+  
+    .contact-form {
+      margin: 25px;
+    }
+  
+    .upper-part {
+      flex-direction: column;
+      max-width: 100%;
+      
+  
+    }
+    .contact-info{
+      width: 100px;
+      height: fit-content;
+      margin: 0px;
+      
+    }
+    .logo{
+      font-size: smaller;
+    }
+  
+    .form-container {
+      width: 100%;
+      max-width: 100%;
+      padding: 10px;
+    }
+  
+    input[type="text"],
+    input[type="email"],
+    select {
+      width: 100%;
+    }
+    label{
+      font-size: small;
+      float: left;
+    }
+   
+    
+  }
+  
+  @media (max-width: 768px) {
+    .footer {
+      flex-wrap: wrap;
+    }
+  
+    .footer div {
+      width: 100%;
+    }
+  
+    .footer .separator {
+      display: none;
+    }
+  
+    //nav pages
+    div {
+  
+    .container {
+      justify-content: flex-start;
+      height: auto;
+      
+    }
+  
+    .main-nav {
+      display: none;
+    }
+  
+    .logo {
+      width: 100%;
+      height: auto;
+      margin: 0 auto;
+    }
+  }
+  
+  //contactUs page
+  .main {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+  .search {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 0%;
+    display: block;
+    margin-bottom: 0;
+  
+  }
+  .firstP {
+    margin-top: 0px;
+  }
+  .nav {
+    margin-bottom: 0;
+  }
+  .search h2 {
+    font-size: 10px;
+  }
+  
+  .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0px;
+  }
+  .search-container1{
+    display: none;
+  }
+  
+  .search-container input[type="text"] {
+    width: 80%;
+    padding-left: 30px;
+  }
+  
+  .search-container .search-icon {
+    position: absolute;
+    left: 55px; 
+    color: black; 
+    padding-bottom: 15px;
+    margin: 10px;
+  }
+  
+  @supports (-webkit-touch-callout: none) {
+    /* Safari and iOS */
+    .search-container input[type="text"]::-webkit-input-placeholder {
+      color: transparent;
+    }
+  
+    
+  }
+  
+  @supports not (-webkit-touch-callout: none) {
+    /* Other browsers */
+    .search-container input[type="text"]::placeholder {
+      color: transparent;
+    }
+  }
+  
+  
+  .app-container {
+    display: block;
+    align-items: center;
+    max-width: 100%;
+    margin-top: 0;
+  }
+  
+  .box-container {
+    display: grid;
+  }
+  
+  .box {
+    width: auto;
+    height: auto;
+    background-color: #f2f2f2;
+    margin: 8px;
+    padding-top: 5px;
+    display: grid;
+    font-size: small;
+  }
+  
+  .box-full {
+    width: 250px;
+    height: 80px;
+    background-color: #f2f2f2;
+    margin: 8px;
+    padding-top: 15px;
+    width: auto;
+    height: auto;
+  }
+  //contact us
+  
+    .contact-form {
+      margin: 25px;
+    }
+  
+    .upper-part {
+      flex-direction: column;
+      max-width: 100%;
+      
+  
+    }
+    .contact-info{
+      width: 100px;
+      height: fit-content;
+      margin: 0px;
+      
+    }
+    .logo{
+      font-size: smaller;
+    }
+  
+    .form-container {
+      width: 100%;
+      max-width: 100%;
+      padding: 10px;
+    }
+  
+    input[type="text"],
+    input[type="email"],
+    select {
+      width: 100%;
+    }
+    label{
+      font-size: small;
+      float: left;
+    }
+
+    
+  }
+  
+  @media (max-width: 900px) {
+    .search-container1{
+      display: none;
+    }
+    .app-container{
+      width: auto;
+    }
+    .container{
+      width: auto;
+      margin: auto;
+      padding: auto;
+    }
+    .main-nav{
+      
+      width: auto;
+    }
+    .icon{
+      display: none;
+      width: 10px;
+    }
+}
+  
+  @media (max-width: 1024px) {
+   
+    .app-container{
+      width: auto;
+    }
+    .container{
+      font-size: smaller;
+    }
+}
+
+  
+  @media (max-width: 1290px) {
+  
+    .search-container-forContact{
+      display: none;
+    }
+    .search-containerG{
+    }
+
+    .app-container{
+      width: auto;
+    }
+  }
+  
