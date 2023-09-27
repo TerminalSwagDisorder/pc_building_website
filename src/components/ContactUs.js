@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logo from '../images/Color-logo-no-background-2048x597.png';
 import './index.scss';
 
 
@@ -42,7 +41,7 @@ const ContactUs = () => {
             <h2>Contact Us</h2>
           </div>
           <div className="logo">
-            <img src={logo} alt="Logo" className="logo" />
+            <img src={process.env.PUBLIC_URL + "images/Color-logo-no-background-2048x597.png"} alt="Logo" className="logo" />
           </div>
         </div>
         <div className="form-container">
