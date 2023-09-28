@@ -2,6 +2,7 @@
  Custom-PC-Building-Website SEM_2023 ver.<br>
  
 # How to use
+ Please use the **dev** branch for development. <br>
  In your preferred terminal environment run, after cloning:<br>
  `npm install`<br>
  `npm run server`<br>
@@ -11,4 +12,4 @@
  `npm install`<br>
  `npm run dev`<br>
  <br>
- To access the API data go to [localhost:4000/api/{whatever you want to access}](localhost:4000/api/cases)<br>
+ To access the API data go to [localhost:4000/api/{whatever you want to access}](http://localhost:4000/api/cases)<br>
