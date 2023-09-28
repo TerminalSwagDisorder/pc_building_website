@@ -6,6 +6,9 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 
 const api = express();
 const port = 4000;
@@ -51,6 +54,37 @@ api.post('/api/users', async (req, res) => {
     }
 });
 
+// Login route
+api.post("/api/login", (req, res) => {
+	const { Email, Password } = req.body;
+	const sql = "SELECT * FROM user WHERE Email = ?";
+	userDb.get(sql, [Email], async (err, user) => {
+		if (err) {
+			res.status(500).send(err);
+			return;
+		}
+		else if (!user) {
+			res.status(401).send("User not found");
+			return;
+		} else {
+
+		const match = await bcrypt.compare(Password, user.Password);
+		if (match) {
+			const accessToken = jwt.sign({ id: user.id }, "yourSecretKey", {
+				expiresIn: "1h",
+			});
+			res.send({ accessToken });
+		} else {
+			res.status(401).send("Password incorrect");
+			}
+		}
+	});
+});
+
+// Logout route (Frontend will handle removing the token)
+api.post("/api/logout", (req, res) => {
+	res.json({ message: "Logged out successfully" });
+});
 
 api.get('/api/cases', (req, res) => {
   const sql = 'SELECT * FROM chassis';

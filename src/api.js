@@ -5,7 +5,9 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
+import { Route, BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
+import Signin from "./components/Signin"
+import Signup from "./components/Signup"
 
 import { Main } from "./components/Main";
 
@@ -27,6 +29,9 @@ export const fetchCpuData = () => {
 };
 
 const API = ({ onUserChange }) => {
+	const navigate = useNavigate();
+	const location = useLocation();
+	
 	const [users, setUsers] = useState([]);
 	const [cases, setCases] = useState([]);
 	const [cpus, setCpus] = useState([]);
@@ -123,6 +128,100 @@ const fetchStorageData = () => {
 		.catch(console.error);
 	};
 };
+
+
+export const handleSignin = async (email, password) => {
+	const response = await fetch("http://localhost:4000/api/login", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({ Email: email, Password: password })
+	});
+	const data = await response.json();
+	if (response.ok) {
+		localStorage.setItem("accessToken", data.accessToken);
+		return data;
+	} else {
+		throw new Error(data.error);
+	}
+};
+
+
+export const handleSignup = async (event) => {
+	const Name = event.target.username.value;
+    const Email = event.target.email.value;
+    const Password = event.target.password.value;
+	console.log(Name, Email, Password)
+    if (Name && Email && Password) {
+      fetch("http://localhost:4000/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Name, Email, Password }),
+      })
+
+      .catch(console.error);
+  }
+};
+
+const handleLogout = () => {
+	localStorage.removeItem("accessToken");
+};
+
+
+
+/*
+export const handleSignin = (email, password) => {
+	return fetch("http://localhost:4000/api/signin", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ Email: email, Password: password }),
+	})
+		.then((res) => res.json())
+		.then((data) => {
+			if (data.accessToken) {
+				localStorage.setItem("accessToken", data.accessToken);
+				return true;
+			} else {
+				return false;
+			}
+		})
+		.catch((error) => {
+			console.error(error);
+			return false;
+		});
+};
+*/
+
+/*
+const handleSignin = () => {
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+
+	const handleSubmit = async () => {
+		try {
+			const res = await axios.post("http://localhost:3000/signin", { username, password });
+			const token = res.data.accessToken;
+			// Store this token in localStorage/sessionStorage
+			localStorage.setItem("token", token);
+		} catch (error) {
+			console.log("Signin failed", error);
+		}
+	};
+
+	return (
+		<div>
+			<input type="text" placeholder="Username" onChange={e => setUsername(e.target.value)} />
+			<input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
+			<button onClick={handleSubmit}>Signin</button>
+		</div>
+	);
+};
+
+export default Signin;
+*/
 
 /*
 // Async way to get a promise for fetching the data, just in case

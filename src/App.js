@@ -1,4 +1,5 @@
 import './App.css';
+import React, { useState } from 'react';
 import Home from './components/Home';
 import Cpu from './components/Cpu';
 import Case from './components/Case';
@@ -11,22 +12,36 @@ import Storge from './components/Storge';
 import ContactUs from './components/ContactUs';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Register from './components/Register';
-import Login from './components/Login';
-import Logout from './components/Logout';
-
-
-
+import Signin from "./components/Signin";
+import Signup from "./components/Signup";
+import { API } from "./api";
 import { Router, Routes, Route } from 'react-router-dom';
 
 
 const App = () => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const handleUserChange = (event) => {
+    setCurrentUser(event);
+  };
+  if (currentUser) {
+    console.log("app.js", currentUser);
+  }
+
+  // To check if the user did sign in or not
+  const isUserSignedIn = () => {
+    const userId = localStorage.getItem("currentUserId");
+    return !!userId;
+  };
+	
   return (
     <div className="App">
     <Navbar/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/Signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     <Footer />
     </div>
