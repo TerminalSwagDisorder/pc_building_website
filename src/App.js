@@ -24,23 +24,15 @@ const App = () => {
   const handleUserChange = (event) => {
     setCurrentUser(event);
   };
-  if (currentUser) {
-    console.log("app.js", currentUser);
-  }
 
-  // To check if the user did sign in or not
-  const isUserSignedIn = () => {
-    const userId = localStorage.getItem("currentUserId");
-    return !!userId;
-  };
-	
+
   return (
     <div className="App">
     <Navbar/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contactus" element={<ContactUs />} />
-        <Route path="/Signin" element={<Signin />} />
+        <Route path="/Signin" element={<Signin setCurrentUser={setCurrentUser} />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
     <Footer />

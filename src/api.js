@@ -41,7 +41,6 @@ const API = ({ onUserChange }) => {
 	const [motherboards, setMotherboards] = useState([]);
 	const [psus, setPsus] = useState([]);
 	const [storages, setStorages] = useState([]);
-	const [currentUser, setCurrentUser] = useState(null);
 
 useEffect(() => {
 	fetchUserData();
@@ -130,17 +129,20 @@ const fetchStorageData = () => {
 };
 
 
-export const handleSignin = async (email, password) => {
+export const handleSignin = async (email, password, setCurrentUser) => {
+	console.log(email, password)
 	const response = await fetch("http://localhost:4000/api/login", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json"
 		},
+		credentials: "include", // For all fetch requests, do this!
 		body: JSON.stringify({ Email: email, Password: password })
 	});
 	const data = await response.json();
 	if (response.ok) {
-		localStorage.setItem("accessToken", data.accessToken);
+		console.log(data)
+		setCurrentUser(data);
 		return data;
 	} else {
 		throw new Error(data.error);
@@ -157,6 +159,7 @@ export const handleSignup = async (event) => {
       fetch("http://localhost:4000/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+		credentials: "include",
         body: JSON.stringify({ Name, Email, Password }),
       })
 
@@ -164,8 +167,34 @@ export const handleSignup = async (event) => {
   }
 };
 
-const handleLogout = () => {
-	localStorage.removeItem("accessToken");
+
+export const handleSignout = async (setCurrentUser) => {
+	const response = await fetch("http://localhost:4000/api/logout", {
+		method: "POST",
+		credentials: "include",  // Important, because we're using cookies
+	});
+
+	if (response.ok) {
+		setCurrentUser(null);
+		return "Logged out successfully";
+	} else {
+		const data = await response.json();
+		throw new Error(data.error);
+	}
+};
+
+export const checkIfSignedIn = async () => {
+	const response = await fetch("http://localhost:4000/api/profile", {
+		method: "GET",
+		credentials: "include", // Important, because we're using cookies
+	});
+
+	const data = await response.json();
+	if (response.ok) {
+		return data;
+	} else {
+		throw new Error(data.error);
+	}
 };
 
 

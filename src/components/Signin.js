@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { handleSignin } from "../api"
+import { handleSignin } from "../api";
+import { useNavigate } from "react-router-dom";
 
-export const Signin = ({ onSubmit, currentUser }) => {
+export const Signin = ({ onSubmit, setCurrentUser }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 	
   const handleSubmit = async (event) => {
     event.preventDefault();
 		try {
-			await handleSignin(email, password);
+			await handleSignin(email, password, setCurrentUser);
 			alert("Logged in successfully");
+			navigate("/");
 		} catch (event) {
 			console.log(event.message);
 		}
