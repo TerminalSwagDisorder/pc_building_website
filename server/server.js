@@ -68,6 +68,7 @@ api.post("/api/users", async (req, res) => {
     }
 });
 
+
 // Login route
 api.post("/api/login", (req, res) => {
 	console.log("server api login accessed")
@@ -90,9 +91,10 @@ api.post("/api/login", (req, res) => {
 			});
 			res.cookie("accessToken", accessToken, {
 			  httpOnly: true,
-			  sameSite: "lax"
+			  sameSite: "lax",
+			  maxAge: 3600000
 			});
-			res.status(200).json({ message: "Logged in successfully" });
+			res.status(200).json({ message: "Logged in successfully", userData: user});
 		} else {
 			res.status(401).json({ message: "Password incorrect" });
 			}
@@ -100,10 +102,11 @@ api.post("/api/login", (req, res) => {
 	});
 });
 
-// For checking if user is logged in
+// Middleware for checking if user is logged in
 const authenticateJWT = (req, res, next) => {
 	const token = req.cookies ? req.cookies.accessToken : null;
 	if (token) {
+	console.log(token)
 		jwt.verify(token, jwtSecret, (err, user) => {
 			if (err) {
 				return res.status(403).json({ message: "JWT error" });
@@ -120,9 +123,10 @@ const authenticateJWT = (req, res, next) => {
 api.get("/api/profile", authenticateJWT, (req, res) => {
 	console.log("server api profile accessed")
 	// If we're here, the JWT was valid and `req.user` contains the payload from the JWT
+	const userData = { userData: user };
 	res.json({
 		message: "Authenticated",
-		user: req.user
+		user: userData,
 	});
 });
 

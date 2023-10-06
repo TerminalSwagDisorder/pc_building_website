@@ -4,20 +4,17 @@ import { checkIfSignedIn } from "../api";
 import { handleSignout } from "../api";
 import './nav.scss';
 
-const Navbar = ({ onClick }) => {
+const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 	const [isSignedIn, setIsSignedIn] = useState(false);
+	const handleLogout = async () => {
+  try {
+    await handleSignout();
+    setCurrentUser(null);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-	useEffect(() => {
-		const fetchStatus = async () => {
-			try {
-				await checkIfSignedIn();
-				setIsSignedIn(true);
-			} catch (error) {
-				setIsSignedIn(false);
-			}
-		};
-		fetchStatus();
-	}, []); 
 
   return (
     <div class="container">
@@ -26,10 +23,10 @@ const Navbar = ({ onClick }) => {
         <li><Link to="/"><i class="fas fa-home icon" /> Home</Link></li>
         <li><Link to="/contactus"><i class="fas fa-home icon" /> Contact Us</Link></li>
         <li><Link to="/cpu"><i class="fas fa-home icon" /> Cpu</Link></li>
-	  	      {isSignedIn ? (
+	  	      {currentUser ? (
 				<li><button onClick={handleSignout}>Log out</button></li>
             ) : (
- 				<li><a>Not signed in</a></li>
+ 				<li style={{color:"white"}}>Not signed in</li>
             )}
         </ul>
     </div>

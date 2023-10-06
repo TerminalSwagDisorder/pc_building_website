@@ -6,10 +6,10 @@ import React, { useEffect, useState } from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { Route, BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
-import Signin from "./components/Signin"
-import Signup from "./components/Signup"
-
+import Signin from "./components/Signin";
+import Signup from "./components/Signup";
 import { Main } from "./components/Main";
+import Cookies from "universal-cookie";
 
 
 // Alternative fetching
@@ -141,9 +141,9 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 	});
 	const data = await response.json();
 	if (response.ok) {
-		console.log(data)
-		setCurrentUser(data);
-		return data;
+		console.log(data.userData)
+		setCurrentUser(data.userData);
+		return data.userData;
 	} else {
 		throw new Error(data.error);
 	}
@@ -174,28 +174,36 @@ export const handleSignout = async (setCurrentUser) => {
 		credentials: "include",  // Important, because we're using cookies
 	});
 
+	const data = await response.json();
 	if (response.ok) {
-		setCurrentUser(null);
 		return "Logged out successfully";
 	} else {
-		const data = await response.json();
 		throw new Error(data.error);
 	}
 };
 
 export const checkIfSignedIn = async () => {
-	const response = await fetch("http://localhost:4000/api/profile", {
-		method: "GET",
-		credentials: "include", // Important, because we're using cookies
-	});
+  const response = await fetch("http://localhost:4000/api/profile", {
+    method: "GET",
+    credentials: "include", // Important, because we're using cookies
+  });
 
-	const data = await response.json();
-	if (response.ok) {
-		return data;
-	} else {
-		throw new Error(data.error);
-	}
+  const cookies = new Cookies();
+  const token = cookies.get("accessToken");
+  console.log("checkSignin", token);
+
+  if (!token) {
+    return null; // User is not signed in (no token)
+  }
+
+  const data = await response.json();
+  if (response.ok) {
+    return data.user; // Return user data
+  } else {
+    return null; // User is not signed in (invalid token or other error)
+  }
 };
+
 
 
 
