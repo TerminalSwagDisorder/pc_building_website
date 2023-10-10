@@ -140,11 +140,11 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 		body: JSON.stringify({ Email: email, Password: password })
 	});
 	const data = await response.json();
+		console.log("data.userData", data.user)
 	if (response.ok) {
-		console.log(data.userData)
-		setCurrentUser(data.userData);
-		window.location.reload();
-		return data.userData;
+		setCurrentUser(data.user);
+		//window.location.reload();
+		return data.user;
 	} else {
 		throw new Error(data.error);
 	}

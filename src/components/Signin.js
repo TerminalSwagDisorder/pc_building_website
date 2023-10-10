@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { handleSignin } from "../api";
+import { handleSignin, checkIfSignedIn } from "../api";
 import { useNavigate } from "react-router-dom";
 
 export const Signin = ({ onSubmit, setCurrentUser }) => {
@@ -14,6 +14,8 @@ export const Signin = ({ onSubmit, setCurrentUser }) => {
 			alert("Logged in successfully");
 			navigate("/");
 			//window.location.reload();
+			//const userData = await checkIfSignedIn();
+			//setCurrentUser(userData); 
 		} catch (event) {
 			console.log(event.message);
 		}

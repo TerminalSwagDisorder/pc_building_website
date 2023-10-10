@@ -40,7 +40,7 @@ const App = () => {
     setCurrentUser(event);
   };
 
-console.log("currentuser in app.js", currentUser);
+//console.log("currentuser in app.js", currentUser);
 
   return (
     <div className="App">
