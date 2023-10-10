@@ -13,6 +13,7 @@ export const Signin = ({ onSubmit, setCurrentUser }) => {
 			await handleSignin(email, password, setCurrentUser);
 			alert("Logged in successfully");
 			navigate("/");
+			//window.location.reload();
 		} catch (event) {
 			console.log(event.message);
 		}

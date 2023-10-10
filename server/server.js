@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const fs = require("fs");
+const cookieParser = require("cookie-parser");
 require('dotenv').config();
 
 const jwtSecret = process.env.JWT_SECRET;
@@ -29,6 +30,7 @@ const corsOptions = {
 };
 
 api.use(cors(corsOptions));
+api.use(cookieParser());
 
 const dbPath = path.resolve(__dirname, "database/pcbuildwebsite_db.db");
 const db = new sqlite3.Database(dbPath);
@@ -86,7 +88,7 @@ api.post("/api/login", (req, res) => {
 
 		const match = await bcrypt.compare(Password, user.Password);
 		if (match) {
-			const accessToken = jwt.sign({ id: user.id }, jwtSecret, {
+			const accessToken = jwt.sign({ user }, jwtSecret, {
 				expiresIn: "1h",
 			});
 			res.cookie("accessToken", accessToken, {
@@ -94,7 +96,7 @@ api.post("/api/login", (req, res) => {
 			  sameSite: "lax",
 			  maxAge: 3600000
 			});
-			res.status(200).json({ message: "Logged in successfully", userData: user});
+			res.status(200).json({ message: "Logged in successfully", user });
 		} else {
 			res.status(401).json({ message: "Password incorrect" });
 			}
@@ -105,17 +107,18 @@ api.post("/api/login", (req, res) => {
 // Middleware for checking if user is logged in
 const authenticateJWT = (req, res, next) => {
 	const token = req.cookies ? req.cookies.accessToken : null;
-	if (token) {
+	// console.log(req.headers)
 	console.log(token)
+	if (token) {
 		jwt.verify(token, jwtSecret, (err, user) => {
 			if (err) {
-				return res.status(403).json({ message: "JWT error" });
+				return res.status(403).json({ message: "JWT 403 error" });
 			}
-			req.user = user;
+			req.user = user.user;
 			next();
 		});
 	} else {
-		res.status(401).json({ message: "JWT error" });
+		res.status(401).json({ message: "JWT 401 error" });
 	}
 };
 
@@ -123,10 +126,10 @@ const authenticateJWT = (req, res, next) => {
 api.get("/api/profile", authenticateJWT, (req, res) => {
 	console.log("server api profile accessed")
 	// If we're here, the JWT was valid and `req.user` contains the payload from the JWT
-	const userData = { userData: user };
+	// const userData = { userData: req.user };
 	res.json({
 		message: "Authenticated",
-		user: userData,
+		userData: req.user,
 	});
 });
 

@@ -26,7 +26,8 @@ const App = () => {
     const fetchUserStatus = async () => {
       try {
         const userData = await checkIfSignedIn();
-        setCurrentUser(userData.user); // Initialize currentUser with user data
+        setCurrentUser(userData); // Initialize currentUser with user data
+		 //console.log("userData.user", userData)
       } catch (error) {
         setCurrentUser(null); // No user is signed in
       }
@@ -38,7 +39,8 @@ const App = () => {
   const handleUserChange = (event) => {
     setCurrentUser(event);
   };
-console.log("currentuser", currentUser);
+
+console.log("currentuser in app.js", currentUser);
 
   return (
     <div className="App">

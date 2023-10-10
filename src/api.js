@@ -143,6 +143,7 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 	if (response.ok) {
 		console.log(data.userData)
 		setCurrentUser(data.userData);
+		window.location.reload();
 		return data.userData;
 	} else {
 		throw new Error(data.error);
@@ -176,12 +177,30 @@ export const handleSignout = async (setCurrentUser) => {
 
 	const data = await response.json();
 	if (response.ok) {
+		window.location.reload();
 		return "Logged out successfully";
 	} else {
 		throw new Error(data.error);
 	}
 };
 
+
+export const checkIfSignedIn = async () => {
+	const response = await fetch("http://localhost:4000/api/profile", {
+		method: "GET",
+		credentials: "include",  // Important, because we're using cookies
+	});
+
+	const data = await response.json();
+	console.log(data.userData)
+	if (response.ok) {
+		return data.userData;  // Return server's response, which should include user data if authenticated
+	} else {
+		return null;  // User is not signed in (invalid token or other error)
+	}
+};
+
+/*
 export const checkIfSignedIn = async () => {
   const response = await fetch("http://localhost:4000/api/profile", {
     method: "GET",
@@ -193,6 +212,7 @@ export const checkIfSignedIn = async () => {
   console.log("checkSignin", token);
 
   if (!token) {
+	  console.log("JWT token not found")
     return null; // User is not signed in (no token)
   }
 
@@ -203,7 +223,7 @@ export const checkIfSignedIn = async () => {
     return null; // User is not signed in (invalid token or other error)
   }
 };
-
+*/
 
 
 
