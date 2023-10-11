@@ -48,6 +48,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home currentUser={currentUser} />} />
         <Route path="/contactus" element={<ContactUs currentUser={currentUser} />} />
+        <Route path="/cpu" element={<Cpu currentUser={currentUser} />} />
         <Route path="/Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
