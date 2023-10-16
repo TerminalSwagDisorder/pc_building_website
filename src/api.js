@@ -12,123 +12,345 @@ import { Main } from "./components/Main";
 import Cookies from "universal-cookie";
 
 
-// Alternative fetching
-//export const fetchCaseData = () => {
-//	return fetch('http://localhost:4000/api/cases')
-//		.then(response => response.json())
-//};
-
-// for export data of the Cpu to the frontend 
-export const fetchCpuData = () => {
-    return fetch("http://localhost:4000/api/cpus")
-        .then(response => response.json())
-        .catch(error => {
-            console.error(error);
-            throw error;
-        });
-};
-
-const API = ({ onUserChange }) => {
-	const navigate = useNavigate();
-	const location = useLocation();
-	
-	const [users, setUsers] = useState([]);
-	const [cases, setCases] = useState([]);
-	const [cpus, setCpus] = useState([]);
-	const [cpucoolers, setCpuCoolers] = useState([]);
-	const [gpus, setGpus] = useState([]);
-	const [memories, setMemories] = useState([]);
-	const [motherboards, setMotherboards] = useState([]);
-	const [psus, setPsus] = useState([]);
-	const [storages, setStorages] = useState([]);
-
-useEffect(() => {
-	fetchUserData();
-	fetchCaseData();
-	fetchCpuData();
-	fetchCpuCoolerData();
-	fetchGpuData();
-	fetchMemoryData();
-	fetchMotherboardData();
-	fetchPsuData();
-	fetchStorageData();
-	}, []);
-
-// Fetch user data
-const fetchUserData = () => {
-	fetch("http://localhost:4000/api/users")
+// Fetch data for all parts
+/*
+// Old method for fetching the data, still works just worse readability
+export const fetchCaseData = () => {
+	return fetch("http://localhost:4000/api/cases")
 		.then((response) => response.json())
-		.then((data) => setUsers(data))
-		.catch(console.error);
-	};
+		.catch((error) => {
+			console.error(error);
+			throw error;
+		});
+};
+export const useFetchCases = () => {
+	const [cases, setCases] = useState([]);
+	useEffect(() => {
+		fetchCaseData()
+			.then((data) => setCases(data))
+			.catch(console.error);
+	}, []);
+	return cases;
+};
+*/
+
 
 // Fetch case data
-const fetchCaseData = () => {
-    fetch("http://localhost:4000/api/cases")
-        .then((response) => response.json())
-        .then((data) => setCases(data))
-        .catch(console.error);
-	};
-
-	
-// Fetch cpu data
-const fetchCpuData = () => {
-	fetch("http://localhost:4000/api/cpus")
-		.then((response) => response.json())
-		.then((data) => setCpus(data))
-		.catch(console.error);
-	};
-	
-// Fetch cpu_cooler data
-const fetchCpuCoolerData = () => {
-	fetch("http://localhost:4000/api/cpu_coolers")
-		.then((response) => response.json())
-		.then((data) => setCpuCoolers(data))
-		.catch(console.error);
-	};
-	
-// Fetch gpu data
-const fetchGpuData = () => {
-	fetch("http://localhost:4000/api/gpus")
-		.then((response) => response.json())
-		.then((data) => setGpus(data))
-		.catch(console.error);
-	};
-	
-// Fetch memory data
-const fetchMemoryData = () => {
-	fetch("http://localhost:4000/api/memories")
-		.then((response) => response.json())
-		.then((data) => setMemories(data))
-		.catch(console.error);
-	};
-	
-// Fetch motherboard data
-const fetchMotherboardData = () => {
-	fetch("http://localhost:4000/api/motherboards")
-		.then((response) => response.json())
-		.then((data) => setMotherboards(data))
-		.catch(console.error);
-	};
-	
-// Fetch psu data
-const fetchPsuData = () => {
-	fetch("http://localhost:4000/api/psus")
-		.then((response) => response.json())
-		.then((data) => setPsus(data))
-		.catch(console.error);
-	};
-	
-// Fetch storage data
-const fetchStorageData = () => {
-	fetch("http://localhost:4000/api/storages")
-		.then((response) => response.json())
-		.then((data) => setStorages(data))
-		.catch(console.error);
-	};
+export const fetchCaseData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/cases");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 
+// React hook to use case data
+export const useFetchCases = () => {
+	const [cases, setCases] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchCaseData();
+				setCases(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return cases;
+};
+
+
+// Fetch cpu data
+export const fetchCpuData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/cpus");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use cpu data
+export const useFetchCpu = () => {
+	const [cpus, setCpus] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchCpuData();
+				setCpus(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return cpus;
+};
+
+
+// Fetch cpu cooler data
+export const fetchCpuCoolerData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/cpu_coolers");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use cpu cooler data
+export const useFetchCpuCoolers = () => {
+	const [cpuCoolers, setCpuCoolers] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchCpuCoolerData();
+				setCpuCoolers(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return cpuCoolers;
+};
+
+
+// Fetch gpu data
+export const fetchGpuData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/gpus");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use gpu data
+export const useFetchGpus = () => {
+	const [gpus, setGpus] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchGpuData();
+				setGpus(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return gpus;
+};
+
+
+// Fetch memory data
+export const fetchMemoryData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/memories");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use memory data
+export const useFetchMemories = () => {
+	const [memories, setMemories] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchMemoryData();
+				setMemories(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return memories;
+};
+
+
+// Fetch motherboard data
+export const fetchMotherboardData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/motherboards");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use motherboard data
+export const useFetchMotherboards = () => {
+	const [motherboards, setMotherboards] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchMotherboardData();
+				setMotherboards(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return motherboards;
+};
+
+
+// Fetch psu data
+export const fetchPsuData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/psus");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use psu data
+export const useFetchPsus = () => {
+	const [psus, setPsus] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchPsuData();
+				setPsus(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return psus;
+};
+
+
+// Fetch storage data
+export const fetchStorageData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/storages");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use storage data
+export const useFetchStorages = () => {
+	const [storages, setStorages] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchStorageData();
+				setStorages(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return storages;
+};
+
+
+// For less cluttered code
+export const useFetchAllData = () => {
+	const [data, setData] = useState({
+		cases: [],
+		cpus: [],
+		cpuCoolers: [],
+		gpus: [],
+		memories: [],
+		motherboards: [],
+		psus: [],
+		storages: [],
+	});
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const [cases, cpus, cpuCoolers, gpus, memories, motherboards, psus, storages] = await Promise.all([
+					fetchCaseData(),
+					fetchCpuData(),
+					fetchCpuCoolerData(),
+					fetchGpuData(),
+					fetchMemoryData(),
+					fetchMotherboardData(),
+					fetchPsuData(),
+					fetchStorageData(),
+				]);
+
+				setData({
+					cases,
+					cpus,
+					cpuCoolers,
+					gpus,
+					memories,
+					motherboards,
+					psus,
+					storages,
+				});
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		fetchData();
+	}, []);
+
+	return data;
+};
+
+
+/*
+export const useFetchAllData = () => {
+	const cases = useFetchCases;
+	const cpus = useFetchCpu;
+	const cpuCoolers = useFetchCpuCoolers;
+	const gpus = useFetchGpus;
+	const memories = useFetchMemories;
+	const motherboards = useFetchMotherboards;
+	const psus = useFetchPsus;
+	const storages = useFetchStorages;
+
+	return {
+	cases,
+	cpus,
+	cpuCoolers,
+	gpus,
+	memories,
+	motherboards,
+	psus,
+	storages
+	};
+};
+*/
+
+// All of the user data handling
+// Signin
 export const handleSignin = async (email, password, setCurrentUser) => {
 	console.log(email, password)
 	const response = await fetch("http://localhost:4000/api/login", {
@@ -151,6 +373,7 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 };
 
 
+// Signup
 export const handleSignup = async (event) => {
 	const Name = event.target.username.value;
     const Email = event.target.email.value;
@@ -169,6 +392,7 @@ export const handleSignup = async (event) => {
 };
 
 
+// Signout
 export const handleSignout = async (setCurrentUser) => {
 	const response = await fetch("http://localhost:4000/api/logout", {
 		method: "POST",
@@ -185,6 +409,7 @@ export const handleSignout = async (setCurrentUser) => {
 };
 
 
+// Signin status check
 export const checkIfSignedIn = async () => {
 	const response = await fetch("http://localhost:4000/api/profile", {
 		method: "GET",
@@ -280,87 +505,5 @@ const handleSignin = () => {
 export default Signin;
 */
 
-/*
-// Async way to get a promise for fetching the data, just in case
 
-
-// Fetch cpu data
-const fetchCpuData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/cpus");
-    const data = await response.json();
-    setCpus(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch cpu_cooler data
-const fetchCpuCoolerData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/cpu_coolers");
-    const data = await response.json();
-    setCpuCoolers(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch gpu data
-const fetchGpuData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/gpus");
-    const data = await response.json();
-    setGpus(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch memory data
-const fetchMemoryData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/memorys");
-    const data = await response.json();
-    setMemories(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch motherboard data
-const fetchMotherboardData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/motherboards");
-    const data = await response.json();
-    setMotherboards(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch psu data
-const fetchPsuData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/psus");
-    const data = await response.json();
-    setPsus(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch storage data
-const fetchStorageData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/storages");
-    const data = await response.json();
-    setStorages(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-*/
-
-export { API };
+export { };
