@@ -1,14 +1,15 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import Home from "./components/Home";
-import Cpu from "./components/Cpu";
+import Cpus from "./components/Cpus";
 import Cases from "./components/Cases";
-import Cpucooler from "./components/Cpucooler";
-import Gpu from "./components/Gpu";
-import Memory from "./components/Memory";
-import Motherboard from "./components/Motherboard";
-import Psu from "./components/Psu";
-import Storge from "./components/Storge";
+import CpuCoolers from "./components/Cpucoolers";
+import Gpus from "./components/Gpus";
+import Memories from "./components/Memories";
+import Motherboards from "./components/Motherboards";
+import Psus from "./components/Psus";
+import Storages from "./components/Storages";
+import Components from "./components/Components";
 import ContactUs from "./components/ContactUs";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -50,8 +51,15 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home currentUser={currentUser} />} />
         <Route path="/contactus" element={<ContactUs currentUser={currentUser} />} />
-        <Route path="/cpu" element={<Cpu currentUser={currentUser} />} />
+        <Route path="/cpu" element={<Cpus cpus={cpus} currentUser={currentUser} />} />
 	  	<Route path="/cases" element={<Cases cases={cases} currentUser={currentUser} />} />
+	  	<Route path="/cpuCoolers" element={<CpuCoolers cpuCoolers={cpuCoolers} currentUser={currentUser} />} />
+	  	<Route path="/gpus" element={<Gpus gpus={gpus} currentUser={currentUser} />} />
+	  	<Route path="/memories" element={<Memories memories={memories} currentUser={currentUser} />} />
+	  	<Route path="/motherboards" element={<Motherboards motherboards={motherboards} currentUser={currentUser} />} />
+	  	<Route path="/psus" element={<Psus psus={psus} currentUser={currentUser} />} />
+	  	<Route path="/storages" element={<Storages storages={storages} currentUser={currentUser} />} />
+	  	<Route path="/components" element={<Components cases={cases} cpus={cpus} cpuCoolers={cpuCoolers} gpus={gpus} memories={memories} motherboards={motherboards} psus={psus} storages={storages} currentUser={currentUser} />} />
         <Route path="/Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>

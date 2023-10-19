@@ -24,7 +24,21 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
       <ul class="main-nav">
         <li><Link to="/"><i class="fas fa-home icon" /> Home</Link></li>
         <li><Link to="/contactus"><i class="fas fa-home icon" /> Contact Us</Link></li>
-        <li><Link to="/cpu"><i class="fas fa-home icon" /> Cpu</Link></li>
+				<li>
+					<div className="dropdown">
+						<li className="dropbtn"><Link to="/components">Components</Link></li>
+						<div className="dropdown-content">
+							<Link to="/cpu">Cpu</Link>
+							<Link to="/cases">Cases</Link>
+							<Link to="/cpuCoolers">CpuCoolers</Link>
+							<Link to="/gpus">Gpus</Link>
+							<Link to="/memories">Memories</Link>
+							<Link to="/motherboards">Motherboards</Link>
+							<Link to="/psus">Psus</Link>
+							<Link to="/storages">Storages</Link>
+						</div>
+					</div>
+				</li>
 	  	      {currentUser ? (
 				<><li><button onClick={handleSignout}>Log out</button></li>
 				<li style={{color:"white"}}>Singed in as {currentUser.Name}</li></>

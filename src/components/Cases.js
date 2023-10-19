@@ -7,7 +7,7 @@ const BasicRenderCases = ({ cases }) => {
 			<h1>Computer Cases</h1>
 			<ul>
 			{cases.map((caseItem) => (
-				<li key={caseItem.ID} style={{ marginBottom: "4em" }}>
+				<li key={caseItem.ID} className="componentListItem">
 					<div>Manufacturer: {caseItem.Manufacturer}</div>
 					<div>Name: {caseItem.Name}</div>
 					<div>Price: {caseItem.Price}</div>
