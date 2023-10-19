@@ -1,21 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import { CardActionArea } from "@mui/material";
 
-const BasicRenderCpus = ({ cpus }) => {
-	return (
-		<div>
-			<h1>Computer Cpus</h1>
-			<ul>
-			{cpus.map((cpuItem) => (
-				<li key={cpuItem.ID} className="componentListItem">
-					<div>Manufacturer: {cpuItem.Manufacturer}</div>
-					<div>Name: {cpuItem.Name}</div>
-					<div>Price: {cpuItem.Price}</div>
-					<img src={`/product_images/${cpuItem.Image}`} alt={cpuItem.Name} height="400"/>
-				</li>
-			))}
-			</ul>
-		</div>
-	);
+const RenderCpus = ({ cpus }) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (cpus.length > 0) {
+      setLoading(false);
+    }
+  }, [cpus]);
+
+  return (
+    <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+      <h1>Computer CPUs</h1>
+      {loading ? (
+        <CircularProgress /> // Display a loading indicator while loading
+      ) : (
+        <Grid container spacing={2} sx={{ justifyContent: "center" }}>
+          {cpus.map((cpuItem) => (
+            <Grid item xs={12} sm={6} md={3} key={cpuItem.ID}>
+              <Card sx={{ maxWidth: 345 }}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={`/product_images/${cpuItem.Image}`}
+                    alt={cpuItem.Name}
+                    sx={{
+                      objectFit: "cover",
+                    }}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h6" component="div">
+                      Name: {cpuItem.Name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      <div>Manufacturer: {cpuItem.Manufacturer}</div>
+                      <div>Price: {cpuItem.Price}</div>
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
+    </div>
+  );
 };
 
-export default BasicRenderCpus;
+export default RenderCpus;

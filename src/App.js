@@ -10,7 +10,6 @@ import Motherboards from "./components/Motherboards";
 import Psus from "./components/Psus";
 import Storages from "./components/Storages";
 import Components from "./components/Components";
-import ContactUs from "./components/ContactUs";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Signin from "./components/Signin";
@@ -50,7 +49,6 @@ const App = () => {
     <Navbar currentUser={currentUser} setCurrentUser={handleUserChange} />
       <Routes>
         <Route path="/" element={<Home currentUser={currentUser} />} />
-        <Route path="/contactus" element={<ContactUs currentUser={currentUser} />} />
         <Route path="/cpu" element={<Cpus cpus={cpus} currentUser={currentUser} />} />
 	  	<Route path="/cases" element={<Cases cases={cases} currentUser={currentUser} />} />
 	  	<Route path="/cpuCoolers" element={<CpuCoolers cpuCoolers={cpuCoolers} currentUser={currentUser} />} />

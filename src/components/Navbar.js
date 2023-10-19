@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { checkIfSignedIn } from "../api";
 import { handleSignout } from "../api";
 import { useNavigate } from "react-router-dom";
-import './nav.scss';
+import '../style/nav.scss';
 
 const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
   const navigate = useNavigate();
@@ -20,35 +20,36 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 
   return (
     <div class="container">
-      <img src={process.env.PUBLIC_URL + "images/Color-logo-no-background-2048x597.png"} alt="Logo" className="logo"/>
+      <img src={process.env.PUBLIC_URL + "images/logo.png"} alt="Logo" className="logo"/>
       <ul class="main-nav">
         <li><Link to="/"><i class="fas fa-home icon" /> Home</Link></li>
-        <li><Link to="/contactus"><i class="fas fa-home icon" /> Contact Us</Link></li>
-				<li>
-					<div className="dropdown">
-						<li className="dropbtn"><Link to="/components">Components</Link></li>
-						<div className="dropdown-content">
-							<Link to="/cpu">Cpu</Link>
-							<Link to="/cases">Cases</Link>
-							<Link to="/cpuCoolers">CpuCoolers</Link>
-							<Link to="/gpus">Gpus</Link>
-							<Link to="/memories">Memories</Link>
-							<Link to="/motherboards">Motherboards</Link>
-							<Link to="/psus">Psus</Link>
-							<Link to="/storages">Storages</Link>
-						</div>
+			<li>
+				<div className="dropdown">
+					<li className="dropbtn"><Link to="/components">Components</Link></li>
+					<div className="dropdown-content">
+						<Link to="/cpu">Cpu</Link>
+						<Link to="/cases">Cases</Link>
+						<Link to="/cpuCoolers">CpuCoolers</Link>
+						<Link to="/gpus">Gpus</Link>
+						<Link to="/memories">Memories</Link>
+						<Link to="/motherboards">Motherboards</Link>
+						<Link to="/psus">Psus</Link>
+						<Link to="/storages">Storages</Link>
 					</div>
-				</li>
-	  	      {currentUser ? (
-				<><li><button onClick={handleSignout}>Log out</button></li>
-				<li style={{color:"white"}}>Singed in as {currentUser.Name}</li></>
-            ) : (
- 				<li style={{color:"white"}}><Link to="/signin">Not signed in</Link></li>
-            )}
+				</div>
+			</li>
+			{currentUser ? (
+			<><li><button onClick={handleSignout}>Log out</button></li>
+			<li style={{color:"white"}}>Singed in as {currentUser.Name}</li></>
+		) : (
+			<ul>
+				<li style={{color:"white"}}><Link to="/signin">Not signed in</Link></li>
+				<li style={{color:"white"}}><Link to="/signup">Signup</Link></li>
+			</ul>
+		)}
         </ul>
     </div>
   );
 } 
 
 export default Navbar
-

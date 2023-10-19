@@ -8,7 +8,6 @@ import reportWebVitals from './reportWebVitals';
 import { Route, BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
-import { Main } from "./components/Main";
 import Cookies from "universal-cookie";
 
 

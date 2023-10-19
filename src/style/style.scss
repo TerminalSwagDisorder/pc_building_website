@@ -1,0 +1,48 @@
+//coloring
+$backgroundFo: #2A2438;
+$color: #ccc;
+$align: center;
+
+.componentsh2 {
+    color: $backgroundFo;
+	cursor: pointer;
+	margin-bottom: 2em;
+} 
+
+.componentListItem {
+	margin-bottom: 4em;
+}
+
+.componentListItem img {
+	border-bottom-style: solid;
+}
+
+form {
+	background-color: #000d12d6;
+	position: absolute;
+	width: 30%;
+	height: 50%;
+	top: 30%;
+	justify-items: center;
+	color: #fff;
+	border-radius: 5px;
+	box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+	padding-top: 25px;
+	label {
+		text-align: left !important;
+	}
+	input::placeholder {
+		color: #fff !important;
+	}
+	button {
+		width: 50%;
+	}
+}
+.sign {
+	width: 50%;
+	height: 90%;
+	position: absolute;
+	right: 0;
+}
+
+  
