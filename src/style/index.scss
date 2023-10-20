@@ -10,11 +10,10 @@ $align: center;
   display: flex;
   width: 100%;
   height: 80px;
-  padding: 0 10px;
   align-items: $align;
   bottom: 0;
   left: 0;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .footer .separator {
   border-left: 1px solid $color;

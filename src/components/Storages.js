@@ -18,7 +18,15 @@ const RenderStorages = ({ storages }) => {
 
 	return (
 		<div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-      <h1>Computer Storages</h1>
+      <div class="wrapper">
+        <h1 title="Warning">Computer Storages</h1>
+        <h2 title="The new revolution started">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h2>
+        <div class="scroll-downs">
+        <div class="mousey">
+          <div class="scroller"></div>
+        </div>
+        </div>
+      </div>
       {loading ? (
         <CircularProgress /> // Display a loading indicator while loading
       ) : (
