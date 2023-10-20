@@ -38,6 +38,17 @@ form {
 		width: 50%;
 	}
 }
+.signout {
+	display: flex;
+	button, li {
+		background-color: unset;
+		color: #ccc;
+		border: none;
+		padding: 5px 15px;
+		font-size: 15px;
+		cursor: pointer;
+	}
+}
 .sign {
 	width: 50%;
 	height: 90%;
@@ -45,4 +56,9 @@ form {
 	right: 0;
 }
 
+span {
+	color: #dea002;
+	text-transform: capitalize;
+	padding-top: 100px;
+}
   

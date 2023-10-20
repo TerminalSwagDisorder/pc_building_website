@@ -39,8 +39,8 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 				</div>
 			</li>
 			{currentUser ? (
-			<><li><button onClick={handleSignout}>Log out</button></li>
-			<li style={{color:"white"}}>Singed in as {currentUser.Name}</li></>
+			<div className='signout'><li><button onClick={handleSignout}>Log out</button></li>
+			<li style={{color:"white"}}>Welcome <span>{currentUser.Name}</span> :)</li></div>
 		) : (
 			<ul>
 				<li style={{color:"white"}}><Link to="/signin">Not signed in</Link></li>
