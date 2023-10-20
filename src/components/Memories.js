@@ -28,7 +28,9 @@ const RenderMemories = ({ memories }) => {
         </div>
       </div>
       {loading ? (
-        <CircularProgress /> // Display a loading indicator while loading
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "400px" }}>
+          <CircularProgress color="secondary" size={100} thickness={3} />
+        </div>
       ) : (
         <Grid container spacing={2} sx={{ justifyContent: "center" }}>
           {memories.map((memorieItem) => (
