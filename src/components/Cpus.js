@@ -42,7 +42,7 @@ const RenderCpus = ({ cpus }) => {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       <div>Manufacturer: {cpuItem.Manufacturer}</div>
-                      <div>Price: {cpuItem.Price}</div>
+                      <div>Price: {cpuItem.Price} €</div>
                     </Typography>
                   </CardContent>
                 </CardActionArea>

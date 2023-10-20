@@ -43,7 +43,7 @@ const RenderPsus = ({ psus }) => {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       <div>Manufacturer: {psuItem.Manufacturer}</div>
-                      <div>Price: {psuItem.Price}</div>
+                      <div>Price: {psuItem.Price} €</div>
                     </Typography>
                   </CardContent>
                 </CardActionArea>

@@ -42,7 +42,7 @@ const BasicRenderMotherboards = ({ motherboards }) => {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       <div>Manufacturer: {motherboardItem.Manufacturer}</div>
-                      <div>Price: {motherboardItem.Price}</div>
+                      <div>Price: {motherboardItem.Price} €</div>
                     </Typography>
                   </CardContent>
                 </CardActionArea>

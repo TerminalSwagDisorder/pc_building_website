@@ -42,7 +42,7 @@ const BasicRenderCpuCoolers = ({ cpuCoolers }) => {
 						</Typography>
 						<Typography variant="body2" color="text.secondary">
 						<div>Manufacturer: {cpuCoolerItem.Manufacturer}</div>
-						<div>Price: {cpuCoolerItem.Price}</div>
+						<div>Price: {cpuCoolerItem.Price} €</div>
 						</Typography>
 					</CardContent>
 					</CardActionArea>

@@ -42,7 +42,7 @@ const RenderCases = ({ cases }) => {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       <div>Manufacturer: {caseItem.Manufacturer}</div>
-                      <div>Price: {caseItem.Price}</div>
+                      <div>Price: {caseItem.Price} €</div>
                     </Typography>
                   </CardContent>
                 </CardActionArea>

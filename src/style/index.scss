@@ -34,3 +34,10 @@ $align: center;
   transform: rotate(180deg);
   transition: transform 0.3s ease-in-out;
 }
+.MuiPaper-root {
+  height: 400px;
+  img {
+    width: 100%;
+    object-fit: cover;
+  }
+}

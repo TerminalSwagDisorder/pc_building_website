@@ -42,7 +42,7 @@ const RenderMemories = ({ memories }) => {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       <div>Manufacturer: {memorieItem.Manufacturer}</div>
-                      <div>Price: {memorieItem.Price}</div>
+                      <div>Price: {memorieItem.Price} €</div>
                     </Typography>
                   </CardContent>
                 </CardActionArea>

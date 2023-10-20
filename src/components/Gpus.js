@@ -42,7 +42,7 @@ const BasicRenderGpus = ({ gpus }) => {
 						</Typography>
 						<Typography variant="body2" color="text.secondary">
 						<div>Manufacturer: {gpuItem.Manufacturer}</div>
-						<div>Price: {gpuItem.Price}</div>
+						<div>Price: {gpuItem.Price} €</div>
 						</Typography>
 					</CardContent>
 					</CardActionArea>

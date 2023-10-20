@@ -42,7 +42,7 @@ const RenderStorages = ({ storages }) => {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       <div>Manufacturer: {storageItem.Manufacturer}</div>
-                      <div>Price: {storageItem.Price}</div>
+                      <div>Price: {storageItem.Price} €</div>
                     </Typography>
                   </CardContent>
                 </CardActionArea>
