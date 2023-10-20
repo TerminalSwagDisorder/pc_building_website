@@ -8,7 +8,6 @@ const cors = require("cors");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
 require('dotenv').config();
