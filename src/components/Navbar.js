@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { checkIfSignedIn } from "../api";
 import { handleSignout } from "../api";
 import { useNavigate } from "react-router-dom";
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
 import '../style/nav.scss';
 
 const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
@@ -20,7 +22,7 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 
   return (
     <div class="container">
-      <img src={process.env.PUBLIC_URL + "images/logo.png"} alt="Logo" className="logo"/>
+      <img src={"images/logo.png"} alt="Logo" className="logo"/>
       <ul class="main-nav">
         <li><Link to="/"><i class="fas fa-home icon" /> Home</Link></li>
 			<li>
@@ -37,10 +39,17 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 						<Link to="/storages">Storages</Link>
 					</div>
 				</div>
+				
 			</li>
 			{currentUser ? (
 			<div className='signout'><li><button onClick={handleSignout}>Log out</button></li>
-			<li style={{color:"white"}}>Welcome <span>{currentUser.Name}</span> :)</li></div>
+			<li style={{color:"white"}}>Welcome <span>{currentUser.Name}</span> :)</li>
+			<Stack direction="row" spacing={2}>
+				<Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+			</Stack>
+			</div>
+			
+			
 		) : (
 			<ul>
 				<li style={{color:"white"}}><Link to="/signin">Not signed in</Link></li>
