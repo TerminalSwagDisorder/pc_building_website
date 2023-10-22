@@ -29,8 +29,8 @@ const RenderPsus = ({ psus }) => {
         </div>
       </div>
       {loading ? (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "400px" }}>
-          <CircularProgress color="secondary" size={100} thickness={3} />
+        <div style={{ display: "block", justifyContent: "center", alignItems: "center", minHeight: "400" }}>
+          <CircularProgress color="inherit" size={100} thickness={20} />
         </div>
       ) : (
         <Grid container spacing={2} sx={{ justifyContent: "center" }}>
