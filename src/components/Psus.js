@@ -7,10 +7,11 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CardActionArea } from "@mui/material";
 
-
+// Function for rendering psus, which takes psus as a prop from api
 const RenderPsus = ({ psus }) => {
 	const [loading, setLoading] = useState(true);
 
+	// Display loading icon when the array has no data
 	useEffect(() => {
 	  if (psus.length > 0) {
 		setLoading(false);

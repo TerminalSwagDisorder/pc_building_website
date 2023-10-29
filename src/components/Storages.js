@@ -7,9 +7,11 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CardActionArea } from "@mui/material";
 
+// Function for rendering storages, which takes storages as a prop from api
 const RenderStorages = ({ storages }) => {
 	const [loading, setLoading] = useState(true);
 
+	// Display loading icon when the array has no data
 	useEffect(() => {
 	  if (storages.length > 0) {
 		setLoading(false);

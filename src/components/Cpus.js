@@ -7,9 +7,12 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CardActionArea } from "@mui/material";
 import '../style/style.scss';
+
+// Function for rendering cpus, which takes cpus as a prop from api
 const RenderCpus = ({ cpus }) => {
   const [loading, setLoading] = useState(true);
 
+	// Display loading icon when the array has no data
   useEffect(() => {
     if (cpus.length > 0) {
       setLoading(false);

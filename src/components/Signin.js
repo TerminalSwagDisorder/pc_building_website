@@ -8,13 +8,15 @@ import { Input } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
-
+// Function for signin in, take onSubmit and setting the current user as props
 export const Signin = ({ onSubmit, setCurrentUser }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 	
+	// Function for when the user submits the sign in form
   const handleSubmit = async (event) => {
+	  // Need this to prevent regular js from ruining the form submission
     event.preventDefault();
 		try {
 			await handleSignin(email, password, setCurrentUser);

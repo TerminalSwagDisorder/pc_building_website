@@ -7,9 +7,11 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CardActionArea } from "@mui/material";
 
-const BasicRenderMotherboards = ({ motherboards }) => {
+// Function for rendering motherboards, which takes motherboards as a prop from api
+const RenderMotherboards = ({ motherboards }) => {
 	const [loading, setLoading] = useState(true);
 
+	// Display loading icon when the array has no data
 	useEffect(() => {
 	  if (motherboards.length > 0) {
 		setLoading(false);
@@ -65,4 +67,4 @@ const BasicRenderMotherboards = ({ motherboards }) => {
   );
 };
 
-export default BasicRenderMotherboards;
+export default RenderMotherboards;

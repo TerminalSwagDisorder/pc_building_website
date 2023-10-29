@@ -12,6 +12,7 @@ const fs = require("fs");
 const cookieParser = require("cookie-parser");
 require('dotenv').config();
 
+// JSON web token for cookie
 const jwtSecret = process.env.JWT_SECRET;
 if(!jwtSecret) {
     console.error("Missing JWT_SECRET environment variable. Exiting...");
@@ -23,6 +24,7 @@ const port = 4000;
 
 api.use(express.json());
 
+// Cors options to allow the use of user cookies
 const corsOptions = {
 	origin: 'http://localhost:3000',  // replace with your application's origin
 	credentials: true  // allows the Access-Control-Allow-Credentials: true header
@@ -31,12 +33,15 @@ const corsOptions = {
 api.use(cors(corsOptions));
 api.use(cookieParser());
 
+// Component db
 const dbPath = path.resolve(__dirname, "database/pcbuildwebsite_db.db");
 const db = new sqlite3.Database(dbPath);
 
+// User db
 const userDbPath = path.resolve(__dirname, "database/user_data.db");
 const userDb = new sqlite3.Database(userDbPath)
 
+// All of the users, not used in frontend
 api.get("/api/users", (req, res) => {
   const sql = "SELECT * FROM user";
   userDb.all(sql, [], (err, rows) => {
@@ -49,6 +54,7 @@ api.get("/api/users", (req, res) => {
   });
 });
 
+// Signing up
 api.post("/api/users", async (req, res) => {
   const { Name, Email, Password } = req.body;
     try {
@@ -69,7 +75,6 @@ api.post("/api/users", async (req, res) => {
     }
 });
 
-
 // Login route
 api.post("/api/login", (req, res) => {
 	console.log("server api login accessed")
@@ -80,13 +85,17 @@ api.post("/api/login", (req, res) => {
 			res.status(500).json({ message: err });
 			return;
 		}
+		// If the user does not exist
 		else if (!user) {
 			res.status(401).json({ message: "User not found" });
 			return;
 		} else {
-
+		
+		// Compare hashed password with password in form
 		const match = await bcrypt.compare(Password, user.Password);
 		if (match) {
+			
+			// Provide an accessToken cookie
 			const accessToken = jwt.sign({ user }, jwtSecret, {
 				expiresIn: "1h",
 			});
@@ -105,14 +114,20 @@ api.post("/api/login", (req, res) => {
 
 // Middleware for checking if user is logged in
 const authenticateJWT = (req, res, next) => {
+	
+	// Check if cookie exists and retrieve the value, if it does not exist set accessToken to null 
 	const token = req.cookies ? req.cookies.accessToken : null;
-	// console.log(req.headers)
-	console.log(token)
+	//console.log(req.headers)
+	//console.log(token)
 	if (token) {
+		
+		// Verify the token to the jwtSecret
 		jwt.verify(token, jwtSecret, (err, user) => {
 			if (err) {
 				return res.status(403).json({ message: "JWT 403 error" });
 			}
+			
+			// If successful, set req.user to the decoded user info
 			req.user = user.user;
 			next();
 		});
@@ -132,8 +147,6 @@ api.get("/api/profile", authenticateJWT, (req, res) => {
 	});
 });
 
-
-
 // Logout route (Frontend will handle removing the token)
 api.post("/api/logout", (req, res) => {
 	console.log("server api logout accessed")
@@ -141,6 +154,8 @@ api.post("/api/logout", (req, res) => {
 	res.json({ message: "Logged out successfully" });
 });
 
+
+// Get all of the component data from the db, do this for all components
 api.get("/api/cases", (req, res) => {
   const sql = "SELECT * FROM chassis";
   db.all(sql, [], (err, rows) => {
@@ -153,6 +168,7 @@ api.get("/api/cases", (req, res) => {
   });
 });
 
+// Provide posting to the db for all components, in case it it implemented
 api.post("/api/cases", (req, res) => {
   const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility } = req.body;
   const sql = "INSERT INTO chassis (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

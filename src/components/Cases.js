@@ -7,9 +7,11 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CardActionArea } from "@mui/material";
 
+// Function for rendering cases, which takes cases as a prop from api
 const RenderCases = ({ cases }) => {
 	const [loading, setLoading] = useState(true);
 
+	// Display loading icon when the cases array has no data
 	useEffect(() => {
 	  if (cases.length > 0) {
 		setLoading(false);

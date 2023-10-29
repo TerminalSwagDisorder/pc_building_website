@@ -7,9 +7,11 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CardActionArea } from "@mui/material";
 
-const BasicRenderCpuCoolers = ({ cpuCoolers }) => {
+// Function for rendering cpu coolers, which takes cpuCoolers as a prop from api
+const RenderCpuCoolers = ({ cpuCoolers }) => {
 	const [loading, setLoading] = useState(true);
 
+	// Display loading icon when the array has no data
 	useEffect(() => {
 		if (cpuCoolers.length > 0) {
 		setLoading(false);
@@ -65,4 +67,4 @@ const BasicRenderCpuCoolers = ({ cpuCoolers }) => {
 	);
 };
 
-export default BasicRenderCpuCoolers;
+export default RenderCpuCoolers;

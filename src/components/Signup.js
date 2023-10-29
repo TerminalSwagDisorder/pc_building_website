@@ -8,9 +8,11 @@ import { Input } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
-
-export const Signup = ({ onSubmit }) => {	
+// Function for rendering sign up page, takes onSubmit as a prop
+export const Signup = ({ onSubmit }) => {
   const navigate = useNavigate();
+	
+	// Async function for when the user submits the sign up form
   const handleSubmit = async (event) => {
 		try {
 			await handleSignup(event);

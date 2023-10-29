@@ -19,7 +19,7 @@ import { Router, Routes, Route } from "react-router-dom";
 
 
 const App = () => {
-	// Fetch all the component data
+	// Use useFetchAllData() to fetch all component data, allowing it to be done in just one line
 	const { cases, cpus, cpuCoolers, gpus, memories, motherboards, psus, storages } = useFetchAllData();
  	const [currentUser, setCurrentUser] = useState(null);
 	
@@ -28,10 +28,11 @@ const App = () => {
     const fetchUserStatus = async () => {
       try {
         const userData = await checkIfSignedIn();
-        setCurrentUser(userData); // Initialize currentUser with user data
+		// Initialize currentUser with user data
+        setCurrentUser(userData); 
 		 //console.log("userData.user", userData)
       } catch (error) {
-        setCurrentUser(null); // No user is signed in
+        setCurrentUser(null);
       }
     };
 
@@ -46,8 +47,12 @@ const App = () => {
 
   return (
     <div className="App">
+	  
+	 // For all routes, including navbar, add the prop currentUser
+	 // For navbar, add serCurrentUser for sign out
     <Navbar currentUser={currentUser} setCurrentUser={handleUserChange} />
       <Routes>
+	  	// For each route add the appropriate component prop
         <Route path="/" element={<Home currentUser={currentUser} />} />
         <Route path="/cpu" element={<Cpus cpus={cpus} currentUser={currentUser} />} />
 	  	<Route path="/cases" element={<Cases cases={cases} currentUser={currentUser} />} />

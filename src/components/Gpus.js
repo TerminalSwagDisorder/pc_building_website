@@ -7,9 +7,11 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CardActionArea } from "@mui/material";
 
-const BasicRenderGpus = ({ gpus }) => {
+// Function for rendering gpus, which takes gpus as a prop from api
+const RenderGpus = ({ gpus }) => {
 	const [loading, setLoading] = useState(true);
 
+	// Display loading icon when the array has no data
 	useEffect(() => {
 		if (gpus.length > 0) {
 		setLoading(false);
@@ -65,4 +67,4 @@ const BasicRenderGpus = ({ gpus }) => {
 	);
 };
 
-export default BasicRenderGpus;
+export default RenderGpus;

@@ -7,9 +7,11 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CardActionArea } from "@mui/material";
 
+// Function for rendering memories, which takes memories as a prop from api
 const RenderMemories = ({ memories }) => {
 	const [loading, setLoading] = useState(true);
 
+	// Display loading icon when the array has no data
 	useEffect(() => {
 	  if (memories.length > 0) {
 		setLoading(false);

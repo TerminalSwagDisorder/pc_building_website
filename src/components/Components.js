@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import '../style/style.scss';
 import Grid from "@mui/material/Grid";
 
+// Function for rendering all components in one page, takes all components as props from api
 const BasicRenderComponents = ({ cases, cpus, cpuCoolers, gpus, memories, motherboards, psus, storages, currentUser }) => {
 	const [showCases, setShowCases] = useState(false);
 	const [showCpus, setShowCpus] = useState(false);
@@ -18,6 +19,7 @@ const BasicRenderComponents = ({ cases, cpus, cpuCoolers, gpus, memories, mother
 				<h1>All Components</h1>
 				<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
 				<Grid container spacing={2} sx={{ justifyContent: "center" }}>
+					// Render each component similarly like this
 					<Grid item xs={12} sm={6} md={3}>
 						<h2 className="componentsh2" onClick={() => setShowCases(!showCases)}>Cases{showCases ? <span className="arrow">▲</span> : <span className="arrow">▼</span>}</h2>
 						{showCases && (
