@@ -28,7 +28,7 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
       <img src={"images/logo.png"} alt="Logo" className="logo"/>
       <ul class="main-nav">
         <li><Link to="/"><i class="fas fa-home icon" /> Home</Link></li>
-	  		// Dropdown for all components
+	  		{/* Dropdown for all components */}
 			<li>
 				<div className="dropdown">
 					<li className="dropbtn"><Link to="/components">Components</Link></li>
@@ -45,8 +45,8 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 				</div>
 				
 			</li>
-	  		// Check if user is logged in
-	  		// If true do this
+	  		{/* Check if user is logged in */}
+	  		{/* If true do this */}
 			{currentUser ? (
 			<div className='signout'><li><button onClick={handleSignout}>Log out</button></li>
 			<li style={{color:"white"}}>Welcome <span>{currentUser.Name}</span> :)</li>
@@ -57,8 +57,8 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 			
 			
 		) : (
-	  		// If false do this
 			<ul>
+	  		{/* If false do this */}
 				<li style={{color:"white"}}><Link to="/signin">Not signed in</Link></li>
 				<li style={{color:"white"}}><Link to="/signup">Signup</Link></li>
 			</ul>

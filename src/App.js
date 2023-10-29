@@ -48,11 +48,11 @@ const App = () => {
   return (
     <div className="App">
 	  
-	 // For all routes, including navbar, add the prop currentUser
-	 // For navbar, add serCurrentUser for sign out
+	 {/* For all routes, including navbar, add the prop currentUser */}
+	 {/* For navbar, add serCurrentUser for sign out */}
     <Navbar currentUser={currentUser} setCurrentUser={handleUserChange} />
       <Routes>
-	  	// For each route add the appropriate component prop
+	  	{/* For each route add the appropriate component prop */}
         <Route path="/" element={<Home currentUser={currentUser} />} />
         <Route path="/cpu" element={<Cpus cpus={cpus} currentUser={currentUser} />} />
 	  	<Route path="/cases" element={<Cases cases={cases} currentUser={currentUser} />} />
