@@ -5,10 +5,6 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { Route, BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
-import Signin from "./components/Signin";
-import Signup from "./components/Signup";
-import Cookies from "universal-cookie";
 
 
 // Fetch data for all parts
