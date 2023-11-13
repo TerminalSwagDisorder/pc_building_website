@@ -1,11 +1,11 @@
 import React from 'react';
-import './index.scss';
+import '../style/index.scss';
 
 const Footer = () => {
   return (
     <footer className="footer">
       <div>
-        <p>&copy; 2023 Your Company. All rights reserved.</p>
+        <p>&copy; 2023 G9. All rights reserved.</p>
       </div>
       <div className="separator"></div>
       <div>

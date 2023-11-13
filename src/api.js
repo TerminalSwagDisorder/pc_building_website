@@ -5,206 +5,527 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
-
-import { Main } from "./components/Main";
 
 
-// Alternative fetching
-//export const fetchCaseData = () => {
-//	return fetch('http://localhost:4000/api/cases')
-//		.then(response => response.json())
-//};
+// Fetch data for all parts
+/*
+// Old method for fetching the data, still works just worse readability
+export const fetchCaseData = () => {
+	return fetch("http://localhost:4000/api/cases")
+		.then((response) => response.json())
+		.catch((error) => {
+			console.error(error);
+			throw error;
+		});
+};
+export const useFetchCases = () => {
+	const [cases, setCases] = useState([]);
+	useEffect(() => {
+		fetchCaseData()
+			.then((data) => setCases(data))
+			.catch(console.error);
+	}, []);
+	return cases;
+};
+*/
 
-// for export data of the Cpu to the frontend 
-export const fetchCpuData = () => {
-    return fetch("http://localhost:4000/api/cpus")
-        .then(response => response.json())
-        .catch(error => {
-            console.error(error);
-            throw error;
-        });
+// For fetching the data we're doing it async, do the same for all components
+// Fetch case data
+export const fetchCaseData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/cases");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
-const API = ({ onUserChange }) => {
-	const [users, setUsers] = useState([]);
+// For each hook do the same as this
+// React hook to use case data
+export const useFetchCases = () => {
 	const [cases, setCases] = useState([]);
-	const [cpus, setCpus] = useState([]);
-	const [cpucoolers, setCpuCoolers] = useState([]);
-	const [gpus, setGpus] = useState([]);
-	const [memories, setMemories] = useState([]);
-	const [motherboards, setMotherboards] = useState([]);
-	const [psus, setPsus] = useState([]);
-	const [storages, setStorages] = useState([]);
-	const [currentUser, setCurrentUser] = useState(null);
+	useEffect(() => {
+		// Fetch the data asynchronously
+		const fetchData = async () => {
+			try {
+				const data = await fetchCaseData();
+				setCases(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	
+	// Returned data to be used with other files
+	return cases;
+};
 
-useEffect(() => {
-	fetchUserData();
-	fetchCaseData();
-	fetchCpuData();
-	fetchCpuCoolerData();
-	fetchGpuData();
-	fetchMemoryData();
-	fetchMotherboardData();
-	fetchPsuData();
-	fetchStorageData();
+
+// Fetch cpu data
+export const fetchCpuData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/cpus");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use cpu data
+export const useFetchCpu = () => {
+	const [cpus, setCpus] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchCpuData();
+				setCpus(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return cpus;
+};
+
+
+// Fetch cpu cooler data
+export const fetchCpuCoolerData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/cpu_coolers");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use cpu cooler data
+export const useFetchCpuCoolers = () => {
+	const [cpuCoolers, setCpuCoolers] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchCpuCoolerData();
+				setCpuCoolers(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return cpuCoolers;
+};
+
+
+// Fetch gpu data
+export const fetchGpuData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/gpus");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use gpu data
+export const useFetchGpus = () => {
+	const [gpus, setGpus] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchGpuData();
+				setGpus(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return gpus;
+};
+
+
+// Fetch memory data
+export const fetchMemoryData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/memories");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use memory data
+export const useFetchMemories = () => {
+	const [memories, setMemories] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchMemoryData();
+				setMemories(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return memories;
+};
+
+
+// Fetch motherboard data
+export const fetchMotherboardData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/motherboards");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use motherboard data
+export const useFetchMotherboards = () => {
+	const [motherboards, setMotherboards] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchMotherboardData();
+				setMotherboards(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return motherboards;
+};
+
+
+// Fetch psu data
+export const fetchPsuData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/psus");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use psu data
+export const useFetchPsus = () => {
+	const [psus, setPsus] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchPsuData();
+				setPsus(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return psus;
+};
+
+
+// Fetch storage data
+export const fetchStorageData = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/storages");
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use storage data
+export const useFetchStorages = () => {
+	const [storages, setStorages] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchStorageData();
+				setStorages(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return storages;
+};
+
+
+// Hook to fetch all data of the components, for less cluttered code
+export const useFetchAllData = () => {
+	const [data, setData] = useState({
+		cases: [],
+		cpus: [],
+		cpuCoolers: [],
+		gpus: [],
+		memories: [],
+		motherboards: [],
+		psus: [],
+		storages: [],
+	});
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				// Fetch all data in parallel using Promise.all
+				// Each fetchXYZData() function returns a promise that resolves to the data for that component
+				const [cases, cpus, cpuCoolers, gpus, memories, motherboards, psus, storages] = await Promise.all([
+					fetchCaseData(),
+					fetchCpuData(),
+					fetchCpuCoolerData(),
+					fetchGpuData(),
+					fetchMemoryData(),
+					fetchMotherboardData(),
+					fetchPsuData(),
+					fetchStorageData(),
+				]);
+
+				setData({
+					cases,
+					cpus,
+					cpuCoolers,
+					gpus,
+					memories,
+					motherboards,
+					psus,
+					storages,
+				});
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		fetchData();
 	}, []);
 
-// Fetch user data
-const fetchUserData = () => {
-	fetch("http://localhost:4000/api/users")
-		.then((response) => response.json())
-		.then((data) => setUsers(data))
-		.catch(console.error);
-	};
+	// Return all of the data
+	return data;
+};
 
-// Fetch case data
-const fetchCaseData = () => {
-    fetch("http://localhost:4000/api/cases")
-        .then((response) => response.json())
-        .then((data) => setCases(data))
-        .catch(console.error);
-	};
 
-	
-// Fetch cpu data
-const fetchCpuData = () => {
-	fetch("http://localhost:4000/api/cpus")
-		.then((response) => response.json())
-		.then((data) => setCpus(data))
-		.catch(console.error);
+/*
+export const useFetchAllData = () => {
+	const cases = useFetchCases;
+	const cpus = useFetchCpu;
+	const cpuCoolers = useFetchCpuCoolers;
+	const gpus = useFetchGpus;
+	const memories = useFetchMemories;
+	const motherboards = useFetchMotherboards;
+	const psus = useFetchPsus;
+	const storages = useFetchStorages;
+
+	return {
+	cases,
+	cpus,
+	cpuCoolers,
+	gpus,
+	memories,
+	motherboards,
+	psus,
+	storages
 	};
+};
+*/
+
+// All of the user data handling
+// Do all of the user data handling async
+// Signin
+export const handleSignin = async (email, password, setCurrentUser) => {
+	// console.log(email, password)
 	
-// Fetch cpu_cooler data
-const fetchCpuCoolerData = () => {
-	fetch("http://localhost:4000/api/cpu_coolers")
-		.then((response) => response.json())
-		.then((data) => setCpuCoolers(data))
-		.catch(console.error);
-	};
+	// api call to the server to log in the user
+	const response = await fetch("http://localhost:4000/api/login", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		credentials: "include", // For all fetch requests, do this!
+		body: JSON.stringify({ Email: email, Password: password })
+	});
+	const data = await response.json();
+		console.log("data.userData", data.user)
 	
-// Fetch gpu data
-const fetchGpuData = () => {
-	fetch("http://localhost:4000/api/gpus")
-		.then((response) => response.json())
-		.then((data) => setGpus(data))
-		.catch(console.error);
-	};
+	// If successful, set the current user to the provided credentials and return the data
+	if (response.ok) {
+		setCurrentUser(data.user);
+		//window.location.reload();
+		return data.user;
+	} else {
+		throw new Error(data.error);
+	}
+};
+
+
+// Signup
+export const handleSignup = async (event) => {
 	
-// Fetch memory data
-const fetchMemoryData = () => {
-	fetch("http://localhost:4000/api/memories")
-		.then((response) => response.json())
-		.then((data) => setMemories(data))
-		.catch(console.error);
-	};
+	// Data from the form
+	const Name = event.target.username.value;
+    const Email = event.target.email.value;
+    const Password = event.target.password.value;
 	
-// Fetch motherboard data
-const fetchMotherboardData = () => {
-	fetch("http://localhost:4000/api/motherboards")
-		.then((response) => response.json())
-		.then((data) => setMotherboards(data))
-		.catch(console.error);
-	};
+	//console.log(Name, Email, Password)
 	
-// Fetch psu data
-const fetchPsuData = () => {
-	fetch("http://localhost:4000/api/psus")
-		.then((response) => response.json())
-		.then((data) => setPsus(data))
-		.catch(console.error);
-	};
+    if (Name && Email && Password) {
+		
+		// api call to register a new user
+      fetch("http://localhost:4000/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+		credentials: "include", // Important, because we're using cookies
+        body: JSON.stringify({ Name, Email, Password }),
+      })
+
+      .catch(console.error);
+  }
+};
+
+
+// Signout
+export const handleSignout = async (setCurrentUser) => {
 	
-// Fetch storage data
-const fetchStorageData = () => {
-	fetch("http://localhost:4000/api/storages")
-		.then((response) => response.json())
-		.then((data) => setStorages(data))
-		.catch(console.error);
-	};
+	// api call to log out the user
+	const response = await fetch("http://localhost:4000/api/logout", {
+		method: "POST",
+		credentials: "include",  // Important, because we're using cookies
+	});
+
+	const data = await response.json();
+	
+	// If successful, reload the current window
+	if (response.ok) {
+		window.location.reload();
+		return "Logged out successfully";
+	} else {
+		throw new Error(data.error);
+	}
+};
+
+
+// Signin status check
+export const checkIfSignedIn = async () => {
+	
+	// api call to get the user's profile information
+	const response = await fetch("http://localhost:4000/api/profile", {
+		method: "GET",
+		credentials: "include",  // Important, because we're using cookies
+	});
+
+	const data = await response.json();
+	//console.log(data.userData)
+	
+	// If the user is authenticated, return user data
+	if (response.ok) {
+		return data.userData;
+	} else {
+		// If authentication fails
+		// User is not signed in (invalid token or other error)
+		return null; 
+	}
 };
 
 /*
-// Async way to get a promise for fetching the data, just in case
+export const checkIfSignedIn = async () => {
+  const response = await fetch("http://localhost:4000/api/profile", {
+    method: "GET",
+    credentials: "include", // Important, because we're using cookies
+  });
 
+  const cookies = new Cookies();
+  const token = cookies.get("accessToken");
+  console.log("checkSignin", token);
 
-// Fetch cpu data
-const fetchCpuData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/cpus");
-    const data = await response.json();
-    setCpus(data);
-  } catch (error) {
-    console.error(error);
+  if (!token) {
+	  console.log("JWT token not found")
+    return null; // User is not signed in (no token)
+  }
+
+  const data = await response.json();
+  if (response.ok) {
+    return data.user; // Return user data
+  } else {
+    return null; // User is not signed in (invalid token or other error)
   }
 };
-
-// Fetch cpu_cooler data
-const fetchCpuCoolerData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/cpu_coolers");
-    const data = await response.json();
-    setCpuCoolers(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch gpu data
-const fetchGpuData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/gpus");
-    const data = await response.json();
-    setGpus(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch memory data
-const fetchMemoryData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/memorys");
-    const data = await response.json();
-    setMemories(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch motherboard data
-const fetchMotherboardData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/motherboards");
-    const data = await response.json();
-    setMotherboards(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch psu data
-const fetchPsuData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/psus");
-    const data = await response.json();
-    setPsus(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// Fetch storage data
-const fetchStorageData = async () => {
-  try {
-    const response = await fetch("http://localhost:4000/api/storages");
-    const data = await response.json();
-    setStorages(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 */
 
-export { API };
+
+
+/*
+export const handleSignin = (email, password) => {
+	return fetch("http://localhost:4000/api/signin", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ Email: email, Password: password }),
+	})
+		.then((res) => res.json())
+		.then((data) => {
+			if (data.accessToken) {
+				localStorage.setItem("accessToken", data.accessToken);
+				return true;
+			} else {
+				return false;
+			}
+		})
+		.catch((error) => {
+			console.error(error);
+			return false;
+		});
+};
+*/
+
+/*
+const handleSignin = () => {
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+
+	const handleSubmit = async () => {
+		try {
+			const res = await axios.post("http://localhost:3000/signin", { username, password });
+			const token = res.data.accessToken;
+			// Store this token in localStorage/sessionStorage
+			localStorage.setItem("token", token);
+		} catch (error) {
+			console.log("Signin failed", error);
+		}
+	};
+
+	return (
+		<div>
+			<input type="text" placeholder="Username" onChange={e => setUsername(e.target.value)} />
+			<input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
+			<button onClick={handleSubmit}>Signin</button>
+		</div>
+	);
+};
+
+export default Signin;
+*/
+
+
+export { };
