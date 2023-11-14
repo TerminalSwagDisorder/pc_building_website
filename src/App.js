@@ -14,6 +14,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
+import Profile from "./components/Profile";
+import Admin from "./components/Admin";
 import { checkIfSignedIn, useFetchAllData } from "./api";
 import { Router, Routes, Route } from "react-router-dom";
 
@@ -43,7 +45,7 @@ const App = () => {
     setCurrentUser(event);
   };
 
-//console.log("currentuser in app.js", currentUser);
+console.log("currentuser in app.js", currentUser);
 
   return (
     <div className="App">
@@ -65,6 +67,12 @@ const App = () => {
 	  	<Route path="/components" element={<Components cases={cases} cpus={cpus} cpuCoolers={cpuCoolers} gpus={gpus} memories={memories} motherboards={motherboards} psus={psus} storages={storages} currentUser={currentUser} />} />
         <Route path="/Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/admin" element={<Admin currentUser={currentUser} />} />
+	  	
+	  {currentUser && (
+        <Route path="/profile" element={<Profile currentUser={currentUser} />} />
+  		)}
+	  
       </Routes>
     <Footer />
     </div>

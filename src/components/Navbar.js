@@ -49,7 +49,7 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 	  		{/* If true do this */}
 			{currentUser ? (
 			<div className='signout'><li><button onClick={handleSignout}>Log out</button></li>
-			<li style={{color:"white"}}>Welcome <span>{currentUser.Name}</span> :)</li>
+			<li style={{color:"white"}}>Welcome <span><Link to="/profile">{currentUser.Name}</Link></span> :)</li>
 			<Stack direction="row" spacing={2}>
 				<Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
 			</Stack>

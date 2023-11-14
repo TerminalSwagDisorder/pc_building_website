@@ -94,9 +94,11 @@ api.post("/api/login", (req, res) => {
 		// Compare hashed password with password in form
 		const match = await bcrypt.compare(Password, user.Password);
 		if (match) {
+            // Check if user is an admin
+            const isAdmin = user.Admin === 1;
 			
 			// Provide an accessToken cookie
-			const accessToken = jwt.sign({ user }, jwtSecret, {
+			const accessToken = jwt.sign({ user, isAdmin }, jwtSecret, {
 				expiresIn: "1h",
 			});
 			res.cookie("accessToken", accessToken, {
@@ -128,7 +130,7 @@ const authenticateJWT = (req, res, next) => {
 			}
 			
 			// If successful, set req.user to the decoded user info
-			req.user = user.user;
+			req.user = { ...user.user, isAdmin: user.isAdmin };
 			next();
 		});
 	} else {
