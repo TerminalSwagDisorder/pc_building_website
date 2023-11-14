@@ -54,8 +54,7 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 				<Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
 			</Stack>
 			</div>
-			
-			
+
 		) : (
 			<ul>
 	  		{/* If false do this */}
@@ -63,6 +62,11 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 				<li style={{color:"white"}}><Link to="/signup">Signup</Link></li>
 			</ul>
 		)}
+
+	  {currentUser && currentUser.isAdmin && (
+        <li style={{color:"white"}}><Link to="/admin">Admin page</Link></li>
+	  	)}
+
         </ul>
     </div>
   );

@@ -67,8 +67,10 @@ console.log("currentuser in app.js", currentUser);
 	  	<Route path="/components" element={<Components cases={cases} cpus={cpus} cpuCoolers={cpuCoolers} gpus={gpus} memories={memories} motherboards={motherboards} psus={psus} storages={storages} currentUser={currentUser} />} />
         <Route path="/Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} />} />
         <Route path="/signup" element={<Signup />} />
+	  
+	  {currentUser && currentUser.isAdmin && (
         <Route path="/admin" element={<Admin currentUser={currentUser} />} />
-	  	
+	  	)}
 	  {currentUser && (
         <Route path="/profile" element={<Profile currentUser={currentUser} />} />
   		)}
