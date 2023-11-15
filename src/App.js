@@ -72,7 +72,7 @@ console.log("currentuser in app.js", currentUser);
         <Route path="/admin" element={<Admin currentUser={currentUser} />} />
 	  	)}
 	  {currentUser && (
-        <Route path="/profile" element={<Profile currentUser={currentUser} />} />
+        <Route path="/profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} />} />
   		)}
 	  
       </Routes>

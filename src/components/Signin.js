@@ -25,8 +25,9 @@ export const Signin = ({ onSubmit, setCurrentUser }) => {
 			//window.location.reload();
 			//const userData = await checkIfSignedIn();
 			//setCurrentUser(userData); 
-		} catch (event) {
-			console.log(event.message);
+		} catch (error) {
+			alert("Failed login")
+			console.log(error.message);
 		}
 	};
 	return (

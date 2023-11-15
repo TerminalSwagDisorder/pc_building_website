@@ -366,7 +366,7 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 		body: JSON.stringify({ Email: email, Password: password })
 	});
 	const data = await response.json();
-		console.log("data.userData", data.user)
+	//console.log("data.userData", data.user)
 	
 	// If successful, set the current user to the provided credentials and return the data
 	if (response.ok) {
@@ -447,7 +447,93 @@ export const checkIfSignedIn = async () => {
 	}
 };
 
+
+// User credential change
+export const handleCredentialChange = async (event) => {
+    event.preventDefault();
+
+    // Extract values from the form
+    const Name = event.target.name.value;
+    const Email = event.target.email.value;
+    const Password = event.target.password.value;
+	
+	console.log(Name)
+	console.log(Email)
+
+    try {
+        const updatedCredentials = {};
+
+        if (Name) updatedCredentials.Name = Name;
+        if (Email) updatedCredentials.Email = Email;
+        if (Password) updatedCredentials.Password = Password;
+
+        // Only proceed if at least one field is filled
+        if (Object.keys(updatedCredentials).length > 0) {
+			console.log("Proceeded")
+            const response = await fetch("http://localhost:4000/api/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(updatedCredentials)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update user credentials');
+            }
+
+            // Handle successful update
+            const responseData = await response.json();
+            console.log("User updated successfully:", responseData);
+        }
+    } catch (error) {
+        console.error("Error updating credentials:", error);
+        // Handle error
+    }
+};
+
+
+
+
+
 /*
+export const handleCredentialChange = async (event) => {
+    event.preventDefault();
+
+    // Extract values from the form
+    const Name = event.target.username.value;
+    const Email = event.target.email.value;
+    const Password = event.target.password.value;
+
+    // Construct the data object dynamically
+    const dataToUpdate = {};
+    if (Name) dataToUpdate.Name = Name;
+    if (Email) dataToUpdate.Email = Email;
+    if (Password) dataToUpdate.Password = Password;
+
+    // Only proceed if at least one field is filled
+    if (Object.keys(dataToUpdate).length > 0) {
+        try {
+            const response = await fetch("http://localhost:4000/api/users/:id", {
+                method: "PATCH", // Use PATCH for updating
+                headers: { "Content-Type": "application/json" },
+                credentials: "include", // Important, because we're using cookies
+                body: JSON.stringify(dataToUpdate),
+            });
+
+            const responseData = await response.json();
+            if (!response.ok) {
+                throw new Error(responseData.message || 'An error occurred while updating credentials');
+            }
+            // Handle success (e.g., display a success message or update state)
+        } catch (error) {
+            console.error('Error updating credentials:', error);
+            // Handle error (e.g., display an error message)
+        }
+    }
+};
+
+
+
 export const checkIfSignedIn = async () => {
   const response = await fetch("http://localhost:4000/api/profile", {
     method: "GET",

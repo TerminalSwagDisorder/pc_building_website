@@ -43,15 +43,38 @@ const userDb = new sqlite3.Database(userDbPath)
 
 // All of the users, not used in frontend
 api.get("/api/users", (req, res) => {
-  const sql = "SELECT * FROM user";
-  userDb.all(sql, [], (err, rows) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send(err);
-    } else {
-      res.send(rows);
-    }
-  });
+	const sql = "SELECT * FROM user";
+	userDb.all(sql, [], (err, rows) => {
+		if (err) {
+			console.error(err);
+			res.status(500).send(err);
+		} else {
+            // Exclude sensitive information like hashed password before sending the user data
+			const { Password, ...rowData } = rows;
+            res.status(200).send(rowData);
+			//res.send(rows);
+		}
+	});
+});
+
+// All of the users, not used in frontend
+api.get("/api/users/:id", (req, res) => {
+	const { id } = req.params; 
+  	const sql = "SELECT * FROM user WHERE ID = ?";
+  	userDb.get(sql, [id], (err, user) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ message: "Internal server error" });
+        } else if (!user) {
+            res.status(404).json({ message: "User not found" });
+        } else {
+            // Exclude sensitive information like hashed password before sending the user data
+            const { Password, ...userData } = user;
+            res.status(200).json(userData);
+			console.log(userData)
+			console.log(user)
+        }
+  	});
 });
 
 // Signing up
@@ -147,6 +170,61 @@ api.get("/api/profile", authenticateJWT, (req, res) => {
 		message: "Authenticated",
 		userData: req.user,
 	});
+});
+
+// Update user credentials
+api.patch("/api/profile", authenticateJWT, async (req, res) => {
+	console.log("server api update credentials accessed")
+    const userId = req.user.ID; // User ID from the authenticated JWT, this already makes it secure
+    const { Name, Email, Password, Profile_image } = req.body; // Updated credentials from request body
+
+    try {
+
+        let hashedPassword = null;
+        if (Password) {
+			// Hash the new password before storing it
+            hashedPassword = await bcrypt.hash(Password, 10);
+        }
+
+		// SQL query to update user data
+		// updateQuery allows for multiple fields to be updated simultaneously
+        let updateQuery = "UPDATE user SET ";
+        let queryParams = [];
+        
+        if (Name) {
+            updateQuery += "Name = ?, ";
+            queryParams.push(Name);
+        }
+        if (Email) {
+            updateQuery += "Email = ?, ";
+            queryParams.push(Email);
+        }
+        if (hashedPassword) {
+            updateQuery += "Password = ?, ";
+            queryParams.push(hashedPassword);
+        }
+        if (Profile_image) {
+            updateQuery += "Profile_image = ?, ";
+            queryParams.push(Profile_image);
+        }
+
+        // Remove trailing comma and space
+        updateQuery = updateQuery.slice(0, -2);
+        updateQuery += " WHERE ID = ?";
+        queryParams.push(userId);
+
+        userDb.run(updateQuery, queryParams, function (err) {
+            if (err) {
+                console.error(err.message);
+                res.status(500).json({ message: "Internal server error" });
+            } else {
+                res.status(200).json({ message: "User updated successfully", id: this.lastID });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 });
 
 // Logout route (Frontend will handle removing the token)
