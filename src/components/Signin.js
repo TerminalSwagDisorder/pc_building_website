@@ -22,7 +22,7 @@ export const Signin = ({ onSubmit, setCurrentUser }) => {
 			await handleSignin(email, password, setCurrentUser);
 			alert("Logged in successfully");
 			navigate("/");
-			//window.location.reload();
+			window.location.reload();
 			//const userData = await checkIfSignedIn();
 			//setCurrentUser(userData); 
 		} catch (error) {

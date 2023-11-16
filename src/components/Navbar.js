@@ -30,14 +30,14 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 				<div className="dropdown">
 					<li className="dropbtn"><Link to="/components">Components</Link></li>
 					<div className="dropdown-content">
-						<Link to="/cpu">Cpu</Link>
-						<Link to="/cases">Cases</Link>
-						<Link to="/cpuCoolers">CpuCoolers</Link>
-						<Link to="/gpus">Gpus</Link>
-						<Link to="/memories">Memories</Link>
-						<Link to="/motherboards">Motherboards</Link>
-						<Link to="/psus">Psus</Link>
-						<Link to="/storages">Storages</Link>
+						<Link to="cpu">Cpu</Link>
+						<Link to="cases">Cases</Link>
+						<Link to="cpuCoolers">CpuCoolers</Link>
+						<Link to="gpus">Gpus</Link>
+						<Link to="memories">Memories</Link>
+						<Link to="motherboards">Motherboards</Link>
+						<Link to="psus">Psus</Link>
+						<Link to="storages">Storages</Link>
 					</div>
 				</div>
 				
@@ -46,7 +46,7 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 	  		{/* If true do this */}
 			{currentUser ? (
 			<div className='signout'><li><button onClick={handleLogout}>Log out</button></li>
-			<li style={{color:"white"}}><span>Welcome<Link to="/profile">{currentUser.Name}</Link></span></li>
+			<li style={{color:"white"}}><span>Welcome<Link to="profile">{currentUser.Name}</Link></span></li>
 			<Stack direction="row" spacing={2}>
 				<Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
 			</Stack>
@@ -55,13 +55,21 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 		) : (
 			<ul>
 	  		{/* If false do this */}
-				<li style={{color:"white"}}><Link to="/signin">Not signed in</Link></li>
-				<li style={{color:"white"}}><Link to="/signup">Signup</Link></li>
+				<li style={{color:"white"}}><Link to="signin">Not signed in</Link></li>
+				<li style={{color:"white"}}><Link to="signup">Signup</Link></li>
 			</ul>
 		)}
 
 	  {currentUser && currentUser.isAdmin && (
-        <li style={{color:"white"}}><Link to="/admin">Admin page</Link></li>
+		<div className="dropdown">
+        <li className="dropbtn"><Link to="admin">Admin page</Link></li>
+		<div className="dropdown-content">
+			<Link to="admin/users">All users</Link>
+			<Link to="admin/components">All components</Link>
+		</div>
+		</div>
+
+
 	  	)}
 
         </ul>

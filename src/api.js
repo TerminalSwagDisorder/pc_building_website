@@ -394,7 +394,9 @@ export const handleSignup = async (event) => {
 		// api call to register a new user
       fetch("http://localhost:4000/api/users", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+			"Content-Type": "application/json"
+		},
 		credentials: "include", // Important, because we're using cookies
         body: JSON.stringify({ Name, Email, Password }),
       })

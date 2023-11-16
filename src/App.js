@@ -16,6 +16,9 @@ import Signin from "./components/Signin";
 import Signup from "./components/Signup";
 import Profile from "./components/Profile";
 import Admin from "./components/Admin";
+import UsersAdmin from "./components/UsersAdmin";
+import DashboardAdmin from "./components/DashboardAdmin";
+import ComponentsAdmin from "./components/ComponentsAdmin";
 import { checkIfSignedIn, useFetchAllData } from "./api";
 import { Router, Routes, Route } from "react-router-dom";
 
@@ -27,7 +30,7 @@ const App = () => {
 	
   useEffect(() => {
     // Check if the user is signed in on page load
-    const fetchUserStatus = async () => {
+    const fetchUsersAdmintatus = async () => {
       try {
         const userData = await checkIfSignedIn();
 		// Initialize currentUser with user data
@@ -38,7 +41,7 @@ const App = () => {
       }
     };
 
-    fetchUserStatus();
+    fetchUsersAdmintatus();
   }, []);
 
   const handleUserChange = (event) => {
@@ -55,24 +58,28 @@ console.log("currentuser in app.js", currentUser);
     <Navbar currentUser={currentUser} setCurrentUser={handleUserChange} />
       <Routes>
 	  	{/* For each route add the appropriate component prop */}
-        <Route path="/" element={<Home currentUser={currentUser} />} />
-        <Route path="/cpu" element={<Cpus cpus={cpus} currentUser={currentUser} />} />
-	  	<Route path="/cases" element={<Cases cases={cases} currentUser={currentUser} />} />
-	  	<Route path="/cpuCoolers" element={<CpuCoolers cpuCoolers={cpuCoolers} currentUser={currentUser} />} />
-	  	<Route path="/gpus" element={<Gpus gpus={gpus} currentUser={currentUser} />} />
-	  	<Route path="/memories" element={<Memories memories={memories} currentUser={currentUser} />} />
-	  	<Route path="/motherboards" element={<Motherboards motherboards={motherboards} currentUser={currentUser} />} />
-	  	<Route path="/psus" element={<Psus psus={psus} currentUser={currentUser} />} />
-	  	<Route path="/storages" element={<Storages storages={storages} currentUser={currentUser} />} />
-	  	<Route path="/components" element={<Components cases={cases} cpus={cpus} cpuCoolers={cpuCoolers} gpus={gpus} memories={memories} motherboards={motherboards} psus={psus} storages={storages} currentUser={currentUser} />} />
-        <Route path="/Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route index element={<Home currentUser={currentUser} />} />
+        <Route path="cpu" element={<Cpus cpus={cpus} currentUser={currentUser} />} />
+	  	<Route path="cases" element={<Cases cases={cases} currentUser={currentUser} />} />
+	  	<Route path="cpuCoolers" element={<CpuCoolers cpuCoolers={cpuCoolers} currentUser={currentUser} />} />
+	  	<Route path="gpus" element={<Gpus gpus={gpus} currentUser={currentUser} />} />
+	  	<Route path="memories" element={<Memories memories={memories} currentUser={currentUser} />} />
+	  	<Route path="motherboards" element={<Motherboards motherboards={motherboards} currentUser={currentUser} />} />
+	  	<Route path="psus" element={<Psus psus={psus} currentUser={currentUser} />} />
+	  	<Route path="storages" element={<Storages storages={storages} currentUser={currentUser} />} />
+	  	<Route path="components" element={<Components cases={cases} cpus={cpus} cpuCoolers={cpuCoolers} gpus={gpus} memories={memories} motherboards={motherboards} psus={psus} storages={storages} currentUser={currentUser} />} />
+        <Route path="Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} />} />
+        <Route path="signup" element={<Signup />} />
 	  
 	  {currentUser && currentUser.isAdmin && (
-        <Route path="/admin" element={<Admin currentUser={currentUser} />} />
+        <Route path="admin" element={<Admin currentUser={currentUser} />}>
+	  		<Route index element={<DashboardAdmin currentUser={currentUser} />} />
+	  		<Route path="users" element={<UsersAdmin currentUser={currentUser} />} />
+	  		<Route path="components" element={<ComponentsAdmin currentUser={currentUser} />} />
+	  	</Route>
 	  	)}
 	  {currentUser && (
-        <Route path="/profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} />} />
+        <Route path="profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} />} />
   		)}
 	  
       </Routes>
