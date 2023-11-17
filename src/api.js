@@ -5,6 +5,8 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import { useNavigate } from "react-router-dom";
+
 
 
 // Fetch data for all parts
@@ -371,9 +373,13 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 	// If successful, set the current user to the provided credentials and return the data
 	if (response.ok) {
 		setCurrentUser(data.user);
-		//window.location.reload();
+		alert("Logged in successfully");
 		return data.user;
+	} else if (response.status === 403) {
+		alert(data.message)	
+		throw new Error(data.error);
 	} else {
+		alert(data.message)
 		throw new Error(data.error);
 	}
 };
@@ -392,16 +398,27 @@ export const handleSignup = async (event) => {
     if (Name && Email && Password) {
 		
 		// api call to register a new user
-      fetch("http://localhost:4000/api/users", {
+      const response = await fetch("http://localhost:4000/api/users", {
         method: "POST",
         headers: { 
 			"Content-Type": "application/json"
 		},
 		credentials: "include", // Important, because we're using cookies
         body: JSON.stringify({ Name, Email, Password }),
-      })
-
-      .catch(console.error);
+      }).catch(console.error);
+		
+		if (response.ok) {
+			alert("Signed up successfully");
+		} else {
+			const data = await response.json();
+			if (response.status === 409) {
+				alert(data.message);
+				throw new Error(data.error);
+			} else {
+				alert("Failed to sign up. Please try again.");
+				throw new Error(data.error);
+			}
+		}
   }
 };
 
@@ -494,6 +511,41 @@ export const handleCredentialChange = async (event) => {
 };
 
 
+// For admin users
+// Fetch all users
+export const fetchAllUsers = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/users");
+		const data = await response.json();
+		
+		// If data is not correct format
+		if (!Array.isArray(data)) {
+		  return Object.values(data);
+		}
+		
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+// React hook to use user data
+export const useFetchAllUsers = () => {
+	const [users, setUsers] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchAllUsers();
+				setUsers(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return users;
+};
 
 
 

@@ -19,13 +19,14 @@ import Admin from "./components/Admin";
 import UsersAdmin from "./components/UsersAdmin";
 import DashboardAdmin from "./components/DashboardAdmin";
 import ComponentsAdmin from "./components/ComponentsAdmin";
-import { checkIfSignedIn, useFetchAllData } from "./api";
+import { checkIfSignedIn, useFetchAllData, useFetchAllUsers } from "./api";
 import { Router, Routes, Route } from "react-router-dom";
 
 
 const App = () => {
 	// Use useFetchAllData() to fetch all component data, allowing it to be done in just one line
 	const { cases, cpus, cpuCoolers, gpus, memories, motherboards, psus, storages } = useFetchAllData();
+	const users = useFetchAllUsers();
  	const [currentUser, setCurrentUser] = useState(null);
 	
   useEffect(() => {
@@ -74,7 +75,7 @@ console.log("currentuser in app.js", currentUser);
 	  {currentUser && currentUser.isAdmin && (
         <Route path="admin" element={<Admin currentUser={currentUser} />}>
 	  		<Route index element={<DashboardAdmin currentUser={currentUser} />} />
-	  		<Route path="users" element={<UsersAdmin currentUser={currentUser} />} />
+	  		<Route path="users" element={<UsersAdmin currentUser={currentUser} users={users}/>} />
 	  		<Route path="components" element={<ComponentsAdmin currentUser={currentUser} />} />
 	  	</Route>
 	  	)}

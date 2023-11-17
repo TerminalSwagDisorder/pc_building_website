@@ -20,13 +20,11 @@ export const Signin = ({ onSubmit, setCurrentUser }) => {
     event.preventDefault();
 		try {
 			await handleSignin(email, password, setCurrentUser);
-			alert("Logged in successfully");
 			navigate("/");
 			window.location.reload();
 			//const userData = await checkIfSignedIn();
 			//setCurrentUser(userData); 
 		} catch (error) {
-			alert("Failed login")
 			console.log(error.message);
 		}
 	};

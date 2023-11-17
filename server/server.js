@@ -51,7 +51,7 @@ api.get("/api/users", (req, res) => {
 		} else {
             // Exclude sensitive information like hashed password before sending the user data
 			const { Password, ...rowData } = rows;
-            res.status(200).send(rowData);
+            res.status(200).json(rowData);
 			//res.send(rows);
 		}
 	});
@@ -80,23 +80,42 @@ api.get("/api/users/:id", (req, res) => {
 // Signing up
 api.post("/api/users", async (req, res) => {
   const { Name, Email, Password } = req.body;
+
     try {
-        // Hash the password before storing it
-        const hashedPassword = await bcrypt.hash(Password, 10);
-        
-        const sql = "INSERT INTO user (Name, Email, Password) VALUES (?, ?, ?)";
-        userDb.run(sql, [Name, Email, hashedPassword], function (err) {
-    if (err) {
-      console.error(err);
-      res.status(500).send(err);
-    } else {
-      res.send({ id: this.lastID });
-    }
-  });
-    } catch (error) {
-        handleApiError(res, error);
-    }
-});
+    	// Check if a user with the given email already exists
+    	const emailCheckSql = "SELECT Email FROM user WHERE Email = ?";
+    	userDb.get(emailCheckSql, [Email], async (err, row) => {
+    			if (err) {
+    				console.error(err);
+    				return res.status(500).json({message: "Error checking users email"});
+    			}
+    			if (row) {
+    				return res.status(409).json({message: "Email already in use"});
+    			}
+
+    			try {
+    				// Hash the password before storing it
+    				const hashedPassword = await bcrypt.hash(Password, 10);
+
+    				const sql = "INSERT INTO user (Name, Email, Password) VALUES (?, ?, ?)";
+    				userDb.run(sql, [Name, Email, hashedPassword], function (err) {
+    					if (err) {
+    						console.error(err);
+    						res.status(500).send(err);
+    					} else {
+    						res.send({id: this.lastID});
+    					}
+    				});
+    			} catch (error) {
+    				console.error(error);
+    				res.status(500).json({message: "Internal server error while registering new user"});
+    		}
+    	});
+	} catch (error) {
+    		console.error(error);
+    		res.status(500).json({message: "Internal server error"});
+		}
+    });
 
 // Login route
 api.post("/api/login", (req, res) => {
@@ -119,9 +138,13 @@ api.post("/api/login", (req, res) => {
 		if (match) {
             // Check if user is an admin
             const isAdmin = user.Admin === 1;
+            const isBanned = user.Banned === 1;
+			if (user.Banned) {
+				return res.status(403).json({ message: "User is banned" });
+			}
 			
 			// Provide an accessToken cookie
-			const accessToken = jwt.sign({ user, isAdmin }, jwtSecret, {
+			const accessToken = jwt.sign({ user, isAdmin, isBanned }, jwtSecret, {
 				expiresIn: "1h",
 			});
 			res.cookie("accessToken", accessToken, {
@@ -153,7 +176,7 @@ const authenticateJWT = (req, res, next) => {
 			}
 			
 			// If successful, set req.user to the decoded user info
-			req.user = { ...user.user, isAdmin: user.isAdmin };
+			req.user = { ...user.user, isAdmin: user.isAdmin, isBanned: user.isBanned };
 			next();
 		});
 	} else {
@@ -172,9 +195,9 @@ api.get("/api/profile", authenticateJWT, (req, res) => {
 	});
 });
 
-// Update user credentials
+// Update own user credentials
 api.patch("/api/profile", authenticateJWT, async (req, res) => {
-	console.log("server api update credentials accessed")
+	console.log("server api update own credentials accessed")
     const userId = req.user.ID; // User ID from the authenticated JWT, this already makes it secure
     const { Name, Email, Password, Profile_image } = req.body; // Updated credentials from request body
 
@@ -226,6 +249,77 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+// For admins
+// Update user credentials
+
+// Update user credentials
+api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
+	console.log("server api admin update credentials accessed")
+    const { id } = req.params; // User ID from the url
+    const { Name, Email, Password, Profile_image, Admin, Banned } = req.body; // Updated credentials from request body
+
+    try {
+		// Only admins are allowed to update through this
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        let hashedPassword = null;
+        if (Password) {
+			// Hash the new password before storing it
+            hashedPassword = await bcrypt.hash(Password, 10);
+        }
+
+		// SQL query to update user data
+		// updateQuery allows for multiple fields to be updated simultaneously
+        let updateQuery = "UPDATE user SET ";
+        let queryParams = [];
+        
+        if (Name) {
+            updateQuery += "Name = ?, ";
+            queryParams.push(Name);
+        }
+        if (Email) {
+            updateQuery += "Email = ?, ";
+            queryParams.push(Email);
+        }
+        if (hashedPassword) {
+            updateQuery += "Password = ?, ";
+            queryParams.push(hashedPassword);
+        }
+        if (Profile_image) {
+            updateQuery += "Profile_image = ?, ";
+            queryParams.push(Profile_image);
+        }
+		if (Admin) {
+            updateQuery += "Admin = ?, ";
+            queryParams.push(Admin);
+        }
+		if (Banned) {
+            updateQuery += "Banned = ?, ";
+            queryParams.push(Banned);
+        }
+
+        // Remove trailing comma and space
+        updateQuery = updateQuery.slice(0, -2);
+        updateQuery += " WHERE ID = ?";
+        queryParams.push(id);
+
+        userDb.run(updateQuery, queryParams, function (err) {
+            if (err) {
+                console.error(err.message);
+                res.status(500).json({ message: "Internal server error" });
+            } else {
+                res.status(200).json({ message: "User updated successfully", id: this.lastID });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 
 // Logout route (Frontend will handle removing the token)
 api.post("/api/logout", (req, res) => {
