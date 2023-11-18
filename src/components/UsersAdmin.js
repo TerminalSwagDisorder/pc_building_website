@@ -11,6 +11,9 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
 	const [isBannedChecked, setIsBannedChecked] = useState(0);
 
 	useEffect(() => {
+		if (!selectedUser && users.length > 0) {
+			setSelectedUser(users[0])
+		}
 		if (selectedUser) {
             setIsAdminChecked(selectedUser.isAdmin ? 1 : 0);
             setIsBannedChecked(selectedUser.isBanned ? 1 : 0);
@@ -79,7 +82,7 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
 		}
 
 		try {
-			await handleCredentialChangeAdmin(event); // Assumes this function handles the event correctly
+			await handleCredentialChangeAdmin(event, newAdmin, initialAdmin, newBanned, initialBanned); // Assumes this function handles the event correctly
 		} catch (error) {
 			console.error('Error updating credentials:', error);
 			alert('Error updating credentials.');

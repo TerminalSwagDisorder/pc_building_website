@@ -557,7 +557,7 @@ export const useFetchAllUsers = () => {
 
 
 // User credential change for admins
-export const handleCredentialChangeAdmin = async (event) => {
+export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin, newBanned, initialBanned) => {
     event.preventDefault();
 
     // Extract values from the form
@@ -571,7 +571,6 @@ export const handleCredentialChangeAdmin = async (event) => {
 	
 	console.log(ID, Name, Email, Password, Profile_image, Admin, Banned)
 	console.log(Email)
-
     try {
         const updatedCredentials = {};
 		updatedCredentials.ID = ID
@@ -579,8 +578,14 @@ export const handleCredentialChangeAdmin = async (event) => {
         if (Email) updatedCredentials.Email = Email;
         if (Password) updatedCredentials.Password = Password;
         if (Profile_image) updatedCredentials.Profile_image = Profile_image;
-        if (Admin != undefined) updatedCredentials.Admin = Admin ? "1" : "0";
-        if (Banned != undefined) updatedCredentials.Banned = Banned ? "1" : "0";
+        if (newAdmin !== initialAdmin) updatedCredentials.Admin = Admin ? "1" : "0";
+        if (newBanned !== initialBanned) updatedCredentials.Banned = Banned ? "1" : "0";
+		
+		// Also works
+		// if (String(Admin)) updatedCredentials.Admin = Admin ? "1" : "0";
+        // if (String(Banned)) updatedCredentials.Banned = Banned ? "1" : "0";		
+		// if (Admin != undefined) updatedCredentials.Admin = Admin ? "1" : "0";
+        // if (Banned != undefined) updatedCredentials.Banned = Banned ? "1" : "0";
 		
 		console.log(updatedCredentials)
 
