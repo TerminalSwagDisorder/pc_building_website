@@ -26,7 +26,7 @@ api.use(express.json());
 
 // Cors options to allow the use of user cookies
 const corsOptions = {
-	origin: 'http://localhost:3000',  // replace with your application's origin
+	origin: "http://localhost:3000",  // replace with your application's origin
 	credentials: true  // allows the Access-Control-Allow-Credentials: true header
 };
 
@@ -43,21 +43,29 @@ const userDb = new sqlite3.Database(userDbPath)
 
 // All of the users, not used in frontend
 api.get("/api/users", (req, res) => {
-	const sql = "SELECT * FROM user";
-	userDb.all(sql, [], (err, rows) => {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-            // Exclude sensitive information like hashed password before sending the user data
-			const { Password, ...rowData } = rows;
-            res.status(200).json(rowData);
-			//res.send(rows);
-		}
-	});
+    const sql = "SELECT * FROM user";
+    userDb.all(sql, [], (err, users) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send(err);
+        } else {
+            // Process each user to add isAdmin and isBanned properties
+            const processedUsers = users.map(user => {
+                const isAdmin = user.Admin === 1;
+                const isBanned = user.Banned === 1;
+                // Exclude sensitive information like hashed password
+                const { Password, ...userData } = user;
+                return { ...userData, isAdmin, isBanned };
+            });
+
+            res.status(200).json(processedUsers);
+        }
+    });
 });
 
-// All of the users, not used in frontend
+
+
+// Show single user
 api.get("/api/users/:id", (req, res) => {
 	const { id } = req.params; 
   	const sql = "SELECT * FROM user WHERE ID = ?";
@@ -68,11 +76,12 @@ api.get("/api/users/:id", (req, res) => {
         } else if (!user) {
             res.status(404).json({ message: "User not found" });
         } else {
+            const isAdmin = user.Admin === 1;
+            const isBanned = user.Banned === 1;
             // Exclude sensitive information like hashed password before sending the user data
             const { Password, ...userData } = user;
-            res.status(200).json(userData);
+            res.status(200).json( {userData: { ...userData, isAdmin: isAdmin, isBanned: isBanned }});
 			console.log(userData)
-			console.log(user)
         }
   	});
 });
@@ -257,7 +266,8 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
 api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
 	console.log("server api admin update credentials accessed")
     const { id } = req.params; // User ID from the url
-    const { Name, Email, Password, Profile_image, Admin, Banned } = req.body; // Updated credentials from request body
+    const { ID, Name, Email, Password, Profile_image, Admin, Banned } = req.body; // Updated credentials from request body
+	// console.log("Server data: ", { ID, Name, Email, Password, Profile_image, Admin, Banned })
 
     try {
 		// Only admins are allowed to update through this
@@ -302,10 +312,14 @@ api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
         }
 
         // Remove trailing comma and space
-        updateQuery = updateQuery.slice(0, -2);
+		if (queryParams.length > 0 ) {
+			updateQuery = updateQuery.slice(0, -2);
+		}
         updateQuery += " WHERE ID = ?";
         queryParams.push(id);
 
+		// console.log("queryParams: ", queryParams)
+		// console.log("updateQuery: ", updateQuery)
         userDb.run(updateQuery, queryParams, function (err) {
             if (err) {
                 console.error(err.message);

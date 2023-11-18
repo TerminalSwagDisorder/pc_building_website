@@ -496,13 +496,21 @@ export const handleCredentialChange = async (event) => {
                 body: JSON.stringify(updatedCredentials)
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to update user credentials');
-            }
-
-            // Handle successful update
-            const responseData = await response.json();
-            console.log("User updated successfully:", responseData);
+            // Handle update
+			if (response.ok) {
+				const responseData = await response.json();
+				console.log("User updated successfully:", responseData);
+				alert("Successfully changed the users credentials!");
+				window.location.reload();
+			} else {
+				if (response.status === 500) {
+				const data = await response.json();
+				alert(data.message);
+				throw new Error(data.error);
+			} else {
+                throw new Error("Failed to update user credentials");
+				}
+			}
         }
     } catch (error) {
         console.error("Error updating credentials:", error);
@@ -547,6 +555,66 @@ export const useFetchAllUsers = () => {
 	return users;
 };
 
+
+// User credential change for admins
+export const handleCredentialChangeAdmin = async (event) => {
+    event.preventDefault();
+
+    // Extract values from the form
+    const ID = event.target.id.value;
+    const Name = event.target.name.value;
+    const Email = event.target.email.value;
+    const Password = event.target.password.value;
+    const Profile_image = event.target.profile_image.value;
+    const Admin = event.target.admin.checked;
+    const Banned = event.target.banned.checked;
+	
+	console.log(ID, Name, Email, Password, Profile_image, Admin, Banned)
+	console.log(Email)
+
+    try {
+        const updatedCredentials = {};
+		updatedCredentials.ID = ID
+        if (Name) updatedCredentials.Name = Name;
+        if (Email) updatedCredentials.Email = Email;
+        if (Password) updatedCredentials.Password = Password;
+        if (Profile_image) updatedCredentials.Profile_image = Profile_image;
+        if (Admin != undefined) updatedCredentials.Admin = Admin ? "1" : "0";
+        if (Banned != undefined) updatedCredentials.Banned = Banned ? "1" : "0";
+		
+		console.log(updatedCredentials)
+
+        // Only proceed if at least one field is filled
+        if (Object.keys(updatedCredentials).length > 0) {
+            const response = await fetch(`http://localhost:4000/api/users/${ID}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(updatedCredentials)
+            });
+
+            // Handle update
+			if (response.ok) {
+				const responseData = await response.json();
+				console.log("User updated successfully:", responseData);
+				alert("Successfully changed the users credentials!");
+				window.location.reload();
+
+			} else {
+				if (response.status === 500) {
+				const data = await response.json();
+				alert(data.message);
+				throw new Error(data.error);
+			} else {
+                throw new Error("Failed to update user credentials");
+				}
+			}
+        }
+    } catch (error) {
+        console.error("Error updating credentials:", error);
+        // Handle error
+    }
+};
 
 
 /*

@@ -19,7 +19,7 @@ import Admin from "./components/Admin";
 import UsersAdmin from "./components/UsersAdmin";
 import DashboardAdmin from "./components/DashboardAdmin";
 import ComponentsAdmin from "./components/ComponentsAdmin";
-import { checkIfSignedIn, useFetchAllData, useFetchAllUsers } from "./api";
+import { checkIfSignedIn, useFetchAllData, useFetchAllUsers, handleCredentialChangeAdmin } from "./api";
 import { Router, Routes, Route } from "react-router-dom";
 
 
@@ -75,7 +75,7 @@ console.log("currentuser in app.js", currentUser);
 	  {currentUser && currentUser.isAdmin && (
         <Route path="admin" element={<Admin currentUser={currentUser} />}>
 	  		<Route index element={<DashboardAdmin currentUser={currentUser} />} />
-	  		<Route path="users" element={<UsersAdmin currentUser={currentUser} users={users}/>} />
+	  		<Route path="users" element={<UsersAdmin currentUser={currentUser} users={users} handleCredentialChangeAdmin={handleCredentialChangeAdmin} />} />
 	  		<Route path="components" element={<ComponentsAdmin currentUser={currentUser} />} />
 	  	</Route>
 	  	)}
