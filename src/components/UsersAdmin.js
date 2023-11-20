@@ -11,14 +11,18 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
 	const [isBannedChecked, setIsBannedChecked] = useState(0);
 
 	useEffect(() => {
-		if (!selectedUser && users.length > 0) {
-			setSelectedUser(users[0])
-		}
+		//if (!selectedUser && users.length > 0) {
+		//	setSelectedUser(users[0])
+		//}
 		if (selectedUser) {
             setIsAdminChecked(selectedUser.isAdmin ? 1 : 0);
             setIsBannedChecked(selectedUser.isBanned ? 1 : 0);
 		}
 	}, [selectedUser]);
+
+	const closeForm = () => {
+		setSelectedUser(null)
+	}
 
 	console.log("Amount of users: ", users.length)
 
@@ -96,7 +100,8 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
 	  <div><button onClick={() => handleSelectUser(users[0])}>Change user credentials</button></div>
 	  {selectedUser ? (
 	  <div id="userform">
-	  	<form onSubmit={handleSubmit}>
+	  	<form onSubmit={handleSubmit} className="adminForm">
+			<div><button className="closeForm" onClick={() => closeForm()}>x</button></div>
 	  	<div>
 	  	 <input type="number" id="id" name="id" value={selectedUser.ID} onChange={handleInputChange} min={users[0].ID} max={users[users.length - 1].ID}/>
 	  	</div>

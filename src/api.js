@@ -35,7 +35,7 @@ export const useFetchCases = () => {
 // Fetch case data
 export const fetchCaseData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/cases");
+		const response = await fetch("http://localhost:4000/api/chassis");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -327,6 +327,79 @@ export const useFetchAllData = () => {
 	return data;
 };
 
+// All funtions for adding components
+export const handleAddComponentsAdmin = async (event, type, formFields) => {
+
+	const Url = event.target.Url.value;
+	const Price = event.target.Price.value;
+	const Name = event.target.Name.value;
+	const Manufacturer = event.target.Manufacturer.value;
+
+	try {
+		const response = await fetch(`http://localhost:4000/api/${type}`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: "include", // For all fetch requests, do this!
+			body: JSON.stringify(formFields),
+		});
+		if (response.ok) {
+			alert("Added component successfully");
+		} else {
+			const data = await response.json();
+			if (response.status === 500) {
+				alert(data.message);
+				throw new Error(data.error);
+			} else {
+				alert("Failed to add component. Please try again.");
+				throw new Error(data.error);
+			}
+		}
+	} catch (error) {
+		console.error("Error adding component:", error);
+		// Handle error
+	}
+};
+/*
+export const handleSignup = async (event) => {
+	
+	// Data from the form
+	const Name = event.target.username.value;
+    const Email = event.target.email.value;
+    const Password = event.target.password.value;
+	
+	//console.log(Name, Email, Password)
+	
+    if (Name && Email && Password) {
+		
+		// api call to register a new user
+      const response = await fetch("http://localhost:4000/api/users", {
+        method: "POST",
+        headers: { 
+			"Content-Type": "application/json"
+		},
+		credentials: "include", // Important, because we're using cookies
+        body: JSON.stringify({ Name, Email, Password }),
+      }).catch(console.error);
+		
+		if (response.ok) {
+			alert("Signed up successfully");
+		} else {
+			const data = await response.json();
+			if (response.status === 409) {
+				alert(data.message);
+				throw new Error(data.error);
+			} else {
+				alert("Failed to sign up. Please try again.");
+				throw new Error(data.error);
+			}
+		}
+  }
+};
+*/
+
+// Add a webcrawler to jimms
 
 /*
 export const useFetchAllData = () => {

@@ -344,7 +344,7 @@ api.post("/api/logout", (req, res) => {
 
 
 // Get all of the component data from the db, do this for all components
-api.get("/api/cases", (req, res) => {
+api.get("/api/chassis", (req, res) => {
 	const sql = "SELECT * FROM chassis";
 	db.all(sql, [], (err, rows) => {
 		if (err) {
@@ -357,7 +357,7 @@ api.get("/api/cases", (req, res) => {
 });
 
 // Provide posting to the db for all components, in case it it implemented
-api.post("/api/cases", (req, res) => {
+api.post("/api/chassis", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility } = req.body;
 	const sql = "INSERT INTO chassis (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -388,9 +388,14 @@ api.get("/api/cpus", (req, res) => {
 	});
 });
 
-api.post("/api/cpus", (req, res) => {
+api.post("/api/cpus", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU } = req.body;
 	const sql = "INSERT INTO cpu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	if (!req.user.isAdmin) {
+		return res.status(403).json({ message: "Unauthorized" });
+	}
+	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU], function (err) {
 		if (err) {
 			console.error(err);
@@ -414,9 +419,14 @@ api.get("/api/cpu_coolers", (req, res) => {
 	});
 });
 
-api.post("/api/cpu_coolers", (req, res) => {
+api.post("/api/cpu_coolers", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions } = req.body;
 	const sql = "INSERT INTO cpu_cooler (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	if (!req.user.isAdmin) {
+		return res.status(403).json({ message: "Unauthorized" });
+	}
+	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions], function (err) {
 		if (err) {
 			console.error(err);
@@ -440,9 +450,14 @@ api.get("/api/gpus", (req, res) => {
 	});
 });
 
-api.post("/api/gpus", (req, res) => {
+api.post("/api/gpus", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP } = req.body;
 	const sql = "INSERT INTO gpu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	if (!req.user.isAdmin) {
+		return res.status(403).json({ message: "Unauthorized" });
+	}	
+	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP], function (err) {
 		if (err) {
 			console.error(err);
@@ -466,9 +481,14 @@ api.get("/api/memories", (req, res) => {
 	});
 });
 
-api.post("/api/memories", (req, res) => {
+api.post("/api/memories", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency } = req.body;
 	const sql = "INSERT INTO memory (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	if (!req.user.isAdmin) {
+		return res.status(403).json({ message: "Unauthorized" });
+	}
+	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency], function (err) {
 		if (err) {
 			console.error(err);
@@ -492,9 +512,14 @@ api.get("/api/motherboards", (req, res) => {
 	});
 });
 
-api.post("/api/motherboards", (req, res) => {
+api.post("/api/motherboards", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility } = req.body;
 	const sql = "INSERT INTO motherboard (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	if (!req.user.isAdmin) {
+		return res.status(403).json({ message: "Unauthorized" });
+	}	
+	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility], function (err) {
 		if (err) {
 			console.error(err);
@@ -518,9 +543,14 @@ api.get("/api/psus", (req, res) => {
 	});
 });
 
-api.post("/api/psus", (req, res) => {
+api.post("/api/psus", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions } = req.body;
 	const sql = "INSERT INTO psu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	if (!req.user.isAdmin) {
+		return res.status(403).json({ message: "Unauthorized" });
+	}
+	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions], function (err) {
 		if (err) {
 			console.error(err);
@@ -544,9 +574,14 @@ api.get("/api/storages", (req, res) => {
 	});
 });
 
-api.post("/api/storages", (req, res) => {
+api.post("/api/storages", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW } = req.body;
 	const sql = "INSERT INTO storage (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	if (!req.user.isAdmin) {
+		return res.status(403).json({ message: "Unauthorized" });
+	}
+	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW], function (err) {
 		if (err) {
 			console.error(err);
