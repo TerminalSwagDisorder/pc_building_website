@@ -69,7 +69,7 @@ export const useFetchCases = () => {
 // Fetch cpu data
 export const fetchCpuData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/cpus");
+		const response = await fetch("http://localhost:4000/api/cpu");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -99,7 +99,7 @@ export const useFetchCpu = () => {
 // Fetch cpu cooler data
 export const fetchCpuCoolerData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/cpu_coolers");
+		const response = await fetch("http://localhost:4000/api/cpu_cooler");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -129,7 +129,7 @@ export const useFetchCpuCoolers = () => {
 // Fetch gpu data
 export const fetchGpuData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/gpus");
+		const response = await fetch("http://localhost:4000/api/gpu");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -159,7 +159,7 @@ export const useFetchGpus = () => {
 // Fetch memory data
 export const fetchMemoryData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/memories");
+		const response = await fetch("http://localhost:4000/api/memory");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -189,7 +189,7 @@ export const useFetchMemories = () => {
 // Fetch motherboard data
 export const fetchMotherboardData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/motherboards");
+		const response = await fetch("http://localhost:4000/api/motherboard");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -219,7 +219,7 @@ export const useFetchMotherboards = () => {
 // Fetch psu data
 export const fetchPsuData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/psus");
+		const response = await fetch("http://localhost:4000/api/psu");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -249,7 +249,7 @@ export const useFetchPsus = () => {
 // Fetch storage data
 export const fetchStorageData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/storages");
+		const response = await fetch("http://localhost:4000/api/storage");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -348,7 +348,7 @@ export const handleAddComponentsAdmin = async (event, type, formFields) => {
 			alert("Added component successfully");
 		} else {
 			const data = await response.json();
-			if (response.status === 500) {
+			if (response.status === 409) {
 				alert(data.message);
 				throw new Error(data.error);
 			} else {
@@ -361,6 +361,11 @@ export const handleAddComponentsAdmin = async (event, type, formFields) => {
 		// Handle error
 	}
 };
+
+export const handleModifyComponentsAdmin = async (event, type, formFields) => {
+	// Add ability to update an existing component
+};
+
 /*
 export const handleSignup = async (event) => {
 	
@@ -398,8 +403,6 @@ export const handleSignup = async (event) => {
   }
 };
 */
-
-// Add a webcrawler to jimms
 
 /*
 export const useFetchAllData = () => {

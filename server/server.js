@@ -343,9 +343,10 @@ api.post("/api/logout", (req, res) => {
 });
 
 
-// Get all of the component data from the db, do this for all components
-api.get("/api/chassis", (req, res) => {
-	const sql = "SELECT * FROM chassis";
+// Get all of the component data from the db
+api.get("/api/:component", (req, res) => {
+	let { component } = req.params;
+	const sql = `SELECT * FROM ${component}`;
 	db.all(sql, [], (err, rows) => {
 		if (err) {
 			console.error(err);
@@ -356,242 +357,246 @@ api.get("/api/chassis", (req, res) => {
 	});
 });
 
-// Provide posting to the db for all components, in case it it implemented
+// Provide posting to the db for all components, do not make these dynamic as its a big security risk
 api.post("/api/chassis", authenticateJWT, (req, res) => {
-	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility } = req.body;
-	const sql = "INSERT INTO chassis (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility } = req.body;
+    
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Unauthorized" });
+    }
 
-	if (!req.user.isAdmin) {
-		return res.status(403).json({ message: "Unauthorized" });
-	}
+    // Check if an item with the same ID or Name already exists
+    const checkSql = "SELECT * FROM chassis WHERE Url = ?";
+    db.get(checkSql, [Url], (checkErr, row) => {
+        if (checkErr) {
+            console.error(checkErr);
+            return res.status(500).json({ message: "Internal server error" });
+        }
 
-	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility], function (err) {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json({ id: this.lastID });
-		}
-	});
+        if (row) {
+            return res.status(409).json({ message: "Item already exists" });
+        }
+
+        const sql = "INSERT INTO chassis (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility], function (err) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Failed to insert item" });
+            }
+            res.status(200).json({ id: this.lastID });
+        });
+    });
 });
 
+api.post("/api/cpu", authenticateJWT, (req, res) => {
+    const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU } = req.body;
+    
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Unauthorized" });
+    }
 
-api.get("/api/cpus", (req, res) => {
-	const sql = "SELECT * FROM cpu";
-	db.all(sql, [], (err, rows) => {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json(rows);
-		}
-	});
+    // Check if an item with the same ID or Name already exists
+    const checkSql = "SELECT * FROM cpu WHERE Url = ?";
+    db.get(checkSql, [Url], (checkErr, row) => {
+        if (checkErr) {
+            console.error(checkErr);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        if (row) {
+            return res.status(409).json({ message: "Item already exists" });
+        }
+
+		const sql = "INSERT INTO cpu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU], function (err) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Failed to insert item" });
+            }
+            res.status(200).json({ id: this.lastID });
+        });
+    });
 });
 
-api.post("/api/cpus", authenticateJWT, (req, res) => {
-	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU } = req.body;
-	const sql = "INSERT INTO cpu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	
-	if (!req.user.isAdmin) {
-		return res.status(403).json({ message: "Unauthorized" });
-	}
-	
-	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU], function (err) {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json({ id: this.lastID });
-		}
-	});
-});
-
-
-api.get("/api/cpu_coolers", (req, res) => {
-	const sql = "SELECT * FROM cpu_cooler";
-	db.all(sql, [], (err, rows) => {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json(rows);
-		}
-	});
-});
-
-api.post("/api/cpu_coolers", authenticateJWT, (req, res) => {
+api.post("/api/cpu_cooler", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions } = req.body;
+    
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Check if an item with the same ID or Name already exists
+    const checkSql = "SELECT * FROM cpu_cooler WHERE Url = ?";
+    db.get(checkSql, [Url], (checkErr, row) => {
+        if (checkErr) {
+            console.error(checkErr);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        if (row) {
+            return res.status(409).json({ message: "Item already exists" });
+        }
+
 	const sql = "INSERT INTO cpu_cooler (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	
-	if (!req.user.isAdmin) {
-		return res.status(403).json({ message: "Unauthorized" });
-	}
-	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions], function (err) {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json({ id: this.lastID });
-		}
-	});
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Failed to insert item" });
+            }
+            res.status(200).json({ id: this.lastID });
+        });
+    });
 });
 
-
-api.get("/api/gpus", (req, res) => {
-	const sql = "SELECT * FROM gpu";
-	db.all(sql, [], (err, rows) => {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json(rows);
-		}
-	});
-});
-
-api.post("/api/gpus", authenticateJWT, (req, res) => {
+api.post("/api/gpu", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP } = req.body;
+    
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Check if an item with the same ID or Name already exists
+    const checkSql = "SELECT * FROM gpu WHERE Url = ?";
+    db.get(checkSql, [Url], (checkErr, row) => {
+        if (checkErr) {
+            console.error(checkErr);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        if (row) {
+            return res.status(409).json({ message: "Item already exists" });
+        }
+
 	const sql = "INSERT INTO gpu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	
-	if (!req.user.isAdmin) {
-		return res.status(403).json({ message: "Unauthorized" });
-	}	
-	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP], function (err) {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json({ id: this.lastID });
-		}
-	});
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Failed to insert item" });
+            }
+            res.status(200).json({ id: this.lastID });
+        });
+    });
 });
 
-
-api.get("/api/memories", (req, res) => {
-	const sql = "SELECT * FROM memory";
-	db.all(sql, [], (err, rows) => {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json(rows);
-		}
-	});
-});
-
-api.post("/api/memories", authenticateJWT, (req, res) => {
+api.post("/api/memory", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency } = req.body;
+    
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Check if an item with the same ID or Name already exists
+    const checkSql = "SELECT * FROM memory WHERE Url = ?";
+    db.get(checkSql, [Url], (checkErr, row) => {
+        if (checkErr) {
+            console.error(checkErr);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        if (row) {
+            return res.status(409).json({ message: "Item already exists" });
+        }
+
 	const sql = "INSERT INTO memory (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	
-	if (!req.user.isAdmin) {
-		return res.status(403).json({ message: "Unauthorized" });
-	}
-	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency], function (err) {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json({ id: this.lastID });
-		}
-	});
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Failed to insert item" });
+            }
+            res.status(200).json({ id: this.lastID });
+        });
+    });
 });
 
-
-api.get("/api/motherboards", (req, res) => {
-	const sql = "SELECT * FROM motherboard";
-	db.all(sql, [], (err, rows) => {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json(rows);
-		}
-	});
-});
-
-api.post("/api/motherboards", authenticateJWT, (req, res) => {
+api.post("/api/motherboard", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility } = req.body;
+    
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Check if an item with the same ID or Name already exists
+    const checkSql = "SELECT * FROM motherboard WHERE Url = ?";
+    db.get(checkSql, [Url], (checkErr, row) => {
+        if (checkErr) {
+            console.error(checkErr);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        if (row) {
+            return res.status(409).json({ message: "Item already exists" });
+        }
+
 	const sql = "INSERT INTO motherboard (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	
-	if (!req.user.isAdmin) {
-		return res.status(403).json({ message: "Unauthorized" });
-	}	
-	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility], function (err) {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json({ id: this.lastID });
-		}
-	});
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Failed to insert item" });
+            }
+            res.status(200).json({ id: this.lastID });
+        });
+    });
 });
 
-
-api.get("/api/psus", (req, res) => {
-	const sql = "SELECT * FROM psu";
-	db.all(sql, [], (err, rows) => {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json(rows);
-		}
-	});
-});
-
-api.post("/api/psus", authenticateJWT, (req, res) => {
+api.post("/api/psu", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions } = req.body;
+    
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Check if an item with the same ID or Name already exists
+    const checkSql = "SELECT * FROM psu WHERE Url = ?";
+    db.get(checkSql, [Url], (checkErr, row) => {
+        if (checkErr) {
+            console.error(checkErr);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        if (row) {
+            return res.status(409).json({ message: "Item already exists" });
+        }
+
 	const sql = "INSERT INTO psu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	
-	if (!req.user.isAdmin) {
-		return res.status(403).json({ message: "Unauthorized" });
-	}
-	
 	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions], function (err) {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json({ id: this.lastID });
-		}
-	});
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Failed to insert item" });
+            }
+            res.status(200).json({ id: this.lastID });
+        });
+    });
 });
 
-
-api.get("/api/storages", (req, res) => {
-	const sql = "SELECT * FROM storage";
-	db.all(sql, [], (err, rows) => {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json(rows);
-		}
-	});
-});
-
-api.post("/api/storages", authenticateJWT, (req, res) => {
+api.post("/api/storage", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW } = req.body;
-	const sql = "INSERT INTO storage (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	
-	if (!req.user.isAdmin) {
-		return res.status(403).json({ message: "Unauthorized" });
-	}
-	
-	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW], function (err) {
-		if (err) {
-			console.error(err);
-			res.status(500).send(err);
-		} else {
-			res.status(200).json({ id: this.lastID });
-		}
-	});
-});
+    
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ message: "Unauthorized" });
+    }
 
+    // Check if an item with the same ID or Name already exists
+    const checkSql = "SELECT * FROM storage WHERE Url = ?";
+    db.get(checkSql, [Url], (checkErr, row) => {
+        if (checkErr) {
+            console.error(checkErr);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        if (row) {
+            return res.status(409).json({ message: "Item already exists" });
+        }
+
+	const sql = "INSERT INTO storage (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW], function (err) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Failed to insert item" });
+            }
+            res.status(200).json({ id: this.lastID });
+        });
+    });
+});
 
 api.listen(port, () => {
 	console.log(`Server listening at http://localhost:${port}`);
