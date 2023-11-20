@@ -348,12 +348,11 @@ export const handleAddComponentsAdmin = async (event, type, formFields) => {
 			alert("Added component successfully");
 		} else {
 			const data = await response.json();
-			if (response.status === 409) {
-				alert(data.message);
+			if (data.message) {
+				alert(`HTTP error ${response.status}: ${data.message}`)
 				throw new Error(data.error);
 			} else {
 				alert("Failed to add component. Please try again.");
-				throw new Error(data.error);
 			}
 		}
 	} catch (error) {
@@ -579,12 +578,12 @@ export const handleCredentialChange = async (event) => {
 				alert("Successfully changed the users credentials!");
 				window.location.reload();
 			} else {
-				if (response.status === 500) {
 				const data = await response.json();
-				alert(data.message);
-				throw new Error(data.error);
-			} else {
-                throw new Error("Failed to update user credentials");
+				if (data.message) {
+					alert(`HTTP error ${response.status}: ${data.message}`)
+					throw new Error(data.error);
+				} else {
+					alert("Failed to add component. Please try again.");
 				}
 			}
         }
@@ -682,14 +681,14 @@ export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin,
 				window.location.reload();
 
 			} else {
-				if (response.status === 500) {
 				const data = await response.json();
-				alert(data.message);
-				throw new Error(data.error);
-			} else {
-                throw new Error("Failed to update user credentials");
+				if (data.message) {
+					alert(`HTTP error ${response.status}: ${data.message}`)
+					throw new Error(data.error);
+				} else {
+					alert("Failed to add component. Please try again.");
 				}
-			}
+				}
         }
     } catch (error) {
         console.error("Error updating credentials:", error);

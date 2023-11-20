@@ -360,10 +360,18 @@ api.get("/api/:component", (req, res) => {
 // Provide posting to the db for all components, do not make these dynamic as its a big security risk
 api.post("/api/chassis", authenticateJWT, (req, res) => {
     const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility } = req.body;
+	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
     
     if (!req.user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized" });
     }
+	
+	if (!Url || !Price || !Name || !Manufacturer) {
+		return res.status(400).json({ message: "Missing required fields" });
+	}
+	if (!regEx.test(Url)) {
+		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+	}
 
     // Check if an item with the same ID or Name already exists
     const checkSql = "SELECT * FROM chassis WHERE Url = ?";
@@ -391,9 +399,18 @@ api.post("/api/chassis", authenticateJWT, (req, res) => {
 api.post("/api/cpu", authenticateJWT, (req, res) => {
     const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU } = req.body;
     
+	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
+    
     if (!req.user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized" });
     }
+	
+	if (!Url || !Price || !Name || !Manufacturer) {
+		return res.status(400).json({ message: "Missing required fields" });
+	}
+	if (!regEx.test(Url)) {
+		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+	}
 
     // Check if an item with the same ID or Name already exists
     const checkSql = "SELECT * FROM cpu WHERE Url = ?";
@@ -421,9 +438,18 @@ api.post("/api/cpu", authenticateJWT, (req, res) => {
 api.post("/api/cpu_cooler", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions } = req.body;
     
+	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
+    
     if (!req.user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized" });
     }
+	
+	if (!Url || !Price || !Name || !Manufacturer) {
+		return res.status(400).json({ message: "Missing required fields" });
+	}
+	if (!regEx.test(Url)) {
+		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+	}
 
     // Check if an item with the same ID or Name already exists
     const checkSql = "SELECT * FROM cpu_cooler WHERE Url = ?";
@@ -451,9 +477,18 @@ api.post("/api/cpu_cooler", authenticateJWT, (req, res) => {
 api.post("/api/gpu", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP } = req.body;
     
+	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
+    
     if (!req.user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized" });
     }
+	
+	if (!Url || !Price || !Name || !Manufacturer) {
+		return res.status(400).json({ message: "Missing required fields" });
+	}
+	if (!regEx.test(Url)) {
+		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+	}
 
     // Check if an item with the same ID or Name already exists
     const checkSql = "SELECT * FROM gpu WHERE Url = ?";
@@ -481,9 +516,18 @@ api.post("/api/gpu", authenticateJWT, (req, res) => {
 api.post("/api/memory", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency } = req.body;
     
+	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
+    
     if (!req.user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized" });
     }
+	
+	if (!Url || !Price || !Name || !Manufacturer) {
+		return res.status(400).json({ message: "Missing required fields" });
+	}
+	if (!regEx.test(Url)) {
+		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+	}
 
     // Check if an item with the same ID or Name already exists
     const checkSql = "SELECT * FROM memory WHERE Url = ?";
@@ -511,9 +555,18 @@ api.post("/api/memory", authenticateJWT, (req, res) => {
 api.post("/api/motherboard", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility } = req.body;
     
+	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
+    
     if (!req.user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized" });
     }
+	
+	if (!Url || !Price || !Name || !Manufacturer) {
+		return res.status(400).json({ message: "Missing required fields" });
+	}
+	if (!regEx.test(Url)) {
+		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+	}
 
     // Check if an item with the same ID or Name already exists
     const checkSql = "SELECT * FROM motherboard WHERE Url = ?";
@@ -541,9 +594,18 @@ api.post("/api/motherboard", authenticateJWT, (req, res) => {
 api.post("/api/psu", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions } = req.body;
     
+	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
+    
     if (!req.user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized" });
     }
+	
+	if (!Url || !Price || !Name || !Manufacturer) {
+		return res.status(400).json({ message: "Missing required fields" });
+	}
+	if (!regEx.test(Url)) {
+		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+	}
 
     // Check if an item with the same ID or Name already exists
     const checkSql = "SELECT * FROM psu WHERE Url = ?";
@@ -571,9 +633,18 @@ api.post("/api/psu", authenticateJWT, (req, res) => {
 api.post("/api/storage", authenticateJWT, (req, res) => {
 	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW } = req.body;
     
+	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
+    
     if (!req.user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized" });
     }
+	
+	if (!Url || !Price || !Name || !Manufacturer) {
+		return res.status(400).json({ message: "Missing required fields" });
+	}
+	if (!regEx.test(Url)) {
+		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+	}
 
     // Check if an item with the same ID or Name already exists
     const checkSql = "SELECT * FROM storage WHERE Url = ?";
