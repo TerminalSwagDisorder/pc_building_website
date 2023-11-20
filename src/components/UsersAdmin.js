@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { checkIfSignedIn } from "../api";
-import { Input } from '@mui/material';
-import Button from '@mui/material/Button';
+import { Input } from "@mui/material";
+import Button from "@mui/material/Button";
 
 
-const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChangeAdmin, onSubmit }) => {
+const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChangeAdmin, onSubmit, handleSignupAdmin }) => {
 	const [selectedUser, setSelectedUser] = useState(users[0] || 0);
 	const [inputValue, setInputValue] = useState("");
 	const [isAdminChecked, setIsAdminChecked] = useState(0);
@@ -25,6 +25,7 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
 	}
 
 	console.log("Amount of users: ", users.length)
+	console.log("Selected user: ", selectedUser)
 
 	// Event handler for geting the user id from a user
     const handleSelectUser = (user) => {
@@ -61,45 +62,11 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
 		}
     };
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-
-		const initialAdmin = selectedUser.isAdmin ? 1 : 0;
-		const initialBanned = selectedUser.isBanned ? 1 : 0;
-
-		const newName = event.target.name.value;
-		const newEmail = event.target.email.value;
-		const newPassword = event.target.password.value;
-		const newAdmin = isAdminChecked
-		const newBanned = isBannedChecked
-
-		// Check if any field is filled
-		if (!newName && !newEmail && !newPassword && newAdmin === initialAdmin && newBanned === initialBanned) {
-			alert("No changes detected!");
-			return;
-		}
-
-		// Check for changes in name and email
-		if (newName === selectedUser.Name || newEmail === selectedUser.Email ) {
-			alert("You cannot use the same credentials");
-			return;
-		}
-
-		try {
-			await handleCredentialChangeAdmin(event, newAdmin, initialAdmin, newBanned, initialBanned); // Assumes this function handles the event correctly
-		} catch (error) {
-			console.error('Error updating credentials:', error);
-			alert('Error updating credentials.');
-		}
-	};
-
-
-  return (
-    <div>
-	<p>All users!</p>
-	  <div><button onClick={() => handleSelectUser(users[0])}>Change user credentials</button></div>
-	  {selectedUser ? (
-	  <div id="userform">
+const renderBasedOnUser = () => {
+  if (selectedUser && selectedUser !== "New user") {
+    // For modifying existing users
+    return (  
+		<div id="userform">
 	  	<form onSubmit={handleSubmit} className="adminForm">
 			<div><button className="closeForm" onClick={() => closeForm()}>x</button></div>
 	  	<div>
@@ -132,9 +99,106 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
 		</div>
 		</form>
 	  </div>
-    ) : (
-        <p>Select a user to modify their credentials.</p>
-	  )}
+	);
+  } else if (selectedUser === "New user") {
+    // Render for "New user"
+    return (	
+		<div id="userform">
+	  	<form onSubmit={handleSubmit} className="adminForm">
+			<div><button className="closeForm" onClick={() => closeForm()}>x</button></div>
+	  	<div>
+	  	 <input type="text" id="id" name="id" value={selectedUser} onChange={handleInputChange} disabled/>
+	  	</div>
+		 <div>
+		  <Input type="name" placeholder="New user name" name="name" onChange={handleInputChange} />
+		</div><br></br>
+		 <div>
+		  <Input type="email" placeholder="New user email" name="email" onChange={handleInputChange} />
+		</div><br></br>
+		 <div>
+		  <Input type="password" placeholder="Enter new password" name="password" onChange={handleInputChange} />
+		</div><br></br>
+		 <div>
+		  <Input type="file" name="profile_image" onChange={handleInputChange} />
+		</div><br></br>
+		 <div>
+	  		<label for="admin">Admin</label>
+		  <input type="checkbox" name="admin" checked={isAdminChecked} onChange={handleInputChange}/>
+		</div><br></br>
+		 <div>
+	  		<label for="banned">Banned</label>
+		  <input type="checkbox" name="banned" checked={0} onChange={handleInputChange} disabled/>
+		</div><br></br>
+		<div>
+		  <Button variant="contained" type="submit">
+			Add new user
+		  </Button>
+		</div>
+		</form>
+	  </div>
+	);
+  } else {
+    // Render for other cases
+    return ( 
+		<div><p>Select a user to modify their credentials.</p></div>
+	);
+  }
+};
+
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+
+		const initialAdmin = selectedUser.isAdmin ? 1 : 0;
+		const initialBanned = selectedUser.isBanned ? 1 : 0;
+
+		const newName = event.target.name.value;
+		const newEmail = event.target.email.value;
+		const newPassword = event.target.password.value;
+		const newAdmin = isAdminChecked
+		const newBanned = isBannedChecked
+
+		// Check if any field is filled
+		if (selectedUser !== "New user" && !newName && !newEmail && !newPassword && newAdmin === initialAdmin && newBanned === initialBanned) {
+			alert("No changes detected!");
+			return;
+		} else if (selectedUser === "New user" && !newName && !newEmail && !newPassword) {
+			alert("All required fields must be filled!")
+			return;
+		}
+		// Check for changes in name and email
+		if (newName === selectedUser.Name || newEmail === selectedUser.Email ) {
+			alert("You cannot use the same credentials");
+			return;
+		}
+
+			if (selectedUser !== "New user") {
+				try {
+					await handleCredentialChangeAdmin(event, newAdmin, initialAdmin, newBanned, initialBanned);
+				} catch (error) {
+					console.error("Error updating credentials:", error);
+					alert("Error updating credentials.");
+				}
+			} else if (selectedUser === "New user") {
+				try {
+				await handleSignupAdmin(event)
+				} catch (error) {
+					console.error("Error adding user:", error);
+					alert("Error adding user.");
+				}
+			}
+		
+	};
+
+
+  return (
+    <div>
+	<p>All users!</p>
+	  <div><button onClick={() => handleSelectUser("New user")}>Add new user</button></div>
+	  <div><button onClick={() => handleSelectUser(users[0])}>Change user credentials</button></div>
+
+	{renderBasedOnUser()}
+
 		<ul>
 			{users.map((user) => (
 				<li key={user.ID} style={{ marginBottom: "4em" , marginLeft: "25em"}}>

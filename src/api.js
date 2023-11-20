@@ -484,15 +484,15 @@ export const handleSignup = async (event) => {
 		
 		if (response.ok) {
 			alert("Signed up successfully");
-		} else {
-			const data = await response.json();
-			if (response.status === 409) {
-				alert(data.message);
-				throw new Error(data.error);
-			} else {
-				alert("Failed to sign up. Please try again.");
-				throw new Error(data.error);
-			}
+		} else  {
+				const data = await response.json();
+				if (data.message) {
+					alert(`HTTP error ${response.status}: ${data.message}`)
+					throw new Error(data.error);
+				} else {
+					alert("Failed sign up. Please try again.");
+					throw new Error(data.error);
+				}
 		}
   }
 };
@@ -583,7 +583,8 @@ export const handleCredentialChange = async (event) => {
 					alert(`HTTP error ${response.status}: ${data.message}`)
 					throw new Error(data.error);
 				} else {
-					alert("Failed to add component. Please try again.");
+					alert("Failed change credentials. Please try again.");
+					throw new Error(data.error);
 				}
 			}
         }
@@ -686,7 +687,8 @@ export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin,
 					alert(`HTTP error ${response.status}: ${data.message}`)
 					throw new Error(data.error);
 				} else {
-					alert("Failed to add component. Please try again.");
+					alert("Failed to change credentials. Please try again.");
+					throw new Error(data.error);
 				}
 				}
         }
@@ -694,6 +696,47 @@ export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin,
         console.error("Error updating credentials:", error);
         // Handle error
     }
+};
+
+export const handleSignupAdmin = async (event) => {
+
+	// Data from the form
+	const Name = event.target.name.value;
+	const Email = event.target.email.value;
+	const Password = event.target.password.value;
+	const Admin = event.target.admin.checked ? "1" : "0";
+
+	try {
+		if (Name && Email && Password && Admin) {
+
+			// api call to register a new user
+			const response = await fetch("http://localhost:4000/api/users", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				credentials: "include", // Important, because we're using cookies
+				body: JSON.stringify({ Name, Email, Password, Admin }),
+			}).catch(console.error);
+
+			if (response.ok) {
+				alert("Added user successfully");
+				window.location.reload();
+			} else {
+				const data = await response.json();
+				if (data.message) {
+					alert(`HTTP error ${response.status}: ${data.message}`)
+					throw new Error(data.error);
+				} else {
+					alert("Failed to add user. Please try again.");
+					throw new Error(data.error);
+				}
+			}
+		}
+	} catch (error) {
+		console.error("Error updating credentials:", error);
+		// Handle error
+	}
 };
 
 

@@ -41,6 +41,30 @@ const db = new sqlite3.Database(dbPath);
 const userDbPath = path.resolve(__dirname, "database/user_data.db");
 const userDb = new sqlite3.Database(userDbPath)
 
+// Middleware for checking if user is logged in
+const authenticateJWT = (req, res, next) => {
+	
+	// Check if cookie exists and retrieve the value, if it does not exist set accessToken to null 
+	const token = req.cookies ? req.cookies.accessToken : null;
+	//console.log(req.headers)
+	//console.log(token)
+	if (token) {
+		
+		// Verify the token to the jwtSecret
+		jwt.verify(token, jwtSecret, (err, user) => {
+			if (err) {
+				return res.status(403).json({ message: "JWT 403 error" });
+			}
+			
+			// If successful, set req.user to the decoded user info
+			req.user = { ...user.user, isAdmin: user.isAdmin, isBanned: user.isBanned };
+			next();
+		});
+	} else {
+		res.status(401).json({ message: "JWT 401 error" });
+	}
+};
+
 // All of the users, not used in frontend
 api.get("/api/users", (req, res) => {
 	const sql = "SELECT * FROM user";
@@ -62,8 +86,6 @@ api.get("/api/users", (req, res) => {
 		}
 	});
 });
-
-
 
 // Show single user
 api.get("/api/users/:id", (req, res) => {
@@ -87,44 +109,53 @@ api.get("/api/users/:id", (req, res) => {
 });
 
 // Signing up
-api.post("/api/users", async (req, res) => {
-  const { Name, Email, Password } = req.body;
+api.post("/api/users", authenticateJWT, async (req, res) => {
+    const { Name, Email, Password } = req.body;
+    
+    try {
+        // Check if a user with the given email already exists
+        const emailCheckSql = "SELECT Email FROM user WHERE Email = ?";
+        userDb.get(emailCheckSql, [Email], async (err, row) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Error checking user's email" });
+            }
+            if (row) {
+                return res.status(409).json({ message: "Email already in use" });
+            }
 
-	try {
-		// Check if a user with the given email already exists
-		const emailCheckSql = "SELECT Email FROM user WHERE Email = ?";
-		userDb.get(emailCheckSql, [Email], async (err, row) => {
-				if (err) {
-					console.error(err);
-					return res.status(500).json({message: "Error checking users email"});
-				}
-				if (row) {
-					return res.status(409).json({message: "Email already in use"});
-				}
+            try {
+                const hashedPassword = await bcrypt.hash(Password, 10);
+                let sql, params;
+				// Only admins can add other as admin upon signup
+                if (req.user.isAdmin) {
+                    const Admin = req.body.Admin ? 1 : 0;
+                    sql = "INSERT INTO user (Name, Email, Password, Admin) VALUES (?, ?, ?, ?)";
+                    params = [Name, Email, hashedPassword, Admin];
+                } else {
+                    sql = "INSERT INTO user (Name, Email, Password) VALUES (?, ?, ?)";
+                    params = [Name, Email, hashedPassword];
+                }
 
-				try {
-					// Hash the password before storing it
-					const hashedPassword = await bcrypt.hash(Password, 10);
+                userDb.run(sql, params, function (err) {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send({ message: "Failed to insert user" });
+                    } else {
+                        res.status(200).json({ id: this.lastID });
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ message: "Internal server error while registering new user" });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 
-					const sql = "INSERT INTO user (Name, Email, Password) VALUES (?, ?, ?)";
-					userDb.run(sql, [Name, Email, hashedPassword], function (err) {
-						if (err) {
-							console.error(err);
-							res.status(500).send(err);
-						} else {
-							res.status(200).json({ id: this.lastID });
-						}
-					});
-				} catch (error) {
-					console.error(error);
-					res.status(500).json({message: "Internal server error while registering new user"});
-			}
-		});
-	} catch (error) {
-			console.error(error);
-			res.status(500).json({message: "Internal server error"});
-		}
-	});
 
 // Login route
 api.post("/api/login", (req, res) => {
@@ -168,30 +199,6 @@ api.post("/api/login", (req, res) => {
 		}
 	});
 });
-
-// Middleware for checking if user is logged in
-const authenticateJWT = (req, res, next) => {
-	
-	// Check if cookie exists and retrieve the value, if it does not exist set accessToken to null 
-	const token = req.cookies ? req.cookies.accessToken : null;
-	//console.log(req.headers)
-	//console.log(token)
-	if (token) {
-		
-		// Verify the token to the jwtSecret
-		jwt.verify(token, jwtSecret, (err, user) => {
-			if (err) {
-				return res.status(403).json({ message: "JWT 403 error" });
-			}
-			
-			// If successful, set req.user to the decoded user info
-			req.user = { ...user.user, isAdmin: user.isAdmin, isBanned: user.isBanned };
-			next();
-		});
-	} else {
-		res.status(401).json({ message: "JWT 401 error" });
-	}
-};
 
 // Check if the user is logged in
 api.get("/api/profile", authenticateJWT, (req, res) => {
@@ -260,8 +267,6 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
 });
 
 // For admins
-// Update user credentials
-
 // Update user credentials
 api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
 	console.log("server api admin update credentials accessed")
