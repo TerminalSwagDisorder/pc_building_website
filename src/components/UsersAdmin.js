@@ -140,7 +140,7 @@ const renderBasedOnUser = () => {
   } else {
     // Render for other cases
     return ( 
-		<div><p>Select a user to modify their credentials.</p></div>
+		<div className="userChangePrompt"><p>Select a user to modify their credentials.</p></div>
 	);
   }
 };
@@ -194,8 +194,10 @@ const renderBasedOnUser = () => {
   return (
     <div>
 	<p>All users!</p>
+	<div className="userChangeButtons">
 	  <div><button onClick={() => handleSelectUser("New user")}>Add new user</button></div>
 	  <div><button onClick={() => handleSelectUser(users[0])}>Change user credentials</button></div>
+	</div>
 
 	{renderBasedOnUser()}
 

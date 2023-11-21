@@ -13,28 +13,35 @@ const handleSubmit = async (event) => {
     const newName = event.target.name.value;
     const newEmail = event.target.email.value;
     const newPassword = event.target.password.value;
+    const newProfileImage = event.target.profile_image.value;
+	
+	const currentPassword = event.target.currentpassword.value;
 
     // Check if any field is filled
-    if (!newName && !newEmail && !newPassword) {
+    if (!newName && !newEmail && !newPassword && !newProfileImage) {
         alert("No credentials entered!");
         return;
     }
 
     // Check for changes in name and email
-    if (newName === currentUser.Name || newEmail === currentUser.Email) {
-        alert("You cannot use the same credentials");
+    if (newName === currentUser.Name || newEmail === currentUser.Email || newProfileImage === currentUser.Profile_image) {
+        alert("You cannot use the same credentials!");
         return;
     }
+	
+	if (!currentPassword) {
+		alert("You must enter your current password!")
+	}
 
     try {
-        await handleCredentialChange(event); // Assumes this function handles the event correctly
+        await handleCredentialChange(event);
         await handleSignout();
         setCurrentUser(null);
         alert("Changed credentials, please sign in again!");
         navigate("/signin");
     } catch (error) {
-        console.error('Error updating credentials:', error);
-        alert('Error updating credentials.');
+        console.error("Error updating credentials:", error);
+        alert("Error updating credentials.");
     }
 };
 
@@ -55,6 +62,13 @@ const handleSubmit = async (event) => {
 		</div><br></br>
 		 <div>
 		  <Input type="password" placeholder="Enter new password" name="password" />
+		</div><br></br>
+	  	<div>
+	  		<label>New profile image</label>
+		  <Input type="file" name="profile_image"/>
+		</div><br></br><br></br>
+		 <div>
+		  <Input type="password" placeholder="Enter current password" name="currentpassword" required/>
 		</div><br></br>
 		<div>
 		  <Button variant="contained" type="submit">

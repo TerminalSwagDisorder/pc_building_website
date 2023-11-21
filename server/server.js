@@ -215,9 +215,14 @@ api.get("/api/profile", authenticateJWT, (req, res) => {
 api.patch("/api/profile", authenticateJWT, async (req, res) => {
 	console.log("server api update own credentials accessed")
 	const userId = req.user.ID; // User ID from the authenticated JWT, this already makes it secure
-	const { Name, Email, Password, Profile_image } = req.body; // Updated credentials from request body
+	const { Name, Email, Password, Profile_image, currentPassword } = req.body; // Updated credentials from request body
 
 	try {
+		
+		const match = await bcrypt.compare(currentPassword, req.user.Password)
+		if (!match) {
+			return res.status(403).json({ message: "Current password is incorrect" });
+		}
 
 		let hashedPassword = null;
 		if (Password) {
@@ -248,7 +253,9 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
 		}
 
 		// Remove trailing comma and space
-		updateQuery = updateQuery.slice(0, -2);
+		if (queryParams.length > 0 ) {
+			updateQuery = updateQuery.slice(0, -2);
+		}
 		updateQuery += " WHERE ID = ?";
 		queryParams.push(userId);
 

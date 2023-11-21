@@ -450,9 +450,6 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 		setCurrentUser(data.user);
 		alert("Logged in successfully");
 		return data.user;
-	} else if (response.status === 403) {
-		alert(data.message)	
-		throw new Error(data.error);
 	} else {
 		alert(data.message)
 		throw new Error(data.error);
@@ -462,29 +459,30 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 
 // Signup
 export const handleSignup = async (event) => {
-	
+
 	// Data from the form
 	const Name = event.target.username.value;
-    const Email = event.target.email.value;
-    const Password = event.target.password.value;
-	
+	const Email = event.target.email.value;
+	const Password = event.target.password.value;
+
 	//console.log(Name, Email, Password)
-	
-    if (Name && Email && Password) {
-		
-		// api call to register a new user
-      const response = await fetch("http://localhost:4000/api/users", {
-        method: "POST",
-        headers: { 
-			"Content-Type": "application/json"
-		},
-		credentials: "include", // Important, because we're using cookies
-        body: JSON.stringify({ Name, Email, Password }),
-      }).catch(console.error);
-		
-		if (response.ok) {
-			alert("Signed up successfully");
-		} else  {
+	try {
+
+		if (Name && Email && Password) {
+
+			// api call to register a new user
+			const response = await fetch("http://localhost:4000/api/users", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				credentials: "include", // Important, because we're using cookies
+				body: JSON.stringify({ Name, Email, Password }),
+			}).catch(console.error);
+
+			if (response.ok) {
+				alert("Signed up successfully");
+			} else {
 				const data = await response.json();
 				if (data.message) {
 					alert(`HTTP error ${response.status}: ${data.message}`)
@@ -493,8 +491,13 @@ export const handleSignup = async (event) => {
 					alert("Failed sign up. Please try again.");
 					throw new Error(data.error);
 				}
+			}
 		}
-  }
+	} catch (error) {
+		console.error("Error adding user:", error);
+		throw new Error(error);
+
+	}
 };
 
 
@@ -550,9 +553,11 @@ export const handleCredentialChange = async (event) => {
     const Name = event.target.name.value;
     const Email = event.target.email.value;
     const Password = event.target.password.value;
+    const profileImage = event.target.profile_image.value;
+	const currentPassword = event.target.currentpassword.value;
 	
-	console.log(Name)
-	console.log(Email)
+	//console.log(Name)
+	//console.log(Email)
 
     try {
         const updatedCredentials = {};
@@ -560,6 +565,8 @@ export const handleCredentialChange = async (event) => {
         if (Name) updatedCredentials.Name = Name;
         if (Email) updatedCredentials.Email = Email;
         if (Password) updatedCredentials.Password = Password;
+        if (profileImage) updatedCredentials.profileImage = profileImage;
+        if (currentPassword) updatedCredentials.currentPassword = currentPassword;
 
         // Only proceed if at least one field is filled
         if (Object.keys(updatedCredentials).length > 0) {
@@ -590,7 +597,7 @@ export const handleCredentialChange = async (event) => {
         }
     } catch (error) {
         console.error("Error updating credentials:", error);
-        // Handle error
+		throw new Error(error);
     }
 };
 
@@ -610,7 +617,7 @@ export const fetchAllUsers = async () => {
 		return data;
 	} catch (error) {
 		console.error(error);
-		throw error;
+		throw new error;
 	}
 };
 
@@ -694,7 +701,7 @@ export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin,
         }
     } catch (error) {
         console.error("Error updating credentials:", error);
-        // Handle error
+		throw new Error(error);
     }
 };
 
@@ -734,8 +741,9 @@ export const handleSignupAdmin = async (event) => {
 			}
 		}
 	} catch (error) {
-		console.error("Error updating credentials:", error);
-		// Handle error
+		console.error("Error adding user:", error);
+		throw new Error(error);
+		
 	}
 };
 
