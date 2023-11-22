@@ -4,10 +4,10 @@ import { Input } from '@mui/material';
 import Button from '@mui/material/Button';
 
 
-const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponentChangeAdmin, chassis, cpus, cpuCoolers, gpus, memories, motherboards, psus, storages }) => {
+const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponentChangeAdmin, handleComponentDeleteAdmin, chassis, cpus, cpuCoolers, gpus, memories, motherboards, psus, storages }) => {
 	const [currentComponent, setCurrentComponent] = useState("");
 	const [currentComponentData, setCurrentComponentData] = useState(null);
-	const [currentOperation, setCurrentOperation] = useState("")
+	const [currentOperation, setCurrentOperation] = useState("");
 	const [inputValue, setInputValue] = useState("");
 	const [formFields, setFormFields] = useState({});
 
@@ -72,65 +72,68 @@ const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponent
 		const numberKeys = ["ID", "Price"]
 		
 
-		return Object.keys(currentComponentData).map((key) => {
-			if (excludeKeys.includes(key)) return null;
-			
-			const isRequired = requiredKeys.includes(key)
-			const isImage = imageKeys.includes(key)
-			const isNumber = numberKeys.includes(key)
-			const chosenComponentType = componentTypes.find((item) => item.name === currentComponent).data;
-			let inputType;
-			
-			if (currentOperation === "add") {
-				if (isImage) {
-					inputType = (
-						<Input type="file" name={key} onChange={handleInputChange} />
-					);
-				} else if (isNumber) {
-					if (key === "ID") {
-					inputType = (
-						<input id="id" disabled type="number" name={key} placeholder="ID" value="" onChange={handleInputChange} step="1" style={{backgroundColor: "gray"}}/>
-					);
-					} else {
-						inputType = (
-							<input required={isRequired}  type="number" name={key} placeholder={key} onChange={handleInputChange} step="0.01" style={{backgroundColor: "gray"}}/>
-						);
-					}
-				} else {
-					inputType = (
-						<Input required={isRequired} type="text" name={key} placeholder={key} onChange={handleInputChange} />
-					);
-				}
-			} else if (currentOperation === "update") {
-				if (isImage) {
-					inputType = (
-						<Input type="file" name={key} onChange={handleInputChange} />
-					);
-				} else if (isNumber) {
-					if (key === "ID") {
-					inputType = (
-						<input id="id" type="number" name={key} value={currentComponentData.ID} onChange={handleInputChange} step="1" min={chosenComponentType[0].ID} max={chosenComponentType[chosenComponentType.length - 1].ID} style={{backgroundColor: "gray"}}/>
-					);
-					} else {
-						inputType = (
-							<input type="number" name={key} placeholder={currentComponentData[key]} onChange={handleInputChange} step="0.01" style={{backgroundColor: "gray"}}/>
-						);
-					}
-				} else {
-					inputType = (
-						<Input type="text" name={key} placeholder={currentComponentData[key]} onChange={handleInputChange} />
-					);
-				}
-			}
+		if (currentOperation !== "delete") {
+			return Object.keys(currentComponentData).map((key) => {
+				if (excludeKeys.includes(key)) return null;
 
-			return (
-				<div key={key}>
-					<label>{isRequired && "* "}</label>
-						{inputType}
-					<br /><br />
-				</div>
-			);
-		});
+				const isRequired = requiredKeys.includes(key)
+				const isImage = imageKeys.includes(key)
+				const isNumber = numberKeys.includes(key)
+				const chosenComponentType = componentTypes.find((item) => item.name === currentComponent).data;
+				let inputType;
+				if (currentOperation === "add") {
+					if (isImage) {
+						inputType = (
+							<Input type="file" name={key} onChange={handleInputChange} />
+						);
+					} else if (isNumber) {
+						if (key === "ID") {
+						inputType = (
+							<input id="id" disabled type="number" name={key} placeholder="ID" value="" onChange={handleInputChange} step="1" style={{backgroundColor: "gray"}}/>
+						);
+						} else {
+							inputType = (
+								<input required={isRequired}  type="number" name={key} placeholder={key} onChange={handleInputChange} step="0.01" style={{backgroundColor: "gray"}}/>
+							);
+						}
+					} else {
+						inputType = (
+							<Input required={isRequired} type="text" name={key} placeholder={key} onChange={handleInputChange} />
+						);
+					}
+				} else if (currentOperation === "update") {
+					if (isImage) {
+						inputType = (
+							<Input type="file" name={key} onChange={handleInputChange} />
+						);
+					} else if (isNumber) {
+						if (key === "ID") {
+						inputType = (
+							<input id="id" type="number" name={key} value={currentComponentData.ID} onChange={handleInputChange} step="1" min={chosenComponentType[0].ID} max={chosenComponentType[chosenComponentType.length - 1].ID} style={{backgroundColor: "gray"}}/>
+						);
+						} else {
+							inputType = (
+								<input type="number" name={key} placeholder={currentComponentData[key]} onChange={handleInputChange} step="0.01" style={{backgroundColor: "gray"}}/>
+							);
+						}
+					} else {
+						inputType = (
+							<Input type="text" name={key} placeholder={currentComponentData[key]} onChange={handleInputChange} />
+						);
+					}
+				}
+
+				return (
+					<div key={key}>
+						<label>{isRequired && "* "}</label>
+							{inputType}
+						<br /><br />
+					</div>
+				);
+			});
+		} else if (currentOperation === "delete") return (
+			<p>Are you sure you want to delete {currentComponentData.Name}?</p>
+		)
 	};
 
 	// For rendering the component list recursively
@@ -143,6 +146,7 @@ const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponent
 					{component.data.map((item) => (
 						<div key={item.ID} className="adminComponentList">
 						<li>{item.ID}: {item.Manufacturer} - {item.Name.slice(0, 40)}
+							<button className="deleteButton" onClick={() => handleSetComponent(component.name, item, "delete")}>Delete</button>
 							<button onClick={() => handleSetComponent(component.name, item, "update")}>Modify {item.Name}</button>
 						</li>
 						</div>
@@ -177,15 +181,17 @@ const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponent
 		console.log(formFields)
 
 		const submitComponent = currentComponent
-		const newUrl = event.target.Url.value;
-		const newPrice = event.target.Price.value;
-		const newName = event.target.Name.value;
-		const newManufacturer = event.target.Manufacturer.value;
+		if (currentOperation !== "delete") {
+			const newUrl = event.target.Url.value;
+			const newPrice = event.target.Price.value;
+			const newName = event.target.Name.value;
+			const newManufacturer = event.target.Manufacturer.value;
 
-		// Check if any field is filled
-		if (currentOperation === "add" && !newUrl && !newPrice && !newName && !newManufacturer) {
-			alert("Please fill in the required fields!");
-			return;
+			// Check if any field is filled
+			if (currentOperation === "add" && !newUrl && !newPrice && !newName && !newManufacturer) {
+				alert("Please fill in the required fields!");
+				return;
+			}
 		}
 
 		try {
@@ -193,6 +199,8 @@ const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponent
 				await handleComponentAddAdmin(event, submitComponent, formFields);
 			} else if (currentOperation === "update") {
 				await handleComponentChangeAdmin(event, submitComponent, formFields, currentComponentData.ID)
+			} else if (currentOperation === "delete") {
+				await handleComponentDeleteAdmin(submitComponent, currentComponentData.ID)
 			}
 		} catch (error) {
 			console.error("Error adding or modifying part:", error);

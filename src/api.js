@@ -384,6 +384,24 @@ export const handleComponentChangeAdmin = async (event, type, formFields, compon
 	}
 };
 
+export const handleComponentDeleteAdmin = async (type, id) => {
+	
+	// api call to log out the user
+	const response = await fetch(`http://localhost:4000/api/${type}/${id}/delete`, {
+		method: "DELETE",
+		credentials: "include",  // Important, because we're using cookies
+	});
+
+	// If successful, reload the current window
+	if (response.ok) {
+		window.location.reload();
+		alert("Deleted item successfully")
+	} else {
+		const data = await response.json();
+		throw new Error(data.error);
+	}
+};
+
 /*
 export const handleSignup = async (event) => {
 	
