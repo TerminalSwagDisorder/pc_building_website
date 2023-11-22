@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 
 
 const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChangeAdmin, onSubmit, handleSignupAdmin }) => {
-	const [selectedUser, setSelectedUser] = useState(users[0] || 0);
+	const [selectedUser, setSelectedUser] = useState("");
 	const [inputValue, setInputValue] = useState("");
 	const [isAdminChecked, setIsAdminChecked] = useState(0);
 	const [isBannedChecked, setIsBannedChecked] = useState(0);
