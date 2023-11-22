@@ -53,7 +53,7 @@ const authenticateJWT = (req, res, next) => {
 		// Verify the token to the jwtSecret
 		jwt.verify(token, jwtSecret, (err, user) => {
 			if (err) {
-				return res.status(403).json({ message: "JWT 403 error" });
+				return res.status(403).json({ message: "JWT token did not match" });
 			}
 			
 			// If successful, set req.user to the decoded user info
@@ -61,7 +61,7 @@ const authenticateJWT = (req, res, next) => {
 			next();
 		});
 	} else {
-		res.status(401).json({ message: "JWT 401 error" });
+		res.status(401).json({ message: "Could not verify JWT token" });
 	}
 };
 
@@ -109,8 +109,9 @@ api.get("/api/users/:id", (req, res) => {
 });
 
 // Signing up
-api.post("/api/users", authenticateJWT, async (req, res) => {
+api.post("/api/users/signup", async (req, res) => {
     const { Name, Email, Password } = req.body;
+	console.log("server api user signup accessed")
     
     try {
         // Check if a user with the given email already exists
@@ -126,18 +127,9 @@ api.post("/api/users", authenticateJWT, async (req, res) => {
 
             try {
                 const hashedPassword = await bcrypt.hash(Password, 10);
-                let sql, params;
-				// Only admins can add other as admin upon signup
-                if (req.user.isAdmin) {
-                    const Admin = req.body.Admin ? 1 : 0;
-                    sql = "INSERT INTO user (Name, Email, Password, Admin) VALUES (?, ?, ?, ?)";
-                    params = [Name, Email, hashedPassword, Admin];
-                } else {
-                    sql = "INSERT INTO user (Name, Email, Password) VALUES (?, ?, ?)";
-                    params = [Name, Email, hashedPassword];
-                }
+				const sql = "INSERT INTO user (Name, Email, Password) VALUES (?, ?, ?)";
 
-                userDb.run(sql, params, function (err) {
+                userDb.run(sql, [Name, Email, hashedPassword], function (err) {
                     if (err) {
                         console.error(err);
                         return res.status(500).send({ message: "Failed to insert user" });
@@ -155,6 +147,8 @@ api.post("/api/users", authenticateJWT, async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+
 
 
 // Login route
@@ -274,6 +268,56 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
 });
 
 // For admins
+// Admin add user
+api.post("/api/admin/signup", authenticateJWT, async (req, res) => {
+    const { Name, Email, Password, Admin } = req.body;
+	console.log("server api admin user signup accessed")
+    
+    try {
+        // Check if a user with the given email already exists
+        const emailCheckSql = "SELECT Email FROM user WHERE Email = ?";
+        userDb.get(emailCheckSql, [Email], async (err, row) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Error checking user's email" });
+            }
+            if (row) {
+                return res.status(409).json({ message: "Email already in use" });
+            }
+
+            try {
+                const hashedPassword = await bcrypt.hash(Password, 10);
+                let sql, params;
+				// Only admins can add other as admin upon signup
+                if (req.user.isAdmin) {
+					console.log("Admin user added a new user")
+                    const Admin = req.body.Admin ? 1 : 0;
+                    sql = "INSERT INTO user (Name, Email, Password, Admin) VALUES (?, ?, ?, ?)";
+                    params = [Name, Email, hashedPassword, Admin];
+                } else {
+					return res.status(403).json({ message: "Unauthorized" });
+                }
+
+                userDb.run(sql, params, function (err) {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send({ message: "Failed to insert user" });
+                    } else {
+                        res.status(200).json({ id: this.lastID });
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ message: "Internal server error while registering new user" });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+
 // Update user credentials
 api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
 	console.log("server api admin update credentials accessed")

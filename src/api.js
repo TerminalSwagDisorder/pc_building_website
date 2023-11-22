@@ -490,7 +490,7 @@ export const handleSignup = async (event) => {
 		if (Name && Email && Password) {
 
 			// api call to register a new user
-			const response = await fetch("http://localhost:4000/api/users", {
+			const response = await fetch("http://localhost:4000/api/users/signup", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
@@ -713,7 +713,7 @@ export const handleSignupAdmin = async (event) => {
 		if (Name && Email && Password && Admin) {
 
 			// api call to register a new user
-			const response = await fetch("http://localhost:4000/api/users", {
+			const response = await fetch("http://localhost:4000/api/admin/signup", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
