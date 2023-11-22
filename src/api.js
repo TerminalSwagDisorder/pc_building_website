@@ -663,6 +663,7 @@ export const handleCredentialChangeAdmin = async (event, formFields) => {
 
     // Extract values from the form
     const ID = event.target.id.value;
+	const profileImage = event.target.profile_image.value;
     const Admin = event.target.admin.checked;
     const Banned = event.target.banned.checked;
 
