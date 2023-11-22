@@ -10,7 +10,6 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.5.1",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -27,7 +26,6 @@
     "sass": "^1.68.0",
     "sqlite3": "^5.1.6",
     "styled-components": "^6.0.8",
-    "universal-cookie": "^6.1.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -36,7 +34,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server/server.js",
-    "dev": "concurrently \"npm start\" \"node server/server.js\""
+    "dev": "concurrently \"npm start\" \"nodemon server/server.js\""
   },
   "eslintConfig": {
     "extends": [
@@ -57,6 +55,7 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.1"
+    "concurrently": "^8.2.1",
+    "nodemon": "^3.0.1"
   }
 }

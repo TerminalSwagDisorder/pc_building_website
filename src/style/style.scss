@@ -38,6 +38,75 @@ form {
 		width: 50%;
 	}
 }
+
+.userForm {
+	position: absolute;
+	top: 25%;
+	bottom: 25%;
+	left: 70%;
+	height: auto;
+	overflow: auto;
+	display: block;
+	z-index: 1;
+}
+
+.userCredentialChange {
+	margin-top: 3em;
+}
+
+.adminForm {
+	position: absolute;
+	top: 25%;
+	bottom: 25%;
+	left: 70%;
+	height: auto;
+	overflow: auto;
+	display: block;
+	z-index: 1;
+}
+
+.closeForm {
+	position: absolute;
+	left: 90%;
+	width: 2.5em;
+	height: 2.5em;
+	border: none;
+	border-radius: 25%;
+}
+
+.closeForm:hover {
+	background-color: red;
+}
+
+.userChangePrompt {
+	margin-bottom: 0.5em;
+}
+
+.userChangeButtons {
+	margin-bottom: 1em;
+	button {
+		margin-bottom: 0.5em;
+	}
+}
+
+.adminComponentList {
+	margin-bottom: 0.5em;
+	button {
+		float: right;
+		width: 20em;
+		height: 1.6em;
+		overflow: hidden;
+	}
+	.deleteButton {
+		width: 5em;
+		background-color: red;
+		border: none;
+	}
+	.deleteButton:hover {
+		background-color: darkred;
+	}
+}
+
 .signout {
 	display: flex;
 	button, li {

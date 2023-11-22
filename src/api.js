@@ -5,6 +5,8 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import { useNavigate } from "react-router-dom";
+
 
 
 // Fetch data for all parts
@@ -33,7 +35,7 @@ export const useFetchCases = () => {
 // Fetch case data
 export const fetchCaseData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/cases");
+		const response = await fetch("http://localhost:4000/api/chassis");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -67,7 +69,7 @@ export const useFetchCases = () => {
 // Fetch cpu data
 export const fetchCpuData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/cpus");
+		const response = await fetch("http://localhost:4000/api/cpu");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -97,7 +99,7 @@ export const useFetchCpu = () => {
 // Fetch cpu cooler data
 export const fetchCpuCoolerData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/cpu_coolers");
+		const response = await fetch("http://localhost:4000/api/cpu_cooler");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -127,7 +129,7 @@ export const useFetchCpuCoolers = () => {
 // Fetch gpu data
 export const fetchGpuData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/gpus");
+		const response = await fetch("http://localhost:4000/api/gpu");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -157,7 +159,7 @@ export const useFetchGpus = () => {
 // Fetch memory data
 export const fetchMemoryData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/memories");
+		const response = await fetch("http://localhost:4000/api/memory");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -187,7 +189,7 @@ export const useFetchMemories = () => {
 // Fetch motherboard data
 export const fetchMotherboardData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/motherboards");
+		const response = await fetch("http://localhost:4000/api/motherboard");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -217,7 +219,7 @@ export const useFetchMotherboards = () => {
 // Fetch psu data
 export const fetchPsuData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/psus");
+		const response = await fetch("http://localhost:4000/api/psu");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -247,7 +249,7 @@ export const useFetchPsus = () => {
 // Fetch storage data
 export const fetchStorageData = async () => {
 	try {
-		const response = await fetch("http://localhost:4000/api/storages");
+		const response = await fetch("http://localhost:4000/api/storage");
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -325,6 +327,118 @@ export const useFetchAllData = () => {
 	return data;
 };
 
+// All funtions for adding components
+export const handleComponentAddAdmin = async (event, type, formFields) => {
+	try {
+		const response = await fetch(`http://localhost:4000/api/${type}`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: "include", // For all fetch requests, do this!
+			body: JSON.stringify(formFields),
+		});
+		if (response.ok) {
+			window.location.reload();
+			alert("Added component successfully");
+		} else {
+			const data = await response.json();
+			if (data.message) {
+				alert(`HTTP error ${response.status}: ${data.message}`)
+				throw new Error(data.error);
+			} else {
+				alert("Failed to add component. Please try again.");
+			}
+		}
+	} catch (error) {
+		console.error("Error adding component:", error);
+		// Handle error
+	}
+};
+
+export const handleComponentChangeAdmin = async (event, type, formFields, componentId) => {
+	try {
+		const response = await fetch(`http://localhost:4000/api/${type}/${componentId}`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: "include", // For all fetch requests, do this!
+			body: JSON.stringify(formFields),
+		});
+		if (response.ok) {
+			window.location.reload();
+			alert("Changed component successfully");
+		} else {
+			const data = await response.json();
+			if (data.message) {
+				alert(`HTTP error ${response.status}: ${data.message}`)
+				throw new Error(data.error);
+			} else {
+				alert("Failed to change component. Please try again.");
+			}
+		}
+	} catch (error) {
+		console.error("Error changing component:", error);
+		// Handle error
+	}
+};
+
+export const handleComponentDeleteAdmin = async (type, id) => {
+	
+	// api call to log out the user
+	const response = await fetch(`http://localhost:4000/api/${type}/${id}/delete`, {
+		method: "DELETE",
+		credentials: "include",  // Important, because we're using cookies
+	});
+
+	// If successful, reload the current window
+	if (response.ok) {
+		window.location.reload();
+		alert("Deleted item successfully")
+	} else {
+		const data = await response.json();
+		throw new Error(data.error);
+	}
+};
+
+/*
+export const handleSignup = async (event) => {
+	
+	// Data from the form
+	const Name = event.target.username.value;
+    const Email = event.target.email.value;
+    const Password = event.target.password.value;
+	
+	//console.log(Name, Email, Password)
+	
+    if (Name && Email && Password) {
+		
+		// api call to register a new user
+      const response = await fetch("http://localhost:4000/api/users", {
+        method: "POST",
+        headers: { 
+			"Content-Type": "application/json"
+		},
+		credentials: "include", // Important, because we're using cookies
+        body: JSON.stringify({ Name, Email, Password }),
+      }).catch(console.error);
+		
+		if (response.ok) {
+			alert("Signed up successfully");
+		} else {
+			const data = await response.json();
+			if (response.status === 409) {
+				alert(data.message);
+				throw new Error(data.error);
+			} else {
+				alert("Failed to sign up. Please try again.");
+				throw new Error(data.error);
+			}
+		}
+  }
+};
+*/
 
 /*
 export const useFetchAllData = () => {
@@ -366,14 +480,15 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 		body: JSON.stringify({ Email: email, Password: password })
 	});
 	const data = await response.json();
-		console.log("data.userData", data.user)
+	//console.log("data.userData", data.user)
 	
 	// If successful, set the current user to the provided credentials and return the data
 	if (response.ok) {
 		setCurrentUser(data.user);
-		//window.location.reload();
+		alert("Logged in successfully");
 		return data.user;
 	} else {
+		alert(data.message)
 		throw new Error(data.error);
 	}
 };
@@ -381,26 +496,45 @@ export const handleSignin = async (email, password, setCurrentUser) => {
 
 // Signup
 export const handleSignup = async (event) => {
-	
+
 	// Data from the form
 	const Name = event.target.username.value;
-    const Email = event.target.email.value;
-    const Password = event.target.password.value;
-	
-	//console.log(Name, Email, Password)
-	
-    if (Name && Email && Password) {
-		
-		// api call to register a new user
-      fetch("http://localhost:4000/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-		credentials: "include", // Important, because we're using cookies
-        body: JSON.stringify({ Name, Email, Password }),
-      })
+	const Email = event.target.email.value;
+	const Password = event.target.password.value;
 
-      .catch(console.error);
-  }
+	//console.log(Name, Email, Password)
+	try {
+
+		if (Name && Email && Password) {
+
+			// api call to register a new user
+			const response = await fetch("http://localhost:4000/api/users/signup", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				credentials: "include", // Important, because we're using cookies
+				body: JSON.stringify({ Name, Email, Password }),
+			}).catch(console.error);
+
+			if (response.ok) {
+				alert("Signed up successfully");
+			} else {
+				const data = await response.json();
+				if (data.message) {
+					alert(`HTTP error ${response.status}: ${data.message}`)
+					throw new Error(data.error);
+				} else {
+					alert("Failed sign up. Please try again.");
+					throw new Error(data.error);
+				}
+			}
+		}
+	} catch (error) {
+		console.error("Error adding user:", error);
+		throw new Error(error);
+
+	}
 };
 
 
@@ -447,7 +581,226 @@ export const checkIfSignedIn = async () => {
 	}
 };
 
+
+// User credential change
+export const handleCredentialChange = async (event) => {
+    event.preventDefault();
+
+    // Extract values from the form
+    const Name = event.target.name.value;
+    const Email = event.target.email.value;
+    const Password = event.target.password.value;
+    const profileImage = event.target.profile_image.value;
+	const currentPassword = event.target.currentpassword.value;
+	
+	//console.log(Name)
+	//console.log(Email)
+
+    try {
+        const updatedCredentials = {};
+
+        if (Name) updatedCredentials.Name = Name;
+        if (Email) updatedCredentials.Email = Email;
+        if (Password) updatedCredentials.Password = Password;
+        if (profileImage) updatedCredentials.profileImage = profileImage;
+        if (currentPassword) updatedCredentials.currentPassword = currentPassword;
+
+        // Only proceed if at least one field is filled
+        if (Object.keys(updatedCredentials).length > 0) {
+            const response = await fetch("http://localhost:4000/api/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(updatedCredentials)
+            });
+
+            // Handle update
+			if (response.ok) {
+				const responseData = await response.json();
+				console.log("User updated successfully:", responseData);
+				alert("Successfully changed the users credentials!");
+				window.location.reload();
+			} else {
+				const data = await response.json();
+				if (data.message) {
+					alert(`HTTP error ${response.status}: ${data.message}`)
+					throw new Error(data.error);
+				} else {
+					alert("Failed change credentials. Please try again.");
+					throw new Error(data.error);
+				}
+			}
+        }
+    } catch (error) {
+        console.error("Error updating credentials:", error);
+		throw new Error(error);
+    }
+};
+
+
+// For admin users
+// Fetch all users
+export const fetchAllUsers = async () => {
+	try {
+		const response = await fetch("http://localhost:4000/api/users");
+		const data = await response.json();
+		
+		// If data is not correct format
+		if (!Array.isArray(data)) {
+		  return Object.values(data);
+		}
+		
+		return data;
+	} catch (error) {
+		console.error(error);
+		throw new error;
+	}
+};
+
+// React hook to use user data
+export const useFetchAllUsers = () => {
+	const [users, setUsers] = useState([]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const data = await fetchAllUsers();
+				setUsers(data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchData();
+	}, []);
+	return users;
+};
+
+
+// User credential change for admins
+export const handleCredentialChangeAdmin = async (event, formFields) => {
+    event.preventDefault();
+
+    // Extract values from the form
+    const ID = event.target.id.value;
+	const profileImage = event.target.profile_image.value;
+    const Admin = event.target.admin.checked;
+    const Banned = event.target.banned.checked;
+
+    try {
+        if (Admin) formFields.Admin = Admin ? "1" : "0";
+        if (Banned) formFields.Banned = Banned ? "1" : "0";
+
+            const response = await fetch(`http://localhost:4000/api/users/${ID}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(formFields)
+            });
+
+            // Handle update
+			if (response.ok) {
+				const responseData = await response.json();
+				console.log("User updated successfully:", responseData);
+				alert("Successfully changed the users credentials!");
+				window.location.reload();
+
+			} else {
+				const data = await response.json();
+				if (data.message) {
+					alert(`HTTP error ${response.status}: ${data.message}`)
+					throw new Error(data.error);
+				} else {
+					alert("Failed to change credentials. Please try again.");
+					throw new Error(data.error);
+				}
+				}
+    } catch (error) {
+        console.error("Error updating credentials:", error);
+		throw new Error(error);
+    }
+};
+
+export const handleSignupAdmin = async (event) => {
+    event.preventDefault();
+	// Data from the form
+	const Name = event.target.name.value;
+	const Email = event.target.email.value;
+	const Password = event.target.password.value;
+	const Admin = event.target.admin.checked ? "1" : "0";
+
+	try {
+		if (Name && Email && Password && Admin) {
+
+			// api call to register a new user
+			const response = await fetch("http://localhost:4000/api/admin/signup", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				credentials: "include", // Important, because we're using cookies
+				body: JSON.stringify({ Name, Email, Password, Admin }),
+			}).catch(console.error);
+
+			if (response.ok) {
+				alert("Added user successfully");
+				window.location.reload();
+			} else {
+				const data = await response.json();
+				if (data.message) {
+					alert(`HTTP error ${response.status}: ${data.message}`)
+					throw new Error(data.error);
+				} else {
+					alert("Failed to add user. Please try again.");
+					throw new Error(data.error);
+				}
+			}
+		}
+	} catch (error) {
+		console.error("Error adding user:", error);
+		throw new Error(error);
+		
+	}
+};
+
+
 /*
+export const handleCredentialChange = async (event) => {
+    event.preventDefault();
+
+    // Extract values from the form
+    const Name = event.target.username.value;
+    const Email = event.target.email.value;
+    const Password = event.target.password.value;
+
+    // Construct the data object dynamically
+    const dataToUpdate = {};
+    if (Name) dataToUpdate.Name = Name;
+    if (Email) dataToUpdate.Email = Email;
+    if (Password) dataToUpdate.Password = Password;
+
+    // Only proceed if at least one field is filled
+    if (Object.keys(dataToUpdate).length > 0) {
+        try {
+            const response = await fetch("http://localhost:4000/api/users/:id", {
+                method: "PATCH", // Use PATCH for updating
+                headers: { "Content-Type": "application/json" },
+                credentials: "include", // Important, because we're using cookies
+                body: JSON.stringify(dataToUpdate),
+            });
+
+            const responseData = await response.json();
+            if (!response.ok) {
+                throw new Error(responseData.message || 'An error occurred while updating credentials');
+            }
+            // Handle success (e.g., display a success message or update state)
+        } catch (error) {
+            console.error('Error updating credentials:', error);
+            // Handle error (e.g., display an error message)
+        }
+    }
+};
+
+
+
 export const checkIfSignedIn = async () => {
   const response = await fetch("http://localhost:4000/api/profile", {
     method: "GET",

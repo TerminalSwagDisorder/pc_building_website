@@ -14,12 +14,12 @@ export const Signup = ({ onSubmit }) => {
 	
 	// Async function for when the user submits the sign up form
   const handleSubmit = async (event) => {
+	  event.preventDefault();
 		try {
 			await handleSignup(event);
-			alert("Signed up successfully");
 			navigate("/signin");
-		} catch (event) {
-			console.log(event.message);
+		} catch (error) {
+			console.log(error.message);
 		}
 	};
 	return (

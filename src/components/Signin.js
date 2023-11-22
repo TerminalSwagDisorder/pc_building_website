@@ -20,13 +20,12 @@ export const Signin = ({ onSubmit, setCurrentUser }) => {
     event.preventDefault();
 		try {
 			await handleSignin(email, password, setCurrentUser);
-			alert("Logged in successfully");
 			navigate("/");
-			//window.location.reload();
+			window.location.reload();
 			//const userData = await checkIfSignedIn();
 			//setCurrentUser(userData); 
-		} catch (event) {
-			console.log(event.message);
+		} catch (error) {
+			console.log(error.message);
 		}
 	};
 	return (

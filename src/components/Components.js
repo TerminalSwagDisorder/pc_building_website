@@ -77,8 +77,8 @@ const BasicRenderComponents = ({ cases, cpus, cpuCoolers, gpus, memories, mother
 						{showMemories && (
 							<div className="component-list">
 								<ul>
-									{memories.map((memorieItem) => (
-										<li key={memorieItem.ID}>{memorieItem.Manufacturer} - {memorieItem.Name}</li>
+									{memories.map((memoryItem) => (
+										<li key={memoryItem.ID}>{memoryItem.Manufacturer} - {memoryItem.Name}</li>
 									))}
 								</ul>
 							</div>

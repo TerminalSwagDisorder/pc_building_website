@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { checkIfSignedIn, handleSignout } from "../api";
-import { useNavigate } from "react-router-dom";
+import { handleSignout } from "../api";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import '../style/nav.scss';
 
 // Function for renderin the navbar, takes props for current user and onClick
 const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
-  const navigate = useNavigate();
-	const [isSignedIn, setIsSignedIn] = useState(false);
 	
 	// Async function for signout
 	const handleLogout = async () => {
@@ -33,14 +30,14 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 				<div className="dropdown">
 					<li className="dropbtn"><Link to="/components">Components</Link></li>
 					<div className="dropdown-content">
-						<Link to="/cpu">Cpu</Link>
-						<Link to="/cases">Cases</Link>
-						<Link to="/cpuCoolers">CpuCoolers</Link>
-						<Link to="/gpus">Gpus</Link>
-						<Link to="/memories">Memories</Link>
-						<Link to="/motherboards">Motherboards</Link>
-						<Link to="/psus">Psus</Link>
-						<Link to="/storages">Storages</Link>
+						<Link to="cpu">Cpu</Link>
+						<Link to="cases">Cases</Link>
+						<Link to="cpuCoolers">CpuCoolers</Link>
+						<Link to="gpus">Gpus</Link>
+						<Link to="memories">Memories</Link>
+						<Link to="motherboards">Motherboards</Link>
+						<Link to="psus">Psus</Link>
+						<Link to="storages">Storages</Link>
 					</div>
 				</div>
 				
@@ -48,21 +45,33 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 	  		{/* Check if user is logged in */}
 	  		{/* If true do this */}
 			{currentUser ? (
-			<div className='signout'><li><button onClick={handleSignout}>Log out</button></li>
-			<li style={{color:"white"}}>Welcome <span>{currentUser.Name}</span> :)</li>
+			<div className='signout'><li><button onClick={handleLogout}>Log out</button></li>
+			<li style={{color:"white"}}><span>Welcome<Link to="profile">{currentUser.Name}</Link></span></li>
 			<Stack direction="row" spacing={2}>
 				<Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
 			</Stack>
 			</div>
-			
-			
+
 		) : (
 			<ul>
 	  		{/* If false do this */}
-				<li style={{color:"white"}}><Link to="/signin">Not signed in</Link></li>
-				<li style={{color:"white"}}><Link to="/signup">Signup</Link></li>
+				<li style={{color:"white"}}><Link to="signin">Not signed in</Link></li>
+				<li style={{color:"white"}}><Link to="signup">Signup</Link></li>
 			</ul>
 		)}
+
+	  {currentUser && currentUser.isAdmin && (
+		<div className="dropdown">
+        <li className="dropbtn"><Link to="admin">Admin page</Link></li>
+		<div className="dropdown-content">
+			<Link to="admin/users">All users</Link>
+			<Link to="admin/components">All components</Link>
+		</div>
+		</div>
+
+
+	  	)}
+
         </ul>
     </div>
   );
