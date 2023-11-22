@@ -369,7 +369,91 @@ api.get("/api/:component", (req, res) => {
 	});
 });
 
-// Provide posting to the db for all components, do not make these dynamic as its a big security risk
+// Show single component
+api.get("/api/:component/:id", (req, res) => {
+	const { component, id } = req.params; 
+  	const sql = `SELECT * FROM ${component} WHERE ID = ?`;
+  	db.get(sql, [id], (err, row) => {
+		if (err) {
+			console.error(err.message);
+			res.status(500).json({ message: "Internal server error" });
+		} else if (!row) {
+			res.status(404).json({ message: "User not found" });
+		} else {
+			// Exclude sensitive information like hashed password before sending the row data
+			const { Password, ...rowData } = row;
+			res.status(200).json( {rowData: row });
+			console.log(row)
+		}
+  	});
+});
+
+// Update user credentials
+api.patch("/api/:component/:id", authenticateJWT, (req, res) => {
+	console.log("server api admin update credentials accessed");
+	const { component, id } = req.params; // Component ID from the url
+	const formFields = req.body; // Updated fields from request body
+	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
+
+	try {
+		// Only admins are allowed to update this
+		if (!req.user.isAdmin) {
+			return res.status(403).json({ message: "Unauthorized" });
+		}
+
+		if (typeof Url !== "undefined") {
+		if (!regEx.test(Url)) {
+				return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+			}
+		}
+
+		// SQL query to update component data
+		// updateQuery allows for multiple fields to be updated simultaneously
+		let updateQuery = `UPDATE ${component} SET `;
+		let queryParams = [];
+
+		// Iterate through the formFields object and add fields to the query
+		for (const key in formFields) {
+			if (formFields.hasOwnProperty(key)) {
+				if (formFields[key] !== "") {
+				if (key === "Url") {
+					if (!regEx.test(formFields[key])) {
+							return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
+						}
+				}
+				updateQuery += `${key} = ?, `;
+				queryParams.push(formFields[key]);
+				}
+			}
+		}
+
+		// Remove trailing comma and space
+		if (queryParams.length > 0) {
+			updateQuery = updateQuery.slice(0, -2);
+		}
+		updateQuery += " WHERE ID = ?";
+		queryParams.push(id);
+
+		console.log(updateQuery)
+		console.log(queryParams)
+
+		// Execute the SQL query
+		db.run(updateQuery, queryParams, function (err) {
+			if (err) {
+				console.error(err.message);
+				res.status(500).json({ message: "Internal server error" });
+			} else {
+				res.status(200).json({ message: "Component updated successfully", id: this.lastID });
+			}
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Internal server error" });
+	}
+});
+
+
+// Provide posting to the db for all components, do not make these dynamic as its a security risk
 api.post("/api/chassis", authenticateJWT, (req, res) => {
     const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility } = req.body;
 	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/

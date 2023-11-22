@@ -9,6 +9,8 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
 	const [inputValue, setInputValue] = useState("");
 	const [isAdminChecked, setIsAdminChecked] = useState(0);
 	const [isBannedChecked, setIsBannedChecked] = useState(0);
+	const [formFields, setFormFields] = useState({});
+
 
 	useEffect(() => {
 		//if (!selectedUser && users.length > 0) {
@@ -35,6 +37,10 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
     // Event handler for input change
     const handleInputChange = (event) => {
 		setInputValue(event.target.value);
+		setFormFields(prevFields => ({
+			...prevFields,
+			[event.target.name]: event.target.value
+		}));
 		// console.log("event.target.value", event.target.value)
 		// console.log("event.target.name", event.target.type)
 		
@@ -174,14 +180,14 @@ const renderBasedOnUser = () => {
 
 			if (selectedUser !== "New user") {
 				try {
-					await handleCredentialChangeAdmin(event, newAdmin, initialAdmin, newBanned, initialBanned);
+					await handleCredentialChangeAdmin(event, newAdmin, initialAdmin, newBanned, initialBanned, formFields);
 				} catch (error) {
 					console.error("Error updating credentials:", error);
 					alert("Error updating credentials.");
 				}
 			} else if (selectedUser === "New user") {
 				try {
-				await handleSignupAdmin(event)
+				await handleSignupAdmin(event, formFields)
 				} catch (error) {
 					console.error("Error adding user:", error);
 					alert("Error adding user.");

@@ -328,13 +328,7 @@ export const useFetchAllData = () => {
 };
 
 // All funtions for adding components
-export const handleAddComponentsAdmin = async (event, type, formFields) => {
-
-	const Url = event.target.Url.value;
-	const Price = event.target.Price.value;
-	const Name = event.target.Name.value;
-	const Manufacturer = event.target.Manufacturer.value;
-
+export const handleComponentAddAdmin = async (event, type, formFields) => {
 	try {
 		const response = await fetch(`http://localhost:4000/api/${type}`, {
 			method: "POST",
@@ -345,6 +339,7 @@ export const handleAddComponentsAdmin = async (event, type, formFields) => {
 			body: JSON.stringify(formFields),
 		});
 		if (response.ok) {
+			window.location.reload();
 			alert("Added component successfully");
 		} else {
 			const data = await response.json();
@@ -361,8 +356,32 @@ export const handleAddComponentsAdmin = async (event, type, formFields) => {
 	}
 };
 
-export const handleModifyComponentsAdmin = async (event, type, formFields) => {
-	// Add ability to update an existing component
+export const handleComponentChangeAdmin = async (event, type, formFields, componentId) => {
+	try {
+		const response = await fetch(`http://localhost:4000/api/${type}/${componentId}`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: "include", // For all fetch requests, do this!
+			body: JSON.stringify(formFields),
+		});
+		if (response.ok) {
+			window.location.reload();
+			alert("Changed component successfully");
+		} else {
+			const data = await response.json();
+			if (data.message) {
+				alert(`HTTP error ${response.status}: ${data.message}`)
+				throw new Error(data.error);
+			} else {
+				alert("Failed to change component. Please try again.");
+			}
+		}
+	} catch (error) {
+		console.error("Error changing component:", error);
+		// Handle error
+	}
 };
 
 /*
@@ -570,7 +589,6 @@ export const handleCredentialChange = async (event) => {
 
         // Only proceed if at least one field is filled
         if (Object.keys(updatedCredentials).length > 0) {
-			console.log("Proceeded")
             const response = await fetch("http://localhost:4000/api/profile", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
@@ -640,7 +658,7 @@ export const useFetchAllUsers = () => {
 
 
 // User credential change for admins
-export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin, newBanned, initialBanned) => {
+export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin, newBanned, initialBanned, formFields) => {
     event.preventDefault();
 
     // Extract values from the form
@@ -705,7 +723,7 @@ export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin,
     }
 };
 
-export const handleSignupAdmin = async (event) => {
+export const handleSignupAdmin = async (event, formFields) => {
 
 	// Data from the form
 	const Name = event.target.name.value;

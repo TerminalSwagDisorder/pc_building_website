@@ -75,6 +75,16 @@ form {
 	}
 }
 
+.adminComponentList {
+	margin-bottom: 0.5em;
+	button {
+		float: right;
+		width: 20em;
+		height: 1.6em;
+		overflow: hidden;
+	}
+}
+
 .signout {
 	display: flex;
 	button, li {

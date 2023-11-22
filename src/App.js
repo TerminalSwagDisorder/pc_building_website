@@ -19,7 +19,7 @@ import Admin from "./components/Admin";
 import UsersAdmin from "./components/UsersAdmin";
 import DashboardAdmin from "./components/DashboardAdmin";
 import ComponentsAdmin from "./components/ComponentsAdmin";
-import { checkIfSignedIn, useFetchAllData, useFetchAllUsers, handleCredentialChangeAdmin, handleAddComponentsAdmin, handleSignupAdmin } from "./api";
+import { checkIfSignedIn, useFetchAllData, useFetchAllUsers, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin } from "./api";
 import { Router, Routes, Route } from "react-router-dom";
 
 
@@ -75,7 +75,7 @@ console.log("currentuser in app.js", currentUser);
 		<Route path="admin" element={<Admin currentUser={currentUser} />}>
 			<Route index element={<DashboardAdmin currentUser={currentUser} />} />
 			<Route path="users" element={<UsersAdmin currentUser={currentUser} users={users} handleCredentialChangeAdmin={handleCredentialChangeAdmin} handleSignupAdmin={handleSignupAdmin} />} />
-			<Route path="components" element={<ComponentsAdmin currentUser={currentUser} handleAddComponentsAdmin={handleAddComponentsAdmin} cases={cases} cpus={cpus} cpuCoolers={cpuCoolers} gpus={gpus} memories={memories} motherboards={motherboards} psus={psus} storages={storages} />} />
+			<Route path="components" element={<ComponentsAdmin currentUser={currentUser} handleComponentAddAdmin={handleComponentAddAdmin} handleComponentChangeAdmin={handleComponentChangeAdmin} chassis={cases} cpus={cpus} cpuCoolers={cpuCoolers} gpus={gpus} memories={memories} motherboards={motherboards} psus={psus} storages={storages} />} />
 		</Route>
 		)}
 		{currentUser ? (
