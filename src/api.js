@@ -658,45 +658,23 @@ export const useFetchAllUsers = () => {
 
 
 // User credential change for admins
-export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin, newBanned, initialBanned, formFields) => {
+export const handleCredentialChangeAdmin = async (event, formFields) => {
     event.preventDefault();
 
     // Extract values from the form
     const ID = event.target.id.value;
-    const Name = event.target.name.value;
-    const Email = event.target.email.value;
-    const Password = event.target.password.value;
-    const Profile_image = event.target.profile_image.value;
     const Admin = event.target.admin.checked;
     const Banned = event.target.banned.checked;
-	
-	console.log(ID, Name, Email, Password, Profile_image, Admin, Banned)
-	console.log(Email)
-    try {
-        const updatedCredentials = {};
-		updatedCredentials.ID = ID
-        if (Name) updatedCredentials.Name = Name;
-        if (Email) updatedCredentials.Email = Email;
-        if (Password) updatedCredentials.Password = Password;
-        if (Profile_image) updatedCredentials.Profile_image = Profile_image;
-        if (newAdmin !== initialAdmin) updatedCredentials.Admin = Admin ? "1" : "0";
-        if (newBanned !== initialBanned) updatedCredentials.Banned = Banned ? "1" : "0";
-		
-		// Also works
-		// if (String(Admin)) updatedCredentials.Admin = Admin ? "1" : "0";
-        // if (String(Banned)) updatedCredentials.Banned = Banned ? "1" : "0";		
-		// if (Admin != undefined) updatedCredentials.Admin = Admin ? "1" : "0";
-        // if (Banned != undefined) updatedCredentials.Banned = Banned ? "1" : "0";
-		
-		console.log(updatedCredentials)
 
-        // Only proceed if at least one field is filled
-        if (Object.keys(updatedCredentials).length > 0) {
+    try {
+        if (Admin) formFields.Admin = Admin ? "1" : "0";
+        if (Banned) formFields.Banned = Banned ? "1" : "0";
+
             const response = await fetch(`http://localhost:4000/api/users/${ID}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify(updatedCredentials)
+                body: JSON.stringify(formFields)
             });
 
             // Handle update
@@ -716,15 +694,14 @@ export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin,
 					throw new Error(data.error);
 				}
 				}
-        }
     } catch (error) {
         console.error("Error updating credentials:", error);
 		throw new Error(error);
     }
 };
 
-export const handleSignupAdmin = async (event, formFields) => {
-
+export const handleSignupAdmin = async (event) => {
+    event.preventDefault();
 	// Data from the form
 	const Name = event.target.name.value;
 	const Email = event.target.email.value;

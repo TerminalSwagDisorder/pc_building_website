@@ -278,8 +278,9 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
 api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
 	console.log("server api admin update credentials accessed")
 	const { id } = req.params; // User ID from the url
-	const { ID, Name, Email, Password, Profile_image, Admin, Banned } = req.body; // Updated credentials from request body
-	// console.log("Server data: ", { ID, Name, Email, Password, Profile_image, Admin, Banned })
+	const { formFields } = req.body; // Updated credentials from request body
+
+	console.log(req.body)
 
 	try {
 		// Only admins are allowed to update through this
@@ -288,39 +289,23 @@ api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
 		}
 
 		let hashedPassword = null;
-		if (Password) {
-			// Hash the new password before storing it
-			hashedPassword = await bcrypt.hash(Password, 10);
-		}
 
 		// SQL query to update user data
 		// updateQuery allows for multiple fields to be updated simultaneously
 		let updateQuery = "UPDATE user SET ";
 		let queryParams = [];
 		
-		if (Name) {
-			updateQuery += "Name = ?, ";
-			queryParams.push(Name);
-		}
-		if (Email) {
-			updateQuery += "Email = ?, ";
-			queryParams.push(Email);
-		}
-		if (hashedPassword) {
-			updateQuery += "Password = ?, ";
-			queryParams.push(hashedPassword);
-		}
-		if (Profile_image) {
-			updateQuery += "Profile_image = ?, ";
-			queryParams.push(Profile_image);
-		}
-		if (Admin) {
-			updateQuery += "Admin = ?, ";
-			queryParams.push(Admin);
-		}
-		if (Banned) {
-			updateQuery += "Banned = ?, ";
-			queryParams.push(Banned);
+		for (const key in formFields) {
+			if (formFields.hasOwnProperty(key)) {
+				if (formFields[key] !== "") {
+			if (key === "Password") {
+				// Hash the new password before storing it
+				hashedPassword = await bcrypt.hash(key, 10);
+			}
+				updateQuery += `${key} = ?, `;
+				queryParams.push(formFields[key]);
+				}
+			}
 		}
 
 		// Remove trailing comma and space
@@ -329,9 +314,9 @@ api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
 		}
 		updateQuery += " WHERE ID = ?";
 		queryParams.push(id);
-
-		// console.log("queryParams: ", queryParams)
-		// console.log("updateQuery: ", updateQuery)
+		
+		 console.log("queryParams: ", queryParams)
+		 console.log("updateQuery: ", updateQuery)
 		userDb.run(updateQuery, queryParams, function (err) {
 			if (err) {
 				console.error(err.message);
