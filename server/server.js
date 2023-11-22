@@ -417,7 +417,7 @@ api.get("/api/:component/:id", (req, res) => {
   	});
 });
 
-// Update user credentials
+// Update single component
 api.patch("/api/:component/:id", authenticateJWT, (req, res) => {
 	console.log("server api admin update credentials accessed");
 	const { component, id } = req.params; // Component ID from the url
@@ -481,10 +481,25 @@ api.patch("/api/:component/:id", authenticateJWT, (req, res) => {
 	}
 });
 
+api.post("/api/:component", authenticateJWT, (req, res) => {
+	const { component } = req.params;
+    const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, ...dynamicFields } = req.body;
+	
+	// Predefined SQL queries for security, can add more in the future
+	const componentQueries = {
+		"chassis": "INSERT INTO chassis (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		"cpu": "INSERT INTO cpu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		"cpu_cooler": "INSERT INTO cpu_cooler (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		"gpu": "INSERT INTO gpu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		"memory": "INSERT INTO memory (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		"motherboard": "INSERT INTO motherboard (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		"psu": "INSERT INTO psu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		"storage": "INSERT INTO storage (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+	};
+    if (!componentQueries[component]) {
+        return res.status(400).json({ message: "Invalid component type" });
+    }
 
-// Provide posting to the db for all components, do not make these dynamic as its a security risk
-api.post("/api/chassis", authenticateJWT, (req, res) => {
-    const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility } = req.body;
 	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
     
     if (!req.user.isAdmin) {
@@ -498,293 +513,25 @@ api.post("/api/chassis", authenticateJWT, (req, res) => {
 		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
 	}
 
-    // Check if an item with the same ID or Name already exists
-    const checkSql = "SELECT * FROM chassis WHERE Url = ?";
+    // Check if an item with the same Url already exists
+    const checkSql = `SELECT * FROM ${component} WHERE Url = ?`;
     db.get(checkSql, [Url], (checkErr, row) => {
         if (checkErr) {
             console.error(checkErr);
             return res.status(500).json({ message: "Internal server error" });
         }
-
         if (row) {
             return res.status(409).json({ message: "Item already exists" });
         }
 
-        const sql = "INSERT INTO chassis (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chassis_type, Dimensions, Color, Compatibility], function (err) {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: "Failed to insert item" });
-            }
-            res.status(200).json({ id: this.lastID });
-        });
-    });
-});
+		// For the dynamic fields
+        // const fieldNames = Object.keys(dynamicFields).join(', ');
+		// const placeholders = dynamicFields.map(() => '?').join(', ');
+        const fieldValues = Object.values(dynamicFields);
 
-api.post("/api/cpu", authenticateJWT, (req, res) => {
-    const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU } = req.body;
-    
-	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
-    
-    if (!req.user.isAdmin) {
-        return res.status(403).json({ message: "Unauthorized" });
-    }
-	
-	if (!Url || !Price || !Name || !Manufacturer) {
-		return res.status(400).json({ message: "Missing required fields" });
-	}
-	if (!regEx.test(Url)) {
-		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
-	}
-
-    // Check if an item with the same ID or Name already exists
-    const checkSql = "SELECT * FROM cpu WHERE Url = ?";
-    db.get(checkSql, [Url], (checkErr, row) => {
-        if (checkErr) {
-            console.error(checkErr);
-            return res.status(500).json({ message: "Internal server error" });
-        }
-
-        if (row) {
-            return res.status(409).json({ message: "Item already exists" });
-        }
-
-		const sql = "INSERT INTO cpu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Core_Count, Thread_Count, Base_Clock, Cache, Socket, Cpu_Cooler, TDP, Integrated_GPU], function (err) {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: "Failed to insert item" });
-            }
-            res.status(200).json({ id: this.lastID });
-        });
-    });
-});
-
-api.post("/api/cpu_cooler", authenticateJWT, (req, res) => {
-	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions } = req.body;
-    
-	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
-    
-    if (!req.user.isAdmin) {
-        return res.status(403).json({ message: "Unauthorized" });
-    }
-	
-	if (!Url || !Price || !Name || !Manufacturer) {
-		return res.status(400).json({ message: "Missing required fields" });
-	}
-	if (!regEx.test(Url)) {
-		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
-	}
-
-    // Check if an item with the same ID or Name already exists
-    const checkSql = "SELECT * FROM cpu_cooler WHERE Url = ?";
-    db.get(checkSql, [Url], (checkErr, row) => {
-        if (checkErr) {
-            console.error(checkErr);
-            return res.status(500).json({ message: "Internal server error" });
-        }
-
-        if (row) {
-            return res.status(409).json({ message: "Item already exists" });
-        }
-
-	const sql = "INSERT INTO cpu_cooler (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Compatiblilty, Cooling_Potential, Fan_RPM, Noise_Level, Dimensions], function (err) {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: "Failed to insert item" });
-            }
-            res.status(200).json({ id: this.lastID });
-        });
-    });
-});
-
-api.post("/api/gpu", authenticateJWT, (req, res) => {
-	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP } = req.body;
-    
-	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
-    
-    if (!req.user.isAdmin) {
-        return res.status(403).json({ message: "Unauthorized" });
-    }
-	
-	if (!Url || !Price || !Name || !Manufacturer) {
-		return res.status(400).json({ message: "Missing required fields" });
-	}
-	if (!regEx.test(Url)) {
-		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
-	}
-
-    // Check if an item with the same ID or Name already exists
-    const checkSql = "SELECT * FROM gpu WHERE Url = ?";
-    db.get(checkSql, [Url], (checkErr, row) => {
-        if (checkErr) {
-            console.error(checkErr);
-            return res.status(500).json({ message: "Internal server error" });
-        }
-
-        if (row) {
-            return res.status(409).json({ message: "Item already exists" });
-        }
-
-	const sql = "INSERT INTO gpu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Cores, Core_Clock, Memory, Interface, Dimensions, TDP], function (err) {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: "Failed to insert item" });
-            }
-            res.status(200).json({ id: this.lastID });
-        });
-    });
-});
-
-api.post("/api/memory", authenticateJWT, (req, res) => {
-	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency } = req.body;
-    
-	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
-    
-    if (!req.user.isAdmin) {
-        return res.status(403).json({ message: "Unauthorized" });
-    }
-	
-	if (!Url || !Price || !Name || !Manufacturer) {
-		return res.status(400).json({ message: "Missing required fields" });
-	}
-	if (!regEx.test(Url)) {
-		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
-	}
-
-    // Check if an item with the same ID or Name already exists
-    const checkSql = "SELECT * FROM memory WHERE Url = ?";
-    db.get(checkSql, [Url], (checkErr, row) => {
-        if (checkErr) {
-            console.error(checkErr);
-            return res.status(500).json({ message: "Internal server error" });
-        }
-
-        if (row) {
-            return res.status(409).json({ message: "Item already exists" });
-        }
-
-	const sql = "INSERT INTO memory (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Type, Amount, Speed, Latency], function (err) {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: "Failed to insert item" });
-            }
-            res.status(200).json({ id: this.lastID });
-        });
-    });
-});
-
-api.post("/api/motherboard", authenticateJWT, (req, res) => {
-	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility } = req.body;
-    
-	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
-    
-    if (!req.user.isAdmin) {
-        return res.status(403).json({ message: "Unauthorized" });
-    }
-	
-	if (!Url || !Price || !Name || !Manufacturer) {
-		return res.status(400).json({ message: "Missing required fields" });
-	}
-	if (!regEx.test(Url)) {
-		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
-	}
-
-    // Check if an item with the same ID or Name already exists
-    const checkSql = "SELECT * FROM motherboard WHERE Url = ?";
-    db.get(checkSql, [Url], (checkErr, row) => {
-        if (checkErr) {
-            console.error(checkErr);
-            return res.status(500).json({ message: "Internal server error" });
-        }
-
-        if (row) {
-            return res.status(409).json({ message: "Item already exists" });
-        }
-
-	const sql = "INSERT INTO motherboard (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Chipset, Form_Factor, Memory_Compatibility], function (err) {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: "Failed to insert item" });
-            }
-            res.status(200).json({ id: this.lastID });
-        });
-    });
-});
-
-api.post("/api/psu", authenticateJWT, (req, res) => {
-	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions } = req.body;
-    
-	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
-    
-    if (!req.user.isAdmin) {
-        return res.status(403).json({ message: "Unauthorized" });
-    }
-	
-	if (!Url || !Price || !Name || !Manufacturer) {
-		return res.status(400).json({ message: "Missing required fields" });
-	}
-	if (!regEx.test(Url)) {
-		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
-	}
-
-    // Check if an item with the same ID or Name already exists
-    const checkSql = "SELECT * FROM psu WHERE Url = ?";
-    db.get(checkSql, [Url], (checkErr, row) => {
-        if (checkErr) {
-            console.error(checkErr);
-            return res.status(500).json({ message: "Internal server error" });
-        }
-
-        if (row) {
-            return res.status(409).json({ message: "Item already exists" });
-        }
-
-	const sql = "INSERT INTO psu (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Is_ATX12V, Efficiency, Modular, Dimensions], function (err) {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: "Failed to insert item" });
-            }
-            res.status(200).json({ id: this.lastID });
-        });
-    });
-});
-
-api.post("/api/storage", authenticateJWT, (req, res) => {
-	const { ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW } = req.body;
-    
-	const regEx = /.*jimms\.fi\/fi\/Product\/Show\/.+/
-    
-    if (!req.user.isAdmin) {
-        return res.status(403).json({ message: "Unauthorized" });
-    }
-	
-	if (!Url || !Price || !Name || !Manufacturer) {
-		return res.status(400).json({ message: "Missing required fields" });
-	}
-	if (!regEx.test(Url)) {
-		return res.status(400).json({ message: "Invalid URL format. Must be a Jimms product." });
-	}
-
-    // Check if an item with the same ID or Name already exists
-    const checkSql = "SELECT * FROM storage WHERE Url = ?";
-    db.get(checkSql, [Url], (checkErr, row) => {
-        if (checkErr) {
-            console.error(checkErr);
-            return res.status(500).json({ message: "Internal server error" });
-        }
-
-        if (row) {
-            return res.status(409).json({ message: "Item already exists" });
-        }
-
-	const sql = "INSERT INTO storage (ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	db.run(sql, [ID, Url, Price, Name, Manufacturer, Image, Image_Url, Capacity, Form_Factor, Interface, Cache, Flash, TBW], function (err) {
+    	const sql = componentQueries[component];
+		const params = [ID, Url, Price, Name, Manufacturer, Image, Image_Url, ...fieldValues]
+        db.run(sql, params, function (err) {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ message: "Failed to insert item" });
