@@ -24,3 +24,7 @@ yarn-error.log*
 
 .env
 ./secrettoken.js
+
+#db 
+pcbuildwebsite_db.db
+user_data.db
