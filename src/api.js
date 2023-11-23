@@ -690,15 +690,6 @@ export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin,
 		const formData = new FormData();
 		
 		// Need to append an object to formdata like this
-
-		/*
-		Object.keys(formFields).forEach(key => {
-			if (formFields[key] !== null && formFields[key] !== undefined && key !== "banned" &&  key !== "admin") {
-				formData.append(key, formFields[key]);
-			}
-		});
-		*/
-		
 		if (formFields) formData.append("formFields", JSON.stringify(formFields))
 		if (profileImage) formData.append("profileImage", profileImage);
 		console.log("formData", formData)
@@ -735,6 +726,7 @@ export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin,
 
 export const handleSignupAdmin = async (event) => {
     event.preventDefault();
+	
 	// Data from the form
 	const Name = event.target.name.value;
 	const Email = event.target.email.value;
