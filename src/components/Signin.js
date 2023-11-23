@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { handleSignin, checkIfSignedIn } from "../api";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 // Function for signin in, take onSubmit and setting the current user as props
-export const Signin = ({ onSubmit, setCurrentUser }) => {
+export const Signin = ({ onSubmit, setCurrentUser, handleSignin, checkIfSignedIn }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

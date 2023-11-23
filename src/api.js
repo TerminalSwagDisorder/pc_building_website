@@ -618,7 +618,7 @@ export const handleCredentialChange = async (event) => {
 			if (response.ok) {
 				const responseData = await response.json();
 				console.log("User updated successfully:", responseData);
-				alert("Successfully changed the users credentials!");
+				alert("Changed credentials, please sign in again!");
 				window.location.reload();
 			} else {
 				const data = await response.json();

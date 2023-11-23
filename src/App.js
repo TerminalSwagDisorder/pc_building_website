@@ -19,7 +19,7 @@ import Admin from "./components/Admin";
 import UsersAdmin from "./components/UsersAdmin";
 import DashboardAdmin from "./components/DashboardAdmin";
 import ComponentsAdmin from "./components/ComponentsAdmin";
-import { checkIfSignedIn, useFetchAllData, useFetchAllUsers, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin, handleComponentDeleteAdmin } from "./api";
+import { handleSignout, handleSignup, handleSignin, checkIfSignedIn, useFetchAllData, useFetchAllUsers, handleCredentialChange, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin, handleComponentDeleteAdmin } from "./api";
 import { Router, Routes, Route } from "react-router-dom";
 
 
@@ -56,7 +56,7 @@ console.log("currentuser in app.js", currentUser);
 
 	 {/* For all routes, including navbar, add the prop currentUser */}
 	 {/* For navbar, add serCurrentUser for sign out */}
-	<Navbar currentUser={currentUser} setCurrentUser={handleUserChange} />
+	<Navbar currentUser={currentUser} setCurrentUser={handleUserChange} handleSignout={handleSignout} />
 	  <Routes>
 		{/* For each route add the appropriate component prop */}
 		<Route index element={<Home currentUser={currentUser} />} />
@@ -79,11 +79,11 @@ console.log("currentuser in app.js", currentUser);
 		</Route>
 		)}
 		{currentUser ? (
-			<Route path="profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} />} />
+			<Route path="profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} handleCredentialChange={handleCredentialChange} handleSignout={handleSignout} />} />
 		):(
 			<>
-			<Route path="signup" element={<Signup />} />
-			<Route path="Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} />} />
+			<Route path="signup" element={<Signup handleSignup={handleSignup} />} />
+			<Route path="Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} handleSignin={handleSignin} checkIfSignedIn={checkIfSignedIn}/>} />
 			</>
 		)}
 

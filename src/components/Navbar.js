@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { handleSignout } from "../api";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import '../style/nav.scss';
 
 // Function for renderin the navbar, takes props for current user and onClick
-const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
+const Navbar = ({ onClick, setCurrentUser, currentUser, handleSignout }) => {
 	
 	// Async function for signout
 	const handleLogout = async () => {

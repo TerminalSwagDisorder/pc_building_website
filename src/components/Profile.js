@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { checkIfSignedIn, handleCredentialChange, handleSignout } from "../api";
 import { useNavigate } from "react-router-dom";
 import { Input } from '@mui/material';
 import Button from '@mui/material/Button';
 
-const Profile = ({ setCurrentUser, currentUser, onSubmit }) => {
+const Profile = ({ setCurrentUser, currentUser, onSubmit, handleCredentialChange, handleSignout }) => {
 	const [currentOperation, setCurrentOperation] = useState("");
 	const navigate = useNavigate();
 
@@ -89,7 +88,6 @@ const Profile = ({ setCurrentUser, currentUser, onSubmit }) => {
 			await handleCredentialChange(event);
 			await handleSignout();
 			setCurrentUser(null);
-			alert("Changed credentials, please sign in again!");
 			navigate("/signin");
 		} catch (error) {
 			console.error("Error updating credentials:", error);
