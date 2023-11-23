@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { checkIfSignedIn } from "../api";
 import { Input } from "@mui/material";
 import Button from "@mui/material/Button";
 

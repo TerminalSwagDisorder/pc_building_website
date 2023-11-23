@@ -47,7 +47,7 @@ const Navbar = ({ onClick, setCurrentUser, currentUser, handleSignout }) => {
 			<div className='signout'><li><button onClick={handleLogout}>Log out</button></li>
 			<li style={{color:"white"}}><span>Welcome<Link to="profile">{currentUser.Name}</Link></span></li>
 			<Stack direction="row" spacing={2}>
-				<Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+				<Avatar alt="Travis Howard" src={`/images/${currentUser.Profile_image}`} />
 			</Stack>
 			</div>
 

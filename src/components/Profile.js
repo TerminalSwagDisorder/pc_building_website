@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -98,7 +98,7 @@ const Profile = ({ setCurrentUser, currentUser, onSubmit, handleCredentialChange
 
   return (
     <div>
-	  //<img src={`/images/${currentUser.Profile_image}`} alt={currentUser.Profile_image} height="200"/> <br></br>
+	  <img src={`/images/${currentUser.Profile_image}`} alt={currentUser.Profile_image} height="200"/> <br></br>
 		<label for="username"><b>Name</b></label>
 	  <p id="username">{currentUser.Name}</p>
 		<label for="useremail"><b>Email</b></label>

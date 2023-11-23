@@ -2,11 +2,8 @@
 // Auth: Terminal Swag Disorder
 // Desc: File containing code for api functionality
 
-import React, { useEffect, useState } from 'react';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import { useNavigate } from "react-router-dom";
-
+import React, { useEffect, useState } from "react";
+import "./index.css";
 
 
 // Fetch data for all parts
@@ -651,7 +648,7 @@ export const fetchAllUsers = async () => {
 		return data;
 	} catch (error) {
 		console.error(error);
-		throw new error;
+		throw new Error(error);
 	}
 };
 
