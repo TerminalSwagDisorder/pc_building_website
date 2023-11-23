@@ -10,7 +10,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
-require('dotenv').config();
+const multer = require("multer");
+require("dotenv").config();
+
 
 // JSON web token for cookie
 const jwtSecret = process.env.JWT_SECRET;
@@ -40,6 +42,31 @@ const db = new sqlite3.Database(dbPath);
 // User db
 const userDbPath = path.resolve(__dirname, "database/user_data.db");
 const userDb = new sqlite3.Database(userDbPath)
+
+// Middleware for profile images
+// File filter for image validation
+const imageFileFilter = (req, file, cb) => {
+    const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (allowedFileTypes.includes(file.mimetype)) {
+        cb(null, true); // Accept file
+    } else {
+        cb(new Error("Only image files are allowed!"), false); // Reject file
+    }
+};
+
+// Config for multer
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, "public/images");
+	},
+	filename: function (req, file, cb) {
+		const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+		const extension = path.extname(file.originalname);
+		cb(null, "ProfileImage" + "-" + uniqueSuffix + extension);
+	}
+});
+const upload = multer({ storage: storage, fileFilter: imageFileFilter });
+
 
 // Middleware for checking if user is logged in
 const authenticateJWT = (req, res, next) => {
@@ -206,10 +233,11 @@ api.get("/api/profile", authenticateJWT, (req, res) => {
 });
 
 // Update own user credentials
-api.patch("/api/profile", authenticateJWT, async (req, res) => {
+api.patch("/api/profile", authenticateJWT, upload.single("profileImage"), async (req, res) => {
 	console.log("server api update own credentials accessed")
 	const userId = req.user.ID; // User ID from the authenticated JWT, this already makes it secure
-	const { Name, Email, Password, Profile_image, currentPassword } = req.body; // Updated credentials from request body
+	const { Name, Email, Password, currentPassword } = req.body; // Updated credentials from request body
+	const Profile_image = req.file; // Profile image
 
 	try {
 
@@ -242,8 +270,9 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
 			queryParams.push(hashedPassword);
 		}
 		if (Profile_image) {
+			const Profile_image_name = Profile_image.filename;
 			updateQuery += "Profile_image = ?, ";
-			queryParams.push(Profile_image);
+			queryParams.push(Profile_image_name);
 		}
 
 		// Remove trailing comma and space
@@ -270,7 +299,7 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
 });
 
 // For admins
-// Admin add user
+// Add user
 api.post("/api/admin/signup", authenticateJWT, async (req, res) => {
 	const { Name, Email, Password, Admin } = req.body;
 	console.log("server api admin user signup accessed")
@@ -323,12 +352,16 @@ api.post("/api/admin/signup", authenticateJWT, async (req, res) => {
 
 
 // Update user credentials
-api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
+api.patch("/api/users/:id", authenticateJWT, upload.single("profileImage"), async (req, res) => {
 	console.log("server api admin update credentials accessed")
 	const { id } = req.params; // User ID from the url
 	const { formFields } = req.body; // Updated credentials from request body
+	const Profile_image = req.file; // Profile image
+	const jsonFormFields = JSON.parse(formFields)
+	console.log(jsonFormFields)
 
-	console.log(req.body)
+	const allowedFields = ["ID", "Name", "Email", "Password", "Profile_image", "Admin", "Banned"];
+
 
 	try {
 		// Only admins are allowed to update through this
@@ -343,17 +376,25 @@ api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
 		let updateQuery = "UPDATE user SET ";
 		let queryParams = [];
 
-		for (const key in formFields) {
-			if (formFields.hasOwnProperty(key)) {
-				if (formFields[key] !== "") {
-			if (key === "Password") {
-				// Hash the new password before storing it
-				hashedPassword = await bcrypt.hash(key, 10);
-			}
-				updateQuery += `${key} = ?, `;
-				queryParams.push(formFields[key]);
+		for (const key in jsonFormFields) {
+			if (allowedFields.includes(key)) {
+				if (jsonFormFields.hasOwnProperty(key)) {
+					if (jsonFormFields[key] !== "") {
+				if (key === "Password") {
+					// Hash the new password before storing it
+					hashedPassword = await bcrypt.hash(key, 10);
+				}
+					updateQuery += `${key} = ?, `;
+					queryParams.push(jsonFormFields[key]);
+					}
 				}
 			}
+		}
+		
+		if (Profile_image) {
+			const Profile_image_name = Profile_image.filename;
+			updateQuery += "Profile_image = ?, ";
+			queryParams.push(Profile_image_name);
 		}
 
 		// Remove trailing comma and space

@@ -88,7 +88,7 @@ const renderBasedOnUser = () => {
 		  <Input type="password" placeholder="Enter new password" name="password" onChange={handleInputChange} />
 		</div><br></br>
 		 <div>
-		  <Input type="file" name="profile_image" onChange={handleInputChange} />
+		  <Input type="file" name="profile_image" accept="image/png, image/jpeg, image/gif" onChange={handleInputChange} />
 		</div><br></br>
 		 <div>
 	  		<label for="admin">Admin</label>
@@ -125,7 +125,7 @@ const renderBasedOnUser = () => {
 		  <Input type="password" placeholder="Enter new password" name="password" onChange={handleInputChange} />
 		</div><br></br>
 		 <div>
-		  <Input type="file" name="profile_image" onChange={handleInputChange} />
+		  <Input type="file" name="profile_image" accept="image/png, image/jpeg, image/gif" onChange={handleInputChange} disabled />
 		</div><br></br>
 		 <div>
 	  		<label for="admin">Admin</label>
@@ -161,11 +161,12 @@ const renderBasedOnUser = () => {
 		const newName = event.target.name.value;
 		const newEmail = event.target.email.value;
 		const newPassword = event.target.password.value;
+		const newProfileImage = event.target.profile_image.files[0];
 		const newAdmin = isAdminChecked
 		const newBanned = isBannedChecked
 
 		// Check if any field is filled
-		if (selectedUser !== "New user" && !newName && !newEmail && !newPassword && newAdmin === initialAdmin && newBanned === initialBanned) {
+		if (selectedUser !== "New user" && !newName && !newEmail && !newPassword && !newProfileImage && newAdmin === initialAdmin && newBanned === initialBanned) {
 			alert("No changes detected!");
 			return;
 		} else if (selectedUser === "New user" && !newName && !newEmail && !newPassword) {
@@ -187,7 +188,7 @@ const renderBasedOnUser = () => {
 				}
 			} else if (selectedUser === "New user") {
 				try {
-				await handleSignupAdmin(event, formFields)
+				await handleSignupAdmin(event, newAdmin, formFields)
 				} catch (error) {
 					console.error("Error adding user:", error);
 					alert("Error adding user.");

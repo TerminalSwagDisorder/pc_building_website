@@ -34,7 +34,7 @@ const Profile = ({ setCurrentUser, currentUser, onSubmit, handleCredentialChange
 			</div><br></br>
 			<div>
 				<label>New profile image</label>
-			  <Input type="file" name="profile_image"/>
+			  <Input type="file" name="profile_image" accept="image/png, image/jpeg, image/gif" />
 			</div><br></br><br></br>
 			 <div>
 			  <Input type="password" placeholder="Enter current password" name="currentpassword" required/>
