@@ -49,6 +49,22 @@ form {
 	display: block;
 	z-index: 1;
 }
+.wizardForm {
+	position: absolute;
+	top: 20%;
+	bottom: 20%;
+	left: 10%;
+	width: 80%;
+	height: auto;
+	overflow: auto;
+	display: block;
+	z-index: 1;
+
+}
+
+.setWizardAdvanced {
+	cursor: pointer;
+}
 
 .userCredentialChange {
 	margin-top: 3em;

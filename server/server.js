@@ -46,12 +46,12 @@ const userDb = new sqlite3.Database(userDbPath)
 // Middleware for profile images
 // File filter for image validation
 const imageFileFilter = (req, file, cb) => {
-    const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
-    if (allowedFileTypes.includes(file.mimetype)) {
-        cb(null, true); // Accept file
-    } else {
-        cb(new Error("Only image files are allowed!"), false); // Reject file
-    }
+	const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
+	if (allowedFileTypes.includes(file.mimetype)) {
+		cb(null, true); // Accept file
+	} else {
+		cb(new Error("Only image files are allowed!"), false); // Reject file
+	}
 };
 
 // Config for multer
@@ -104,11 +104,19 @@ api.get("/api/users", (req, res) => {
 			const processedUsers = users.map(user => {
 				const isAdmin = user.Admin === 1;
 				const isBanned = user.Banned === 1;
+				if (user.Completed_builds) {
+					try {
+						const Completed_buildsJSON = JSON.parse(user.Completed_builds)
+						const { Completed_builds, Password, ...userData } = user;
+						return { ...userData, isAdmin, isBanned, Completed_buildsJSON };
+					} catch (err) {
+						return console.error("Error parsing JSON:", error)
+					}
+				}
 				// Exclude sensitive information like hashed password
-				const { Password, ...userData } = user;
-				return { ...userData, isAdmin, isBanned };
+				const { Completed_builds, Password, ...userData } = user;
+				return { ...userData, isAdmin, isBanned, Completed_builds: "" };
 			});
-
 			return res.status(200).json(processedUsers);
 		}
 	});
@@ -127,9 +135,18 @@ api.get("/api/users/:id", (req, res) => {
 		} else {
 			const isAdmin = user.Admin === 1;
 			const isBanned = user.Banned === 1;
+			if (user.Completed_builds) {
+				try {
+					const Completed_buildsJSON = JSON.parse(user.Completed_builds)
+					const { Completed_builds, Password, ...userData } = user;
+					return res.status(200).json( {userData: { ...userData, isAdmin: isAdmin, isBanned: isBanned, Completed_buildsJSON }});
+				} catch (err) {
+					return console.error("Error parsing JSON:", error)
+				}
+			}
 			// Exclude sensitive information like hashed password before sending the user data
 			const { Password, ...userData } = user;
-			return res.status(200).json( {userData: { ...userData, isAdmin: isAdmin, isBanned: isBanned }});
+			return res.status(200).json( {userData: { ...userData, isAdmin: isAdmin, isBanned: isBanned, Completed_builds: "" }});
 			console.log(userData)
 		}
 	});
@@ -298,6 +315,53 @@ api.patch("/api/profile", authenticateJWT, upload.single("profileImage"), async 
 	}
 });
 
+// Add a computer build
+api.patch("/api/computerwizard", authenticateJWT, async (req, res) => {
+	console.log("server api computerwizard accessed")
+	const userId = req.user.ID; // User ID from the authenticated JWT
+	const formFields = req.body // New data to append
+
+	try {
+		// First, retrieve the existing data
+		const selectQuery = "SELECT Completed_builds FROM user WHERE ID = ?";
+		userDb.get(selectQuery, [userId], (err, row) => {
+			if (err) {
+				console.error(err.message);
+				return res.status(500).json({ message: "Internal server error" });
+			}
+
+			// Combine the new data with the existing data
+			let existingData = row.Completed_builds ? JSON.parse(row.Completed_builds) : [];
+
+			// Assign a new ID to the new data based on existing entries
+			const newEntryId = existingData.length + 1;
+			const newEntry = { ID: newEntryId, ...formFields };
+
+			existingData.push(newEntry);
+			let combinedData = JSON.stringify(existingData);
+
+
+			// Now, update the database with the combined data
+			let updateQuery = "UPDATE user SET Completed_builds = ? WHERE ID = ?";
+			userDb.run(updateQuery, [combinedData, userId], function (err) {
+				if (err) {
+					console.error(err.message);
+					return res.status(500).json({ message: "Internal server error" });
+				}
+				if (this.changes === 0) {
+					return res.status(404).json({ message: "Item not found" });
+				}
+				return res.status(200).json({ message: "Completed builds updated successfully", id: this.lastID });
+			});
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ message: "Internal server error" });
+	}
+});
+
+
+
 // For admins
 // Add user
 api.post("/api/admin/signup", authenticateJWT, async (req, res) => {
@@ -390,7 +454,7 @@ api.patch("/api/users/:id", authenticateJWT, upload.single("profileImage"), asyn
 				}
 			}
 		}
-		
+
 		if (Profile_image) {
 			const Profile_image_name = Profile_image.filename;
 			updateQuery += "Profile_image = ?, ";

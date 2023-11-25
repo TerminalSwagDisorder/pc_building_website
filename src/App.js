@@ -19,7 +19,8 @@ import Admin from "./components/Admin";
 import UsersAdmin from "./components/UsersAdmin";
 import DashboardAdmin from "./components/DashboardAdmin";
 import ComponentsAdmin from "./components/ComponentsAdmin";
-import { handleSignout, handleSignup, handleSignin, checkIfSignedIn, useFetchAllData, useFetchAllUsers, handleCredentialChange, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin, handleComponentDeleteAdmin } from "./api";
+import ComputerWizard from "./components/ComputerWizard";
+import { handleSignout, handleSignup, handleSignin, checkIfSignedIn, useFetchAllData, useFetchAllUsers, handleCredentialChange, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin, handleComponentDeleteAdmin, handleComputerWizard } from "./api";
 import { Router, Routes, Route } from "react-router-dom";
 
 
@@ -79,7 +80,10 @@ console.log("currentuser in app.js", currentUser);
 		</Route>
 		)}
 		{currentUser ? (
+			<>
+			<Route path="computerwizard" element={<ComputerWizard currentUser={currentUser} handleComputerWizard={handleComputerWizard} />} />
 			<Route path="profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} handleCredentialChange={handleCredentialChange} handleSignout={handleSignout} />} />
+			</>
 		):(
 			<>
 			<Route path="signup" element={<Signup handleSignup={handleSignup} />} />

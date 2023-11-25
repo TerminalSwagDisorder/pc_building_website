@@ -399,6 +399,35 @@ export const handleComponentDeleteAdmin = async (type, id) => {
 	}
 };
 
+export const handleComputerWizard = async (event, formFields) => {
+	console.log(formFields)
+	try {
+		const response = await fetch("http://localhost:4000/api/computerwizard", {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: "include", // For all fetch requests, do this!
+			body: JSON.stringify(formFields),
+		});
+		if (response.ok) {
+			window.location.reload();
+			alert("Check a way to fetch the updated data without logging out (cookie update)");
+		} else {
+			const data = await response.json();
+			if (data.message) {
+				alert(`HTTP error ${response.status}: ${data.message}`)
+				throw new Error(data.error);
+			} else {
+				alert("Computer wizard failed. Please try again.");
+			}
+		}
+	} catch (error) {
+		console.error("Error running computer wizard:", error);
+		// Handle error
+	}
+};
+
 /*
 export const handleSignup = async (event) => {
 	
