@@ -50,16 +50,15 @@ form {
 	z-index: 1;
 }
 .wizardForm {
-	position: absolute;
-	top: 20%;
-	bottom: 20%;
+	position: relative;
+	top: 2em;
 	left: 10%;
 	width: 80%;
 	height: auto;
 	overflow: auto;
 	display: block;
 	z-index: 1;
-
+	margin-bottom: 2em;
 }
 
 .setWizardAdvanced {

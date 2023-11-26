@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Input } from '@mui/material';
 import Button from '@mui/material/Button';
 
-const ComputerWizard = ({ setCurrentUser, currentUser, onSubmit, handleComputerWizard }) => {
-	const [currentOperation, setCurrentOperation] = useState("");
+const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerWizard, refreshProfileData }) => {
+	const [currentOperation, setCurrentOperation] = useState("wizard");
 	// Do the wizard form initialization this way
 	const [formFields, setFormFields] = useState({
 		"price": 0,
@@ -52,18 +52,20 @@ const ComputerWizard = ({ setCurrentUser, currentUser, onSubmit, handleComputerW
 			event.target.value = priceValue
 
 		}
+
 	};
 
 	const formatWizardBuilds = () => {
 		if (currentUser.Completed_builds) {
 			let completedBuilds = JSON.parse(currentUser.Completed_builds)
 			console.log(completedBuilds)
-			
+
 		return completedBuilds.map((build) => (
 			<div key={build.ID}>
 				{Object.keys(build).map((key) => (
 					<p key={key}>{key}: {build[key]}</p>
 				))}
+				<br></br>
 			</div>
 		));
 		}
@@ -76,6 +78,8 @@ const ComputerWizard = ({ setCurrentUser, currentUser, onSubmit, handleComputerW
 			<div id="userform">
 			<form onSubmit={handleSubmit} className="wizardForm">
 			<div><button className="closeForm" onClick={() => closeForm()}>x</button></div>
+			<h2>Computer wizard</h2>
+			<br></br>
 			<div>
 				<label for="price" className="wizardLabel">Max price (500-5000): </label>
 				<input type="number" name="price" min="500" max="5000" step="50" onChange={handleInputChange} required />
@@ -241,8 +245,17 @@ const ComputerWizard = ({ setCurrentUser, currentUser, onSubmit, handleComputerW
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
+		if (formFields.otherColor !== "" && formFields.colorPreference !== "other") {
+			let resetValue = ""
+			event.target.otherColor.value = resetValue
+			formFields.otherColor = resetValue
+		}
+		
 		try {
-			await handleComputerWizard(event, formFields);
+			console.log("event.target.otherColor.value", event.target.otherColor.value)
+			console.log(formFields)
+			await handleComputerWizard(event, formFields, setCurrentUser);
+			await refreshProfileData()
 		} catch (error) {
 			console.error("Error updating credentials:", error);
 			alert("Error updating credentials.");
@@ -254,7 +267,7 @@ const ComputerWizard = ({ setCurrentUser, currentUser, onSubmit, handleComputerW
 		<div>
 		<div>
 		{renderComputerWizard()} 
-
+		<br></br>
 		</div>
 		 <div>
 		 {formatWizardBuilds()}

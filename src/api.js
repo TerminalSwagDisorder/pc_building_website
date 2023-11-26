@@ -621,10 +621,10 @@ export const refreshProfile = async () => {
 		});
 
 		const data = await response.json();
-		console.log(data.userData)
 
 		// If the user is authenticated, return user data
 		if (response.ok) {
+			//setCurrentUser(data.userData)
 			return data.userData;
 		} else {
 			// If authentication fails
@@ -671,8 +671,7 @@ export const handleCredentialChange = async (event) => {
 		if (response.ok) {
 			const responseData = await response.json();
 			console.log("User updated successfully:", responseData);
-			alert("Changed credentials, please sign in again!");
-			window.location.reload();
+			alert("Successfully changed credentials!");
 		} else {
 			const data = await response.json();
 			if (data.message) {
