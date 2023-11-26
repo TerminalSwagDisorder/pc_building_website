@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from '@mui/material';
 import Button from '@mui/material/Button';
 
-const Profile = ({ setCurrentUser, currentUser, onSubmit, handleCredentialChange, handleSignout }) => {
+const Profile = ({ setCurrentUser, currentUser, onSubmit, handleCredentialChange, handleSignout, refreshProfileData }) => {
 	const [currentOperation, setCurrentOperation] = useState("");
 	const navigate = useNavigate();
 
@@ -86,9 +86,7 @@ const Profile = ({ setCurrentUser, currentUser, onSubmit, handleCredentialChange
 
 		try {
 			await handleCredentialChange(event);
-			await handleSignout();
-			setCurrentUser(null);
-			navigate("/signin");
+			await refreshProfileData();
 		} catch (error) {
 			console.error("Error updating credentials:", error);
 			alert("Error updating credentials.");

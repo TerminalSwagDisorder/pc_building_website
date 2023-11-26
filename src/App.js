@@ -93,7 +93,7 @@ console.log("currentuser in app.js", currentUser);
 		{currentUser ? (
 			<>
 			<Route path="computerwizard" element={<ComputerWizard currentUser={currentUser} handleComputerWizard={handleComputerWizard} refreshProfileData={refreshProfileData} />} />
-			<Route path="profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} handleCredentialChange={handleCredentialChange} handleSignout={handleSignout} />} />
+			<Route path="profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} handleCredentialChange={handleCredentialChange} handleSignout={handleSignout} refreshProfileData={refreshProfileData} />} />
 			</>
 		):(
 			<>
