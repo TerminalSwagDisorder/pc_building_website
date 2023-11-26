@@ -249,6 +249,26 @@ api.get("/api/profile", authenticateJWT, (req, res) => {
 	});
 });
 
+// Profile refresh if userdata gets updated
+api.get("/api/profile/refresh", authenticateJWT, (req, res) => {
+	const userId = req.user.ID; // Extract user ID from JWT payload
+	const sql = "SELECT * FROM user WHERE ID = ?";
+	userDb.get(sql, [userId], (err, user) => {
+		if (err) {
+			console.error(err.message);
+			return res.status(500).json({ message: "Internal server error" });
+		} else if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		} else {
+			const isAdmin = user.Admin === 1;
+			const isBanned = user.Banned === 1;
+			// Exclude sensitive information like hashed password before sending the user data
+			const { Password, ...userData } = user;
+			return res.status(200).json( {userData: { ...userData, isAdmin: isAdmin, isBanned: isBanned}});
+		}
+	});
+});
+
 // Update own user credentials
 api.patch("/api/profile", authenticateJWT, upload.single("profileImage"), async (req, res) => {
 	console.log("server api update own credentials accessed")

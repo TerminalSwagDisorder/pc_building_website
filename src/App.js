@@ -20,7 +20,7 @@ import UsersAdmin from "./components/UsersAdmin";
 import DashboardAdmin from "./components/DashboardAdmin";
 import ComponentsAdmin from "./components/ComponentsAdmin";
 import ComputerWizard from "./components/ComputerWizard";
-import { handleSignout, handleSignup, handleSignin, checkIfSignedIn, useFetchAllData, useFetchAllUsers, handleCredentialChange, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin, handleComponentDeleteAdmin, handleComputerWizard } from "./api";
+import { handleSignout, handleSignup, handleSignin, checkIfSignedIn, refreshProfile, useFetchAllData, useFetchAllUsers, handleCredentialChange, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin, handleComponentDeleteAdmin, handleComputerWizard } from "./api";
 import { Router, Routes, Route } from "react-router-dom";
 
 
@@ -30,25 +30,30 @@ const App = () => {
 	const users = useFetchAllUsers();
 	const [currentUser, setCurrentUser] = useState(null);
 
-  useEffect(() => {
 	// Check if the user is signed in on page load
 	const fetchUserStatus = async () => {
-	  try {
-		const userData = await checkIfSignedIn();
-		// Initialize currentUser with user data
-		setCurrentUser(userData); 
-		 //console.log("userData.user", userData)
-	  } catch (error) {
-		setCurrentUser(null);
-	  }
+		try {
+			// Initialize currentUser with user data
+			const userData = await checkIfSignedIn();
+			if (userData) {
+				// Refresh profile
+				const refreshedUserData = await refreshProfile();
+				setCurrentUser(refreshedUserData);
+			} else {
+				setCurrentUser(null);
+			}
+		} catch (error) {
+			console.error("Error fetching user status:", error);
+			setCurrentUser(null);
+		}
 	};
+	useEffect(() => {
+		fetchUserStatus();
+	}, []);
 
-	fetchUserStatus();
-  }, []);
-
-  const handleUserChange = (event) => {
-	setCurrentUser(event);
-  };
+	const handleUserChange = (event) => {
+		setCurrentUser(event);
+	};
 
 console.log("currentuser in app.js", currentUser);
 
@@ -81,7 +86,7 @@ console.log("currentuser in app.js", currentUser);
 		)}
 		{currentUser ? (
 			<>
-			<Route path="computerwizard" element={<ComputerWizard currentUser={currentUser} handleComputerWizard={handleComputerWizard} />} />
+			<Route path="computerwizard" element={<ComputerWizard currentUser={currentUser} handleComputerWizard={handleComputerWizard} refreshProfile={refreshProfile} />} />
 			<Route path="profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} handleCredentialChange={handleCredentialChange} handleSignout={handleSignout} />} />
 			</>
 		):(

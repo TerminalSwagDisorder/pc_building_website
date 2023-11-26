@@ -400,7 +400,6 @@ export const handleComponentDeleteAdmin = async (type, id) => {
 };
 
 export const handleComputerWizard = async (event, formFields) => {
-	console.log(formFields)
 	try {
 		const response = await fetch("http://localhost:4000/api/computerwizard", {
 			method: "PATCH",
@@ -411,8 +410,8 @@ export const handleComputerWizard = async (event, formFields) => {
 			body: JSON.stringify(formFields),
 		});
 		if (response.ok) {
-			window.location.reload();
-			alert("Check a way to fetch the updated data without logging out (cookie update)");
+			//window.location.reload();
+			alert("Successfully build computer");
 		} else {
 			const data = await response.json();
 			if (data.message) {
@@ -424,9 +423,9 @@ export const handleComputerWizard = async (event, formFields) => {
 		}
 	} catch (error) {
 		console.error("Error running computer wizard:", error);
-		// Handle error
 	}
 };
+
 
 /*
 export const handleSignup = async (event) => {
@@ -587,26 +586,55 @@ export const handleSignout = async (setCurrentUser) => {
 
 // Signin status check
 export const checkIfSignedIn = async () => {
-	
-	// api call to get the user's profile information
-	const response = await fetch("http://localhost:4000/api/profile", {
-		method: "GET",
-		credentials: "include",  // Important, because we're using cookies
-	});
 
-	const data = await response.json();
-	//console.log(data.userData)
-	
-	// If the user is authenticated, return user data
-	if (response.ok) {
-		return data.userData;
-	} else {
-		// If authentication fails
-		// User is not signed in (invalid token or other error)
-		return null; 
+	// api call to get the user's profile information
+	try {
+		const response = await fetch("http://localhost:4000/api/profile", {
+			method: "GET",
+			credentials: "include", // Important, because we're using cookies
+		});
+
+		const data = await response.json();
+		console.log(data.userData)
+
+		// If the user is authenticated, return user data
+		if (response.ok) {
+			return data.userData;
+		} else {
+			// If authentication fails
+			// User is not signed in (invalid token or other error)
+			return null;
+		}
+	} catch (error) {
+		console.error("Error while fetching user:", error);
 	}
 };
 
+// Profile refresh
+export const refreshProfile = async () => {
+
+	// api call to get the user's profile information
+	try {
+		const response = await fetch("http://localhost:4000/api/profile/refresh", {
+			method: "GET",
+			credentials: "include", // Important, because we're using cookies
+		});
+
+		const data = await response.json();
+		console.log(data.userData)
+
+		// If the user is authenticated, return user data
+		if (response.ok) {
+			return data.userData;
+		} else {
+			// If authentication fails
+			// User is not signed in (invalid token or other error)
+			return null;
+		}
+	} catch (error) {
+		console.error("Error while fetching user:", error);
+	}
+};
 
 // User credential change
 export const handleCredentialChange = async (event) => {
