@@ -1,36 +1,30 @@
-import React from 'react'
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';import { pink } from '@mui/material/colors';
-import Checkbox from '@mui/material/Checkbox';
-
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+import React from "react";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <div>
-      <h1>This is Home page</h1>
-      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-      <ButtonGroup variant="contained" aria-label="outlined primary button group">
-        <Button>One</Button>
-        <Button>Two</Button>
-        <Button>Three</Button>
-    </ButtonGroup>
-    <Checkbox {...label} defaultChecked />
-      <Checkbox {...label} defaultChecked color="secondary" />
-      <Checkbox {...label} defaultChecked color="success" />
-      <Checkbox {...label} defaultChecked color="default" />
-      <Checkbox
-        {...label}
-        defaultChecked
-        sx={{
-          color: pink[800],
-          '&.Mui-checked': {
-            color: pink[600],
-          },
-        }}
-      />
+    <div className="Container">
+      <h1>This is a backend project application.</h1>
+      <p>
+        Exploring a React.js Computer Configurator: Empowering Users to
+        Customize PC Builds with Data Scraping and Database Integration. This
+        project focuses on the development process of a custom computer
+        configurator, a user-friendly web-based application that empowers users
+        to create personalized computer systems. The project is composed of
+        three core components: data scraping, dynamic web design, and database
+        integration.
+      </p><br></br>
+      <ButtonGroup
+        variant="contained"
+        aria-label="outlined primary button group"
+        
+      >
+        <Button><Link to="components">Components</Link></Button>
+      </ButtonGroup>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

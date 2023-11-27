@@ -3,6 +3,19 @@ $backgroundFo: #2A2438;
 $color: #ccc;
 $align: center;
 
+.Container {
+	width: 50%;
+	margin: 0 auto;
+	padding: 50px;
+	text-align: left;
+}
+
+@media screen and (max-width:600px) {
+	.Container {
+		width: 100%;
+	}
+}
+
 .componentsh2 {
     color: $backgroundFo;
 	cursor: pointer;
@@ -331,8 +344,9 @@ span {
 	border-radius: 10px;
 	text-align: left;
 	img {
-		width: 100px;
-		height: 100px;
+		background-size: cover;
+		width: 150px;
+		height: 150px;
 		border-radius: 50%;
 		padding: 10px;
 		margin: -120px 0 40px 0;
