@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { handleSignout } from "../api";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import '../style/nav.scss';
 
 // Function for renderin the navbar, takes props for current user and onClick
-const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
+const Navbar = ({ onClick, setCurrentUser, currentUser, handleSignout }) => {
 	
 	// Async function for signout
 	const handleLogout = async () => {
@@ -45,13 +44,15 @@ const Navbar = ({ onClick, setCurrentUser, currentUser }) => {
 	  		{/* Check if user is logged in */}
 	  		{/* If true do this */}
 			{currentUser ? (
+	  		<>
+	  		<li><Link to="/computerwizard">Computer Wizard</Link></li>
 			<div className='signout'><li><button onClick={handleLogout}>Log out</button></li>
 			<li style={{color:"white"}}><span>Welcome<Link to="profile">{currentUser.Name}</Link></span></li>
 			<Stack direction="row" spacing={2}>
-				<Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+				<Avatar alt="Travis Howard" src={`/images/${currentUser.Profile_image}`} />
 			</Stack>
 			</div>
-
+			</>
 		) : (
 			<ul>
 	  		{/* If false do this */}

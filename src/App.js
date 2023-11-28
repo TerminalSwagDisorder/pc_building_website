@@ -19,7 +19,8 @@ import Admin from "./components/Admin";
 import UsersAdmin from "./components/UsersAdmin";
 import DashboardAdmin from "./components/DashboardAdmin";
 import ComponentsAdmin from "./components/ComponentsAdmin";
-import { checkIfSignedIn, useFetchAllData, useFetchAllUsers, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin, handleComponentDeleteAdmin } from "./api";
+import ComputerWizard from "./components/ComputerWizard";
+import { handleSignout, handleSignup, handleSignin, checkIfSignedIn, refreshProfile, useFetchAllData, useFetchAllUsers, handleCredentialChange, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin, handleComponentDeleteAdmin, handleComputerWizard } from "./api";
 import { Router, Routes, Route } from "react-router-dom";
 
 
@@ -29,25 +30,36 @@ const App = () => {
 	const users = useFetchAllUsers();
 	const [currentUser, setCurrentUser] = useState(null);
 
-  useEffect(() => {
 	// Check if the user is signed in on page load
 	const fetchUserStatus = async () => {
-	  try {
-		const userData = await checkIfSignedIn();
-		// Initialize currentUser with user data
-		setCurrentUser(userData); 
-		 //console.log("userData.user", userData)
-	  } catch (error) {
-		setCurrentUser(null);
-	  }
+		try {
+			// Initialize currentUser with user data
+			const userData = await checkIfSignedIn();
+			if (userData) {
+				// Refresh profile
+				const refreshedUserData = await refreshProfile();
+				setCurrentUser(refreshedUserData);
+			} else {
+				setCurrentUser(null);
+			}
+		} catch (error) {
+			console.error("Error fetching user status:", error);
+			setCurrentUser(null);
+		}
 	};
+	useEffect(() => {
+		fetchUserStatus();
+	}, []);
 
-	fetchUserStatus();
-  }, []);
-
-  const handleUserChange = (event) => {
-	setCurrentUser(event);
-  };
+	const handleUserChange = (event) => {
+		setCurrentUser(event);
+	};
+	
+	const refreshProfileData = async () => {
+		const refreshedUserData = await refreshProfile();
+		setCurrentUser(refreshedUserData);
+		
+	}
 
 console.log("currentuser in app.js", currentUser);
 
@@ -56,7 +68,7 @@ console.log("currentuser in app.js", currentUser);
 
 	 {/* For all routes, including navbar, add the prop currentUser */}
 	 {/* For navbar, add serCurrentUser for sign out */}
-	<Navbar currentUser={currentUser} setCurrentUser={handleUserChange} />
+	<Navbar currentUser={currentUser} setCurrentUser={handleUserChange} handleSignout={handleSignout} />
 	  <Routes>
 		{/* For each route add the appropriate component prop */}
 		<Route index element={<Home currentUser={currentUser} />} />
@@ -79,11 +91,14 @@ console.log("currentuser in app.js", currentUser);
 		</Route>
 		)}
 		{currentUser ? (
-			<Route path="profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} />} />
+			<>
+			<Route path="computerwizard" element={<ComputerWizard currentUser={currentUser} handleComputerWizard={handleComputerWizard} refreshProfileData={refreshProfileData} />} />
+			<Route path="profile" element={<Profile currentUser={currentUser} setCurrentUser={handleUserChange} handleCredentialChange={handleCredentialChange} handleSignout={handleSignout} refreshProfileData={refreshProfileData} />} />
+			</>
 		):(
 			<>
-			<Route path="signup" element={<Signup />} />
-			<Route path="Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} />} />
+			<Route path="signup" element={<Signup handleSignup={handleSignup} />} />
+			<Route path="Signin" element={<Signin setCurrentUser={handleUserChange} currentUser={currentUser} handleSignin={handleSignin} checkIfSignedIn={checkIfSignedIn}/>} />
 			</>
 		)}
 

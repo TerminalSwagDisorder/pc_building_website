@@ -2,11 +2,8 @@
 // Auth: Terminal Swag Disorder
 // Desc: File containing code for api functionality
 
-import React, { useEffect, useState } from 'react';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import { useNavigate } from "react-router-dom";
-
+import React, { useEffect, useState } from "react";
+import "./index.css";
 
 
 // Fetch data for all parts
@@ -402,6 +399,34 @@ export const handleComponentDeleteAdmin = async (type, id) => {
 	}
 };
 
+export const handleComputerWizard = async (event, formFields) => {
+	try {
+		const response = await fetch("http://localhost:4000/api/computerwizard", {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: "include", // For all fetch requests, do this!
+			body: JSON.stringify(formFields),
+		});
+		if (response.ok) {
+			//window.location.reload();
+			alert("Successfully build computer");
+		} else {
+			const data = await response.json();
+			if (data.message) {
+				alert(`HTTP error ${response.status}: ${data.message}`)
+				throw new Error(data.error);
+			} else {
+				alert("Computer wizard failed. Please try again.");
+			}
+		}
+	} catch (error) {
+		console.error("Error running computer wizard:", error);
+	}
+};
+
+
 /*
 export const handleSignup = async (event) => {
 	
@@ -561,26 +586,55 @@ export const handleSignout = async (setCurrentUser) => {
 
 // Signin status check
 export const checkIfSignedIn = async () => {
-	
-	// api call to get the user's profile information
-	const response = await fetch("http://localhost:4000/api/profile", {
-		method: "GET",
-		credentials: "include",  // Important, because we're using cookies
-	});
 
-	const data = await response.json();
-	//console.log(data.userData)
-	
-	// If the user is authenticated, return user data
-	if (response.ok) {
-		return data.userData;
-	} else {
-		// If authentication fails
-		// User is not signed in (invalid token or other error)
-		return null; 
+	// api call to get the user's profile information
+	try {
+		const response = await fetch("http://localhost:4000/api/profile", {
+			method: "GET",
+			credentials: "include", // Important, because we're using cookies
+		});
+
+		const data = await response.json();
+		console.log(data.userData)
+
+		// If the user is authenticated, return user data
+		if (response.ok) {
+			return data.userData;
+		} else {
+			// If authentication fails
+			// User is not signed in (invalid token or other error)
+			return null;
+		}
+	} catch (error) {
+		console.error("Error while fetching user:", error);
 	}
 };
 
+// Profile refresh
+export const refreshProfile = async () => {
+
+	// api call to get the user's profile information
+	try {
+		const response = await fetch("http://localhost:4000/api/profile/refresh", {
+			method: "GET",
+			credentials: "include", // Important, because we're using cookies
+		});
+
+		const data = await response.json();
+
+		// If the user is authenticated, return user data
+		if (response.ok) {
+			//setCurrentUser(data.userData)
+			return data.userData;
+		} else {
+			// If authentication fails
+			// User is not signed in (invalid token or other error)
+			return null;
+		}
+	} catch (error) {
+		console.error("Error while fetching user:", error);
+	}
+};
 
 // User credential change
 export const handleCredentialChange = async (event) => {
@@ -590,47 +644,44 @@ export const handleCredentialChange = async (event) => {
     const Name = event.target.name.value;
     const Email = event.target.email.value;
     const Password = event.target.password.value;
-    const profileImage = event.target.profile_image.value;
+    const profileImage = event.target.profile_image.files[0];
 	const currentPassword = event.target.currentpassword.value;
-	
+
 	//console.log(Name)
 	//console.log(Email)
 
     try {
-        const updatedCredentials = {};
+		// Since were using files here, we need to use FormData
+		const formData = new FormData();
 
-        if (Name) updatedCredentials.Name = Name;
-        if (Email) updatedCredentials.Email = Email;
-        if (Password) updatedCredentials.Password = Password;
-        if (profileImage) updatedCredentials.profileImage = profileImage;
-        if (currentPassword) updatedCredentials.currentPassword = currentPassword;
+        if (Name) formData.append("Name", Name);
+        if (Email) formData.append("Email", Email);
+        if (Password) formData.append("Password", Password);
+        if (profileImage) formData.append("profileImage", profileImage);
+        if (currentPassword) formData.append("currentPassword", currentPassword);
 
-        // Only proceed if at least one field is filled
-        if (Object.keys(updatedCredentials).length > 0) {
-            const response = await fetch("http://localhost:4000/api/profile", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(updatedCredentials)
-            });
+		const response = await fetch("http://localhost:4000/api/profile", {
+			method: "PATCH",
+			// When using FormData, do not include "Content-Type"
+			credentials: "include",
+			body: formData
+		});
 
-            // Handle update
-			if (response.ok) {
-				const responseData = await response.json();
-				console.log("User updated successfully:", responseData);
-				alert("Successfully changed the users credentials!");
-				window.location.reload();
+		// Handle update
+		if (response.ok) {
+			const responseData = await response.json();
+			console.log("User updated successfully:", responseData);
+			alert("Successfully changed credentials!");
+		} else {
+			const data = await response.json();
+			if (data.message) {
+				alert(`HTTP error ${response.status}: ${data.message}`)
+				throw new Error(data.error);
 			} else {
-				const data = await response.json();
-				if (data.message) {
-					alert(`HTTP error ${response.status}: ${data.message}`)
-					throw new Error(data.error);
-				} else {
-					alert("Failed change credentials. Please try again.");
-					throw new Error(data.error);
-				}
+				alert("Failed change credentials. Please try again.");
+				throw new Error(data.error);
 			}
-        }
+		}
     } catch (error) {
         console.error("Error updating credentials:", error);
 		throw new Error(error);
@@ -653,7 +704,7 @@ export const fetchAllUsers = async () => {
 		return data;
 	} catch (error) {
 		console.error(error);
-		throw new error;
+		throw new Error(error);
 	}
 };
 
@@ -674,45 +725,52 @@ export const useFetchAllUsers = () => {
 	return users;
 };
 
-
 // User credential change for admins
-export const handleCredentialChangeAdmin = async (event, formFields) => {
+export const handleCredentialChangeAdmin = async (event, newAdmin, initialAdmin, newBanned, initialBanned, formFields) => {
     event.preventDefault();
 
     // Extract values from the form
     const ID = event.target.id.value;
-	const profileImage = event.target.profile_image.value;
+	const profileImage = event.target.profile_image.files[0];
     const Admin = event.target.admin.checked;
     const Banned = event.target.banned.checked;
 
     try {
-        if (Admin) formFields.Admin = Admin ? "1" : "0";
-        if (Banned) formFields.Banned = Banned ? "1" : "0";
+        if (newAdmin !== initialAdmin) formFields.Admin = Admin ? "1" : "0"; // Can also use newAdmin instead of Admin ? "1" : "0" however they're integers, not string chars
+        if (newBanned !== initialBanned) formFields.Banned = Banned ? "1" : "0"; // Can also use newBanned instead of Banned ? "1" : "0" however they're integers, not string chars
 
-            const response = await fetch(`http://localhost:4000/api/users/${ID}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(formFields)
-            });
+		// Since were using files here, we need to use FormData
+		const formData = new FormData();
+		
+		// Need to append an object to formdata like this
+		if (formFields) formData.append("formFields", JSON.stringify(formFields))
+		if (profileImage) formData.append("profileImage", profileImage);
+		console.log("formData", formData)
 
-            // Handle update
-			if (response.ok) {
-				const responseData = await response.json();
-				console.log("User updated successfully:", responseData);
-				alert("Successfully changed the users credentials!");
-				window.location.reload();
+		const response = await fetch(`http://localhost:4000/api/users/${ID}`, {
+			method: "PATCH",
+			// When using FormData, do not include "Content-Type"
+			credentials: "include",
+			body: formData
+		});
 
+		// Handle update
+		if (response.ok) {
+			const responseData = await response.json();
+			console.log("User updated successfully:", responseData);
+			alert("Successfully changed the users credentials!");
+			window.location.reload();
+
+		} else {
+			const data = await response.json();
+			if (data.message) {
+				alert(`HTTP error ${response.status}: ${data.message}`)
+				throw new Error(data.error);
 			} else {
-				const data = await response.json();
-				if (data.message) {
-					alert(`HTTP error ${response.status}: ${data.message}`)
-					throw new Error(data.error);
-				} else {
-					alert("Failed to change credentials. Please try again.");
-					throw new Error(data.error);
-				}
-				}
+				alert("Failed to change credentials. Please try again.");
+				throw new Error(data.error);
+			}
+		}
     } catch (error) {
         console.error("Error updating credentials:", error);
 		throw new Error(error);
@@ -721,6 +779,7 @@ export const handleCredentialChangeAdmin = async (event, formFields) => {
 
 export const handleSignupAdmin = async (event) => {
     event.preventDefault();
+	
 	// Data from the form
 	const Name = event.target.name.value;
 	const Email = event.target.email.value;

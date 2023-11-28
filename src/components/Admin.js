@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { checkIfSignedIn } from "../api";
+import React from "react";
 import { Outlet } from 'react-router-dom';
 
 

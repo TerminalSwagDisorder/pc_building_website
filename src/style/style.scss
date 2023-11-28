@@ -3,6 +3,19 @@ $backgroundFo: #2A2438;
 $color: #ccc;
 $align: center;
 
+.Container {
+	width: 50%;
+	margin: 0 auto;
+	padding: 50px;
+	text-align: left;
+}
+
+@media screen and (max-width:600px) {
+	.Container {
+		width: 100%;
+	}
+}
+
 .componentsh2 {
     color: $backgroundFo;
 	cursor: pointer;
@@ -48,6 +61,21 @@ form {
 	overflow: auto;
 	display: block;
 	z-index: 1;
+}
+.wizardForm {
+	position: relative;
+	top: 2em;
+	left: 10%;
+	width: 80%;
+	height: auto;
+	overflow: auto;
+	display: block;
+	z-index: 1;
+	margin-bottom: 2em;
+}
+
+.setWizardAdvanced {
+	cursor: pointer;
 }
 
 .userCredentialChange {
@@ -105,6 +133,11 @@ form {
 	.deleteButton:hover {
 		background-color: darkred;
 	}
+}
+
+.adminDashboardButton {
+	height: 15em;
+	width: 30em;
 }
 
 .signout {
@@ -294,4 +327,47 @@ span {
 		opacity: 0;
 		}
 	}
+}
+
+.Profile-bg {
+	height: 20vh;
+	background-color: #e99700d3;
+}
+
+.Profile-info {
+	box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(5, 100, 196, 0.15) 0px 0px 0px 1px;
+	background-color: #dcdcdc;
+	margin-top: -20px;
+	width: 800px;
+	margin: -50px auto 0 auto;
+	padding: 50px;
+	border-radius: 10px;
+	text-align: left;
+	img {
+		background-size: cover;
+		width: 150px;
+		height: 150px;
+		border-radius: 50%;
+		padding: 10px;
+		margin: -120px 0 40px 0;
+		background-color: #dea002;
+	}	
+	span {
+		text-transform: lowercase;
+		color: #0e002e;
+		font-weight: 400;
+	}
+	button {
+		background-color: #0e002e;
+		color: #ccc;
+		font-size: 16px;
+		padding: 15px 40px;
+		cursor: pointer;
+		border: none;
+		border-radius: 5px;
+		&:hover {
+			background-color: #17004c;
+		}
+	}
+
 }

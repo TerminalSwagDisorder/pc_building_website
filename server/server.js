@@ -10,7 +10,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
-require('dotenv').config();
+const multer = require("multer");
+require("dotenv").config();
+
 
 // JSON web token for cookie
 const jwtSecret = process.env.JWT_SECRET;
@@ -40,6 +42,31 @@ const db = new sqlite3.Database(dbPath);
 // User db
 const userDbPath = path.resolve(__dirname, "database/user_data.db");
 const userDb = new sqlite3.Database(userDbPath)
+
+// Middleware for profile images
+// File filter for image validation
+const imageFileFilter = (req, file, cb) => {
+	const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
+	if (allowedFileTypes.includes(file.mimetype)) {
+		cb(null, true); // Accept file
+	} else {
+		cb(new Error("Only image files are allowed!"), false); // Reject file
+	}
+};
+
+// Config for multer
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, "public/images");
+	},
+	filename: function (req, file, cb) {
+		const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+		const extension = path.extname(file.originalname);
+		cb(null, "ProfileImage" + "-" + uniqueSuffix + extension);
+	}
+});
+const upload = multer({ storage: storage, fileFilter: imageFileFilter });
+
 
 // Middleware for checking if user is logged in
 const authenticateJWT = (req, res, next) => {
@@ -77,11 +104,19 @@ api.get("/api/users", (req, res) => {
 			const processedUsers = users.map(user => {
 				const isAdmin = user.Admin === 1;
 				const isBanned = user.Banned === 1;
+				if (user.Completed_builds) {
+					try {
+						const Completed_buildsJSON = JSON.parse(user.Completed_builds)
+						const { Completed_builds, Password, ...userData } = user;
+						return { ...userData, isAdmin, isBanned, Completed_buildsJSON };
+					} catch (err) {
+						return console.error("Error parsing JSON:", error)
+					}
+				}
 				// Exclude sensitive information like hashed password
-				const { Password, ...userData } = user;
-				return { ...userData, isAdmin, isBanned };
+				const { Completed_builds, Password, ...userData } = user;
+				return { ...userData, isAdmin, isBanned, Completed_builds: "" };
 			});
-
 			return res.status(200).json(processedUsers);
 		}
 	});
@@ -100,9 +135,18 @@ api.get("/api/users/:id", (req, res) => {
 		} else {
 			const isAdmin = user.Admin === 1;
 			const isBanned = user.Banned === 1;
+			if (user.Completed_builds) {
+				try {
+					const Completed_buildsJSON = JSON.parse(user.Completed_builds)
+					const { Completed_builds, Password, ...userData } = user;
+					return res.status(200).json( {userData: { ...userData, isAdmin: isAdmin, isBanned: isBanned, Completed_buildsJSON }});
+				} catch (err) {
+					return console.error("Error parsing JSON:", error)
+				}
+			}
 			// Exclude sensitive information like hashed password before sending the user data
 			const { Password, ...userData } = user;
-			return res.status(200).json( {userData: { ...userData, isAdmin: isAdmin, isBanned: isBanned }});
+			return res.status(200).json( {userData: { ...userData, isAdmin: isAdmin, isBanned: isBanned, Completed_builds: "" }});
 			console.log(userData)
 		}
 	});
@@ -205,11 +249,32 @@ api.get("/api/profile", authenticateJWT, (req, res) => {
 	});
 });
 
+// Profile refresh if userdata gets updated
+api.get("/api/profile/refresh", authenticateJWT, (req, res) => {
+	const userId = req.user.ID; // Extract user ID from JWT payload
+	const sql = "SELECT * FROM user WHERE ID = ?";
+	userDb.get(sql, [userId], (err, user) => {
+		if (err) {
+			console.error(err.message);
+			return res.status(500).json({ message: "Internal server error" });
+		} else if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		} else {
+			const isAdmin = user.Admin === 1;
+			const isBanned = user.Banned === 1;
+			// Exclude sensitive information like hashed password before sending the user data
+			const { Password, ...userData } = user;
+			return res.status(200).json( {userData: { ...userData, isAdmin: isAdmin, isBanned: isBanned}});
+		}
+	});
+});
+
 // Update own user credentials
-api.patch("/api/profile", authenticateJWT, async (req, res) => {
+api.patch("/api/profile", authenticateJWT, upload.single("profileImage"), async (req, res) => {
 	console.log("server api update own credentials accessed")
 	const userId = req.user.ID; // User ID from the authenticated JWT, this already makes it secure
-	const { Name, Email, Password, Profile_image, currentPassword } = req.body; // Updated credentials from request body
+	const { Name, Email, Password, currentPassword } = req.body; // Updated credentials from request body
+	const Profile_image = req.file; // Profile image
 
 	try {
 
@@ -242,8 +307,9 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
 			queryParams.push(hashedPassword);
 		}
 		if (Profile_image) {
+			const Profile_image_name = Profile_image.filename;
 			updateQuery += "Profile_image = ?, ";
-			queryParams.push(Profile_image);
+			queryParams.push(Profile_image_name);
 		}
 
 		// Remove trailing comma and space
@@ -269,8 +335,55 @@ api.patch("/api/profile", authenticateJWT, async (req, res) => {
 	}
 });
 
+// Add a computer build
+api.patch("/api/computerwizard", authenticateJWT, async (req, res) => {
+	console.log("server api computerwizard accessed")
+	const userId = req.user.ID; // User ID from the authenticated JWT
+	const formFields = req.body // New data to append
+
+	try {
+		// First, retrieve the existing data
+		const selectQuery = "SELECT Completed_builds FROM user WHERE ID = ?";
+		userDb.get(selectQuery, [userId], (err, row) => {
+			if (err) {
+				console.error(err.message);
+				return res.status(500).json({ message: "Internal server error" });
+			}
+
+			// Combine the new data with the existing data
+			let existingData = row.Completed_builds ? JSON.parse(row.Completed_builds) : [];
+
+			// Assign a new ID to the new data based on existing entries
+			const newEntryId = existingData.length + 1;
+			const newEntry = { ID: newEntryId, ...formFields };
+
+			existingData.push(newEntry);
+			let combinedData = JSON.stringify(existingData);
+
+
+			// Now, update the database with the combined data
+			let updateQuery = "UPDATE user SET Completed_builds = ? WHERE ID = ?";
+			userDb.run(updateQuery, [combinedData, userId], function (err) {
+				if (err) {
+					console.error(err.message);
+					return res.status(500).json({ message: "Internal server error" });
+				}
+				if (this.changes === 0) {
+					return res.status(404).json({ message: "Item not found" });
+				}
+				return res.status(200).json({ message: "Completed builds updated successfully", id: this.lastID });
+			});
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ message: "Internal server error" });
+	}
+});
+
+
+
 // For admins
-// Admin add user
+// Add user
 api.post("/api/admin/signup", authenticateJWT, async (req, res) => {
 	const { Name, Email, Password, Admin } = req.body;
 	console.log("server api admin user signup accessed")
@@ -323,12 +436,16 @@ api.post("/api/admin/signup", authenticateJWT, async (req, res) => {
 
 
 // Update user credentials
-api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
+api.patch("/api/users/:id", authenticateJWT, upload.single("profileImage"), async (req, res) => {
 	console.log("server api admin update credentials accessed")
 	const { id } = req.params; // User ID from the url
 	const { formFields } = req.body; // Updated credentials from request body
+	const Profile_image = req.file; // Profile image
+	const jsonFormFields = JSON.parse(formFields)
+	console.log(jsonFormFields)
 
-	console.log(req.body)
+	const allowedFields = ["ID", "Name", "Email", "Password", "Profile_image", "Admin", "Banned"];
+
 
 	try {
 		// Only admins are allowed to update through this
@@ -343,17 +460,25 @@ api.patch("/api/users/:id", authenticateJWT, async (req, res) => {
 		let updateQuery = "UPDATE user SET ";
 		let queryParams = [];
 
-		for (const key in formFields) {
-			if (formFields.hasOwnProperty(key)) {
-				if (formFields[key] !== "") {
-			if (key === "Password") {
-				// Hash the new password before storing it
-				hashedPassword = await bcrypt.hash(key, 10);
-			}
-				updateQuery += `${key} = ?, `;
-				queryParams.push(formFields[key]);
+		for (const key in jsonFormFields) {
+			if (allowedFields.includes(key)) {
+				if (jsonFormFields.hasOwnProperty(key)) {
+					if (jsonFormFields[key] !== "") {
+				if (key === "Password") {
+					// Hash the new password before storing it
+					hashedPassword = await bcrypt.hash(key, 10);
+				}
+					updateQuery += `${key} = ?, `;
+					queryParams.push(jsonFormFields[key]);
+					}
 				}
 			}
+		}
+
+		if (Profile_image) {
+			const Profile_image_name = Profile_image.filename;
+			updateQuery += "Profile_image = ?, ";
+			queryParams.push(Profile_image_name);
 		}
 
 		// Remove trailing comma and space

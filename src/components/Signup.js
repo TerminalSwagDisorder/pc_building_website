@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { handleSignup } from "../api";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 // Function for rendering sign up page, takes onSubmit as a prop
-export const Signup = ({ onSubmit }) => {
+export const Signup = ({ onSubmit, handleSignup }) => {
   const navigate = useNavigate();
 	
 	// Async function for when the user submits the sign up form
