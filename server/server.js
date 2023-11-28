@@ -340,6 +340,12 @@ api.patch("/api/computerwizard", authenticateJWT, async (req, res) => {
 	console.log("server api computerwizard accessed")
 	const userId = req.user.ID; // User ID from the authenticated JWT
 	const formFields = req.body // New data to append
+	
+	if (formFields.price === NaN || formFields.price === 0 || formFields.price === undefined) {
+		return res.status(400).json({ message: "Price must be a number between 500-5000" })
+	} else if (formFields.price < 500 || formFields.price > 5000) {
+		return res.status(400).json({ message: "Price must be between 500-5000" })
+	}
 
 	try {
 		// First, retrieve the existing data

@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Input } from '@mui/material';
 import Button from '@mui/material/Button';
 
 const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerWizard, refreshProfileData }) => {
@@ -11,7 +9,6 @@ const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerW
 		"useCase": "noPreference",
 		"performancePreference": "noPreference",
 		"formFactor": "noPreference",
-		"formFactor": "noPreference",
 		"colorPreference": "noPreference",
 		"otherColor": "",
 		"rgbPreference": "noPreference",
@@ -21,8 +18,6 @@ const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerW
 		"storageBias": "noPreference",
 		"additionalStorage": "noPreference",
 	});
-
-	const navigate = useNavigate();
 
 	const closeForm = () => {
 		setCurrentOperation("")
@@ -244,6 +239,14 @@ const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerW
 	// Function for when the user submits the form
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+		
+		if (formFields.price === NaN || formFields.price === 0 || formFields.price === undefined) {
+			alert("Price must be a number between 500-5000")
+		}
+		
+		if (formFields.price < 500 || formFields.price > 5000) {
+			alert("Price must be between 500-5000")
+		}
 
 		if (formFields.otherColor !== "" && formFields.colorPreference !== "other") {
 			let resetValue = ""
