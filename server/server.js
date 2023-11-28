@@ -344,7 +344,7 @@ api.patch("/api/computerwizard", authenticateJWT, async (req, res) => {
 
 	try {
 		// Some checks for formData data
-		if (formFields.price === NaN || formFields.price === 0 || formFields.price === undefined) {
+		if (Number.isNaN(formFields.price) || formFields.price === 0 || formFields.price === undefined) {
 			return res.status(400).json({ message: "Price must be a number between 500-5000" })
 		} else if (formFields.price < 500 || formFields.price > 5000) {
 			return res.status(400).json({ message: "Price must be between 500-5000" })

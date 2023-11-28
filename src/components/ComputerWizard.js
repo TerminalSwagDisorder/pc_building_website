@@ -240,7 +240,7 @@ const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerW
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		
-		if (formFields.price === NaN || formFields.price === 0 || formFields.price === undefined) {
+		if (Number.isNaN(formFields.price) || formFields.price === 0 || formFields.price === undefined) {
 			alert("Price must be a number between 500-5000")
 		}
 		
