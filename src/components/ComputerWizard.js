@@ -255,8 +255,7 @@ const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerW
 		}
 		
 		try {
-			console.log("event.target.otherColor.value", event.target.otherColor.value)
-			console.log(formFields)
+			//console.log(formFields)
 			await handleComputerWizard(event, formFields, setCurrentUser);
 			await refreshProfileData()
 		} catch (error) {

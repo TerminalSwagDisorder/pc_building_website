@@ -346,6 +346,9 @@ api.patch("/api/computerwizard", authenticateJWT, async (req, res) => {
 	} else if (formFields.price < 500 || formFields.price > 5000) {
 		return res.status(400).json({ message: "Price must be between 500-5000" })
 	}
+	if (formFields.otherColor !== "" && formFields.colorPreference !== "other") {
+		formFields.otherColor = ""
+	}
 
 	try {
 		// First, retrieve the existing data
