@@ -35,15 +35,15 @@ const Profile = ({
               </button>
             </div>
             <div>
-              <Input type="name" placeholder="Enter new name" name="name" />
+              <input type="name" placeholder="Enter new name" name="name" />
             </div>
             <br></br>
             <div>
-              <Input type="email" placeholder="Enter new email" name="email" />
+              <input type="email" placeholder="Enter new email" name="email" />
             </div>
             <br></br>
             <div>
-              <Input
+              <input
                 type="password"
                 placeholder="Enter new password"
                 name="password"
@@ -52,7 +52,7 @@ const Profile = ({
             <br></br>
             <div>
               <label>New profile image</label>
-              <Input
+              <input
                 type="file"
                 name="profile_image"
                 accept="image/png, image/jpeg, image/gif"
@@ -61,7 +61,7 @@ const Profile = ({
             <br></br>
             <br></br>
             <div>
-              <Input
+              <input
                 type="password"
                 placeholder="Enter current password"
                 name="currentpassword"
@@ -70,9 +70,9 @@ const Profile = ({
             </div>
             <br></br>
             <div>
-              <Button variant="contained" type="submit">
+              <button variant="contained" type="submit">
                 Change credentials
-              </Button>
+              </button>
             </div>
           </form>
         </div>

@@ -3,15 +3,16 @@ $backgroundFo: #2A2438;
 $color: #ccc;
 $align: center;
 
-.Container {
+.Home-Container {
 	width: 50%;
 	margin: 0 auto;
 	padding: 50px;
 	text-align: left;
+	height: 100%;
 }
 
 @media screen and (max-width:600px) {
-	.Container {
+	.Home-Container {
 		width: 100%;
 	}
 }
@@ -30,48 +31,56 @@ $align: center;
 	border-bottom-style: solid;
 }
 
-form {
-	background-color: #000d12d6;
-	position: absolute;
-	width: 30%;
-	height: 50%;
-	top: 30%;
-	justify-items: center;
-	color: #fff;
-	border-radius: 5px;
-	box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-	padding-top: 25px;
-	label {
-		text-align: left !important;
-	}
-	input::placeholder {
-		color: #fff !important;
-	}
-	button {
-		width: 50%;
-	}
-}
 
-.userForm {
-	position: absolute;
-	top: 25%;
-	bottom: 25%;
-	left: 70%;
-	height: auto;
-	overflow: auto;
-	display: block;
-	z-index: 1;
-}
 .wizardForm {
+	background-color: #000d12d6;
 	position: relative;
 	top: 2em;
 	left: 10%;
 	width: 80%;
-	height: auto;
 	overflow: auto;
 	display: block;
 	z-index: 1;
 	margin-bottom: 2em;
+	text-align: left;
+	padding: 20px;
+	border-radius: 5px;
+	label {
+		color: #fff;
+		text-align: left !important;
+	}
+	input, select {
+		background-color: #b3121200;
+		background: #b3121200;
+		width: 80%;
+		border: none;
+		border-bottom: 1px solid #0e002e !important;
+		height: 35px;
+		color: #fff;
+		padding: 10px;
+		
+	}
+	select option:not(:checked) {
+		color: #000001;
+	}
+	input::placeholder {
+		color: #fff !important;
+	}
+}
+
+.Results {
+	width: 80%;
+	margin: 0 auto;
+	text-align: left;
+	display: flex;
+	justify-content: space-between;
+}
+.Result {
+	background-color: #cdcdcdd6;
+	width: 45%;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: rgba(10, 74, 138, 0.2) 10px 8px 24px;
 }
 
 .setWizardAdvanced {
@@ -94,12 +103,16 @@ form {
 }
 
 .closeForm {
+	background-color: #000412d6;
+	color: #fff;
 	position: absolute;
 	left: 90%;
+	top: 0;
 	width: 2.5em;
 	height: 2.5em;
 	border: none;
 	border-radius: 25%;
+	cursor: pointer;
 }
 
 .closeForm:hover {
@@ -177,10 +190,8 @@ span {
 }
 
 .wrapper {
-	background-color: #0e002e;
+	background-color: #000925;
 	display: flex;
-	height: 25vh;
-	margin-top: -10px;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
@@ -188,15 +199,15 @@ span {
 	margin-bottom: 50px;
 	box-shadow: rgba(10, 74, 138, 0.2) 10px 8px 24px;
 	border-radius: 5px;
-  
+  padding: 20px;
 	h1 {
 		margin: 0 0 24px 0;
-		font-size: 3rem;
+		font-size: 2rem;
 		color: #fff;
 	}
 	
 	h2 {
-		font-size: 1.5rem;
+		font-size: 1rem;
 		color: #fff;
 		margin: 0;
 		text-align: center;
@@ -361,7 +372,7 @@ span {
 		background-color: #0e002e;
 		color: #ccc;
 		font-size: 16px;
-		padding: 15px 40px;
+		padding: 15px;
 		cursor: pointer;
 		border: none;
 		border-radius: 5px;
@@ -369,5 +380,105 @@ span {
 			background-color: #17004c;
 		}
 	}
+	.userForm {
+		background-color: #000d12d6;
+		position: absolute;
+		top: 25%;
+		bottom: 25%;
+		left: 60%;
+		display: block;
+		z-index: 1;
+		padding: 25px;
+		input {
+			background-color: #b3121200;
+			width: 100%;
+			border: none;
+			border-bottom: 1px solid #0e002e !important;
+			height: 35px;
+			color: #fff;
+		}
+	}
+}
 
+.Form-Container {
+	display: flex;
+	width: 50%;
+	padding: 50px;
+	margin: 0 auto;
+	form {
+		background-color: #000d12d6;
+		width: 80%;
+		justify-items: center;
+		color: #fff !important;
+		border-radius: 5px;
+		box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+		padding-top: 20px;
+		padding-bottom: 20px;
+		label {
+			text-align: left !important;
+		}
+		input {
+			background-color: #b3121200;
+			width: 80%;
+			border: none;
+			border-bottom: 1px solid #0e002e !important;
+			height: 35px;
+			color: #fff;
+			padding: 10px;
+		}
+		input::placeholder {
+			color: #fff !important;
+		}
+		button {
+			width: 50%;
+		}
+	}
+	
+}
+@media screen and (max-width:800px) {
+	.Form-Container {
+		width: 100%;
+	}
+	.Profile-info {
+		padding: 0;
+		width: 100%;
+		.userForm {
+			position: unset;
+			width: 80%;
+			margin: -130px auto;
+			input {
+				background-color: #b3121200;
+				width: 100%;
+				border: none;
+				border-bottom: 1px solid #0e002e !important;
+				height: 35px;
+				color: #fff;
+				&::placeholder {
+					color: #fff;
+				}
+			}
+		}
+	}
+	.closeForm {
+		position: absolute;
+		left: 85%;
+		top: 30%;
+		width: 2.5em;
+		height: 2.5em;
+		border: none;
+		border-radius: 25%;
+	}
+	.wizardForm {
+		input, select {
+			background-color: #b3121200;
+			width: 90%;
+		}
+	}
+	.Results {
+		width: 80%;
+		display: block;
+	}
+	.Result {
+		width: 100%;
+	}
 }

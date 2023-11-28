@@ -21,12 +21,12 @@ const RenderCpus = ({ cpus }) => {
 
   return (
     <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-      <div class="wrapper">
+      <div className="wrapper">
         <h1 title="Warning">Computer CPUs</h1>
         <h2 title="The new revolution started">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h2>
-        <div class="scroll-downs">
-          <div class="mousey">
-            <div class="scroller"></div>
+        <div className="scroll-downs">
+          <div className="mousey">
+            <div className="scroller"></div>
           </div>
         </div>
       </div>

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <div className="Container">
+    <div className="Home-Container">
       <h1>This is a backend project application.</h1>
       <p>
         Exploring a React.js Computer Configurator: Empowering Users to
