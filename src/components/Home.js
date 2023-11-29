@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Link } from 'react-router-dom';
 
-const Home = () => {
+const Home = ({ currentUser }) => {
   return (
     <div className="Home-Container">
       <h1>This is a backend project application.</h1>
@@ -15,12 +15,17 @@ const Home = () => {
         to create personalized computer systems. The project is composed of
         three core components: data scraping, dynamic web design, and database
         integration.
-      </p><br></br>
+      </p>
+	  {!currentUser && (
+	  	 <p>To use the <strong>Computer Builder</strong> please <Link to="/signin">sign in</Link></p>
+  		)}
+		<br></br>
       <ButtonGroup
         variant="contained"
         aria-label="outlined primary button group"
         
       >
+	  
         <Button><Link to="components">Components</Link></Button>
       </ButtonGroup>
     </div>
