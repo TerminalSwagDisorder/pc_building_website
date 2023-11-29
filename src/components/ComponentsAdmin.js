@@ -83,7 +83,7 @@ const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponent
 				if (currentOperation === "add") {
 					if (isImage) {
 						inputType = (
-							<Input type="file" name={key} onChange={handleInputChange} />
+							<input type="file" name={key} onChange={handleInputChange} />
 						);
 					} else if (isNumber) {
 						if (key === "ID") {
@@ -97,13 +97,13 @@ const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponent
 						}
 					} else {
 						inputType = (
-							<Input required={isRequired} type="text" name={key} placeholder={key} onChange={handleInputChange} />
+							<input required={isRequired} type="text" name={key} placeholder={key} onChange={handleInputChange} />
 						);
 					}
 				} else if (currentOperation === "update") {
 					if (isImage) {
 						inputType = (
-							<Input type="file" name={key} onChange={handleInputChange} />
+							<input type="file" name={key} onChange={handleInputChange} />
 						);
 					} else if (isNumber) {
 						if (key === "ID") {
@@ -117,7 +117,7 @@ const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponent
 						}
 					} else {
 						inputType = (
-							<Input type="text" name={key} placeholder={currentComponentData[key]} onChange={handleInputChange} />
+							<input type="text" name={key} placeholder={currentComponentData[key]} onChange={handleInputChange} />
 						);
 					}
 				}

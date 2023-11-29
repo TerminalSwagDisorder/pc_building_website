@@ -11,17 +11,27 @@ $align: center;
 	height: 100%;
 }
 
+button {
+	cursor: pointer;
+}
+
+.UserName {
+	text-align: left;
+	font-weight: 700;
+}
+
 @media screen and (max-width:600px) {
 	.Home-Container {
-		width: 100%;
+		width: 85%;
+		padding: 10px 20px;
 	}
 }
 
 .componentsh2 {
-    color: $backgroundFo;
+	color: $backgroundFo;
 	cursor: pointer;
 	margin-bottom: 2em;
-} 
+}
 
 .componentListItem {
 	margin-bottom: 4em;
@@ -32,7 +42,8 @@ $align: center;
 }
 
 
-.wizardForm {
+.wizardForm,
+.adminForm {
 	background-color: #000d12d6;
 	position: relative;
 	top: 2em;
@@ -45,11 +56,14 @@ $align: center;
 	text-align: left;
 	padding: 20px;
 	border-radius: 5px;
+
 	label {
 		color: #fff;
 		text-align: left !important;
 	}
-	input, select {
+
+	input,
+	select {
 		background-color: #b3121200;
 		background: #b3121200;
 		width: 80%;
@@ -58,11 +72,13 @@ $align: center;
 		height: 35px;
 		color: #fff;
 		padding: 10px;
-		
+
 	}
+
 	select option:not(:checked) {
 		color: #000001;
 	}
+
 	input::placeholder {
 		color: #fff !important;
 	}
@@ -75,6 +91,7 @@ $align: center;
 	display: flex;
 	justify-content: space-between;
 }
+
 .Result {
 	background-color: #cdcdcdd6;
 	width: 45%;
@@ -89,17 +106,6 @@ $align: center;
 
 .userCredentialChange {
 	margin-top: 3em;
-}
-
-.adminForm {
-	position: absolute;
-	top: 25%;
-	bottom: 25%;
-	left: 70%;
-	height: auto;
-	overflow: auto;
-	display: block;
-	z-index: 1;
 }
 
 .closeForm {
@@ -125,6 +131,7 @@ $align: center;
 
 .userChangeButtons {
 	margin-bottom: 1em;
+
 	button {
 		margin-bottom: 0.5em;
 	}
@@ -132,17 +139,20 @@ $align: center;
 
 .adminComponentList {
 	margin-bottom: 0.5em;
+
 	button {
 		float: right;
 		width: 20em;
 		height: 1.6em;
 		overflow: hidden;
 	}
+
 	.deleteButton {
 		width: 5em;
 		background-color: red;
 		border: none;
 	}
+
 	.deleteButton:hover {
 		background-color: darkred;
 	}
@@ -155,7 +165,9 @@ $align: center;
 
 .signout {
 	display: flex;
-	button, li {
+
+	button,
+	li {
 		background-color: unset;
 		color: #ccc;
 		border: none;
@@ -164,6 +176,7 @@ $align: center;
 		cursor: pointer;
 	}
 }
+
 .sign {
 	width: 50%;
 	height: 90%;
@@ -178,15 +191,13 @@ span {
 }
 
 :root {
-  --space: ;
-  --op-gradient: conic-gradient(
-    from 0deg at 50% 100% var(--space),
-    oklch(29% 0.06 237) 0%,
-    oklch(65% 0.11 219) 25%,
-    oklch(81% 0.07 229) 50%,
-    oklch(83% 0.17 80) 75%,
-    oklch(73% 0.18 56) 100%
-  );
+	--space: ;
+	--op-gradient: conic-gradient(from 0deg at 50% 100% var(--space),
+			oklch(29% 0.06 237) 0%,
+			oklch(65% 0.11 219) 25%,
+			oklch(81% 0.07 229) 50%,
+			oklch(83% 0.17 80) 75%,
+			oklch(73% 0.18 56) 100%);
 }
 
 .wrapper {
@@ -199,47 +210,49 @@ span {
 	margin-bottom: 50px;
 	box-shadow: rgba(10, 74, 138, 0.2) 10px 8px 24px;
 	border-radius: 5px;
-  padding: 20px;
+	padding: 20px;
+
 	h1 {
 		margin: 0 0 24px 0;
 		font-size: 2rem;
 		color: #fff;
 	}
-	
+
 	h2 {
 		font-size: 1rem;
 		color: #fff;
 		margin: 0;
 		text-align: center;
 	}
-	
+
 	@media (min-width: 768px) {
 		h2 {
-		font-size: 1rem;
+			font-size: 1rem;
 		}
 	}
-	
+
 	h1,
 	h2 {
 		animation: glitch 1s linear infinite;
 	}
-	
+
 	@keyframes glitch {
+
 		2%,
 		64% {
-		transform: translate(2px, 0) skew(0deg);
+			transform: translate(2px, 0) skew(0deg);
 		}
-	
+
 		4%,
 		60% {
-		transform: translate(-2px, 0) skew(0deg);
+			transform: translate(-2px, 0) skew(0deg);
 		}
-	
+
 		62% {
-		transform: translate(0, 0) skew(5deg);
+			transform: translate(0, 0) skew(5deg);
 		}
 	}
-	
+
 	h1:before,
 	h1:after,
 	h2:before,
@@ -249,59 +262,61 @@ span {
 		left: 0;
 		top: 0;
 	}
-	
+
 	h1:before,
 	h2:before {
 		animation: glitchTop 1s linear infinite;
 		clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
 		-webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
 	}
-	
+
 	@keyframes glitchTop {
+
 		2%,
 		64% {
-		transform: translate(2px, -2px);
+			transform: translate(2px, -2px);
 		}
-	
+
 		4%,
 		60% {
-		transform: translate(-2px, 2px);
+			transform: translate(-2px, 2px);
 		}
-	
+
 		62% {
-		transform: translate(13px, -1px) skew(-13deg);
+			transform: translate(13px, -1px) skew(-13deg);
 		}
 	}
-	
+
 	h1:after,
 	h2:after {
 		animation: glitchBotom 1.5s linear infinite;
 		clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
 		-webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
 	}
-	
+
 	@keyframes glitchBotom {
+
 		2%,
 		64% {
-		transform: translate(-2px, 0);
+			transform: translate(-2px, 0);
 		}
-	
+
 		4%,
 		60% {
-		transform: translate(-2px, 0);
+			transform: translate(-2px, 0);
 		}
-	
+
 		62% {
-		transform: translate(-22px, 5px) skew(21deg);
+			transform: translate(-22px, 5px) skew(21deg);
 		}
 	}
-	
+
 	.scroll-downs {
 		margin: 2.4rem 0 0 0;
 		width: 34px;
 		height: 55px;
 	}
-	
+
 	.mousey {
 		width: 3px;
 		padding: 10px 15px;
@@ -311,7 +326,7 @@ span {
 		opacity: 0.75;
 		box-sizing: content-box;
 	}
-	
+
 	.scroller {
 		width: 3px;
 		height: 10px;
@@ -322,20 +337,20 @@ span {
 		animation-timing-function: cubic-bezier(0.15, 0.41, 0.69, 0.94);
 		animation-iteration-count: infinite;
 	}
-	
+
 	@keyframes scroll {
 		0% {
-		opacity: 0;
+			opacity: 0;
 		}
-	
+
 		10% {
-		transform: translateY(0);
-		opacity: 1;
+			transform: translateY(0);
+			opacity: 1;
 		}
-	
+
 		100% {
-		transform: translateY(15px);
-		opacity: 0;
+			transform: translateY(15px);
+			opacity: 0;
 		}
 	}
 }
@@ -354,6 +369,7 @@ span {
 	padding: 50px;
 	border-radius: 10px;
 	text-align: left;
+
 	img {
 		background-size: cover;
 		width: 150px;
@@ -362,12 +378,14 @@ span {
 		padding: 10px;
 		margin: -120px 0 40px 0;
 		background-color: #dea002;
-	}	
+	}
+
 	span {
 		text-transform: lowercase;
 		color: #0e002e;
 		font-weight: 400;
 	}
+
 	button {
 		background-color: #0e002e;
 		color: #ccc;
@@ -376,10 +394,12 @@ span {
 		cursor: pointer;
 		border: none;
 		border-radius: 5px;
+
 		&:hover {
 			background-color: #17004c;
 		}
 	}
+
 	.userForm {
 		background-color: #000d12d6;
 		position: absolute;
@@ -389,6 +409,7 @@ span {
 		display: block;
 		z-index: 1;
 		padding: 25px;
+
 		input {
 			background-color: #b3121200;
 			width: 100%;
@@ -405,6 +426,7 @@ span {
 	width: 50%;
 	padding: 50px;
 	margin: 0 auto;
+
 	form {
 		background-color: #000d12d6;
 		width: 80%;
@@ -414,9 +436,11 @@ span {
 		box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 		padding-top: 20px;
 		padding-bottom: 20px;
+
 		label {
 			text-align: left !important;
 		}
+
 		input {
 			background-color: #b3121200;
 			width: 80%;
@@ -426,26 +450,32 @@ span {
 			color: #fff;
 			padding: 10px;
 		}
+
 		input::placeholder {
 			color: #fff !important;
 		}
+
 		button {
 			width: 50%;
 		}
 	}
-	
+
 }
+
 @media screen and (max-width:800px) {
 	.Form-Container {
 		width: 100%;
 	}
+
 	.Profile-info {
 		padding: 0;
 		width: 100%;
+
 		.userForm {
 			position: unset;
 			width: 80%;
 			margin: -130px auto;
+
 			input {
 				background-color: #b3121200;
 				width: 100%;
@@ -453,12 +483,14 @@ span {
 				border-bottom: 1px solid #0e002e !important;
 				height: 35px;
 				color: #fff;
+
 				&::placeholder {
 					color: #fff;
 				}
 			}
 		}
 	}
+
 	.closeForm {
 		position: absolute;
 		left: 85%;
@@ -468,16 +500,21 @@ span {
 		border: none;
 		border-radius: 25%;
 	}
+
 	.wizardForm {
-		input, select {
+
+		input,
+		select {
 			background-color: #b3121200;
 			width: 90%;
 		}
 	}
+
 	.Results {
 		width: 80%;
 		display: block;
 	}
+
 	.Result {
 		width: 100%;
 	}
