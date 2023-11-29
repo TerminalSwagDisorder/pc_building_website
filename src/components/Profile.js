@@ -139,7 +139,6 @@ const Profile = ({
         <img
           src={`/images/${currentUser.Profile_image}`}
           alt={currentUser.Profile_image}
-          height="200"
         />{" "}
         <br></br>
         <label for="username">
