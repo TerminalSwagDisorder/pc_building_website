@@ -22,7 +22,7 @@ const RenderMemories = ({ memories }) => {
 		<div style={{ maxWidth: "1000px", margin: "0 auto" }}>
       <div class="wrapper">
         <h1 title="Warning">Computer Memories</h1>
-        <h2 title="The new revolution started">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h2>
+        <p>This page showcases a comprehensive collection of MEMORIES components. Feel free to scroll through and explore the available models.</p>
         <div class="scroll-downs">
         <div class="mousey">
           <div class="scroller"></div>
