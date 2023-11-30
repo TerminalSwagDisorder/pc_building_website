@@ -110,9 +110,9 @@ button {
 .closeForm {
 	background-color: #000412d6;
 	color: #fff;
+	display: inline;
 	position: absolute;
 	left: 90%;
-	top: 0;
 	width: 2.5em;
 	height: 2.5em;
 	border: none;
@@ -385,7 +385,7 @@ span {
 		font-weight: 400;
 	}
 
-	button {
+	button:not(.closeForm) {
 		background-color: #0e002e;
 		color: #ccc;
 		font-size: 16px;
@@ -406,8 +406,26 @@ span {
 		bottom: 25%;
 		left: 60%;
 		display: block;
-		z-index: 1;
+		overflow: auto;
 		padding: 25px;
+		.closeForm {
+			background-color: #000412d6;
+			color: #fff;
+			display: inline;
+			position: absolute;
+			left: 90%;
+			width: 2.5em;
+			height: 2.5em;
+			border: none;
+			border-radius: 25%;
+			cursor: pointer;
+			&:hover {
+				background-color: red;
+			}
+		}
+		label {
+			color: white;
+		}
 
 		input {
 			background-color: #b3121200;
