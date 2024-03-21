@@ -8,19 +8,20 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
 // Function for rendering sign up page, takes onSubmit as a prop
-export const Signup = ({ onSubmit, handleSignup }) => {
-  const navigate = useNavigate();
+const Signup = ({ onSubmit, handleSignup }) => {
+		const navigate = useNavigate();
 
-  // Async function for when the user submits the sign up form
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      await handleSignup(event);
-      navigate("/signin");
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+		// Async function for when the user submits the sign up form
+		const handleSubmit = async (event) => {
+			event.preventDefault();
+			try {
+				await handleSignup(event);
+				navigate("/signin");
+			} catch (error) {
+				console.log(error.message);
+			}
+		};
+
   return (
     <div className="Form-Container">
       <form onSubmit={handleSubmit}>

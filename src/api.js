@@ -400,6 +400,8 @@ export const handleComponentDeleteAdmin = async (type, id) => {
 };
 
 export const handleComputerWizard = async (event, formFields) => {
+	event.preventDefault();
+
 	try {
 		const response = await fetch("http://localhost:4000/api/computerwizard", {
 			method: "PATCH",

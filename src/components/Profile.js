@@ -4,24 +4,17 @@ import { Input } from "@mui/material";
 import Button from "@mui/material/Button";
 import "../style/nav.scss";
 
-const Profile = ({
-  setCurrentUser,
-  currentUser,
-  onSubmit,
-  handleCredentialChange,
-  handleSignout,
-  refreshProfileData,
-}) => {
-  const [currentOperation, setCurrentOperation] = useState("");
-  const navigate = useNavigate();
+const Profile = ({ setCurrentUser, currentUser, onSubmit, handleCredentialChange, handleSignout, refreshProfileData }) => {
+		const [currentOperation, setCurrentOperation] = useState("");
+		const navigate = useNavigate();
 
-  const closeForm = () => {
-    setCurrentOperation("");
-  };
+		const closeForm = () => {
+			setCurrentOperation("");
+		};
 
-  const handleModifyProfile = (user) => {
-    setCurrentOperation(user);
-  };
+		const handleModifyProfile = (user) => {
+			setCurrentOperation(user);
+		};
 
   const renderUserForm = () => {
     if (currentOperation === "edit") {

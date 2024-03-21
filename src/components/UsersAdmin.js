@@ -35,39 +35,39 @@ const UsersAdmin = ({ setCurrentUser, currentUser, users, handleCredentialChange
 
     // Event handler for input change
     const handleInputChange = (event) => {
-		setInputValue(event.target.value);
-		setFormFields(prevFields => ({
-			...prevFields,
+    	setInputValue(event.target.value);
+    	setFormFields(prevFields => ({
+    		...prevFields,
 			[event.target.name]: event.target.value
-		}));
-		// console.log("event.target.value", event.target.value)
-		// console.log("event.target.name", event.target.type)
-		
-		// Event handler updating the user with the id
-		if (event.target.id) {
-			let userId = parseInt(event.target.value, 10);
-			// If the ID goes beyond the range, loop it back
-			if (userId < users[0].ID) {
-				userId = users[users.length - 1].ID;
-			} 
-			if (userId > users[users.length - 1].ID) {
-				userId = users[0].ID;
-			}
+    	}));
+    	// console.log("event.target.value", event.target.value)
+    	// console.log("event.target.name", event.target.type)
 
-			const selectedUser = users.find(user => user.ID === userId);
-			setSelectedUser(selectedUser);
-		}
-		// Event handler for input type checkbox for true/false values
-		if (event.target.type === "checkbox") {
-			if (event.target.name === "admin") {
-                setIsAdminChecked(event.target.checked ? 1 : 0);
-			} else if (event.target.name === "banned") {
-                setIsBannedChecked(event.target.checked ? 1 : 0);
-			}
-		}
+    	// Event handler updating the user with the id
+    	if (event.target.id) {
+    		let userId = parseInt(event.target.value, 10);
+    		// If the ID goes beyond the range, loop it back
+    		if (userId < users[0].ID) {
+    			userId = users[users.length - 1].ID;
+    		}
+    		if (userId > users[users.length - 1].ID) {
+    			userId = users[0].ID;
+    		}
+
+    		const selectedUser = users.find(user => user.ID === userId);
+    		setSelectedUser(selectedUser);
+    	}
+    	// Event handler for input type checkbox for true/false values
+    	if (event.target.type === "checkbox") {
+    		if (event.target.name === "admin") {
+    			setIsAdminChecked(event.target.checked ? 1 : 0);
+    		} else if (event.target.name === "banned") {
+    			setIsBannedChecked(event.target.checked ? 1 : 0);
+    		}
+    	}
     };
 
-const renderBasedOnUser = () => {
+	const renderBasedOnUser = () => {
   if (selectedUser && selectedUser !== "New user") {
     // For modifying existing users
     return (  
@@ -150,7 +150,6 @@ const renderBasedOnUser = () => {
   }
 };
 
-
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
@@ -195,7 +194,6 @@ const renderBasedOnUser = () => {
 			}
 		
 	};
-
 
   return (
     <div>

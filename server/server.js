@@ -67,7 +67,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage, fileFilter: imageFileFilter });
 
-
 // Middleware for checking if user is logged in
 const authenticateJWT = (req, res, next) => {
 

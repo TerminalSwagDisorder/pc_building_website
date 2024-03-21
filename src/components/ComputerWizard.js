@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 
-const ComputerWizard = ({
-  onSubmit,
-  currentUser,
-  setCurrentUser,
-  handleComputerWizard,
-  refreshProfileData,
-}) => {
+const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerWizard, refreshProfileData }) => {
   const [currentOperation, setCurrentOperation] = useState("wizard");
   // Do the wizard form initialization this way
   const [formFields, setFormFields] = useState({

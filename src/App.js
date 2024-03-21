@@ -1,5 +1,6 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
+import { Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Cpus from "./components/Cpus";
 import Cases from "./components/Cases";
@@ -21,7 +22,6 @@ import DashboardAdmin from "./components/DashboardAdmin";
 import ComponentsAdmin from "./components/ComponentsAdmin";
 import ComputerWizard from "./components/ComputerWizard";
 import { handleSignout, handleSignup, handleSignin, checkIfSignedIn, refreshProfile, useFetchAllData, useFetchAllUsers, handleCredentialChange, handleCredentialChangeAdmin, handleComponentAddAdmin, handleComponentChangeAdmin, handleSignupAdmin, handleComponentDeleteAdmin, handleComputerWizard } from "./api";
-import { Router, Routes, Route } from "react-router-dom";
 
 
 const App = () => {

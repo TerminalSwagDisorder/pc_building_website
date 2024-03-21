@@ -35,7 +35,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "node server/server.js",
+    "server": "nodemon server/server.js",
     "dev": "concurrently \"npm start\" \"nodemon server/server.js\""
   },
   "eslintConfig": {

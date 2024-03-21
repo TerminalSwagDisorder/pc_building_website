@@ -5,30 +5,26 @@ import { Input } from "@mui/material";
 import '../style/nav.scss';
 
 // Function for signin in, take onSubmit and setting the current user as props
-export const Signin = ({
-  onSubmit,
-  setCurrentUser,
-  handleSignin,
-  checkIfSignedIn,
-}) => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Signin = ({ onSubmit, setCurrentUser, handleSignin, checkIfSignedIn }) => {
+		const navigate = useNavigate();
+		const [email, setEmail] = useState("");
+		const [password, setPassword] = useState("");
 
-  // Function for when the user submits the sign in form
-  const handleSubmit = async (event) => {
-    // Need this to prevent regular js from ruining the form submission
-    event.preventDefault();
-    try {
-      await handleSignin(email, password, setCurrentUser);
-      navigate("/");
-      window.location.reload();
-      //const userData = await checkIfSignedIn();
-      //setCurrentUser(userData);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+		// Function for when the user submits the sign in form
+		const handleSubmit = async (event) => {
+			// Need this to prevent regular js from ruining the form submission
+			event.preventDefault();
+			try {
+				await handleSignin(email, password, setCurrentUser);
+				navigate("/");
+				window.location.reload();
+				//const userData = await checkIfSignedIn();
+				//setCurrentUser(userData);
+			} catch (error) {
+				console.log(error.message);
+			}
+		};
+
   return (
     <div className="Form-Container">
         <form onSubmit={handleSubmit}>
