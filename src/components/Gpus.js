@@ -1,70 +1,58 @@
 import React, { useState, useEffect } from "react";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
-import { CardActionArea } from "@mui/material";
+import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
+import '../style/style.scss';
 
-// Function for rendering gpus, which takes gpus as a prop from api
+// Function for rendering GPUs, which takes GPUs as a prop from API
 const RenderGpus = ({ gpus }) => {
-	const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-	// Display loading icon when the array has no data
-	useEffect(() => {
-		if (gpus.length > 0) {
-		setLoading(false);
-		}
-	}, [gpus]);
+  // Display loading icon when the array has no data
+  useEffect(() => {
+    if (gpus.length > 0) {
+      setLoading(false);
+    }
+  }, [gpus]);
 
-	return (
-		<div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-		<div class="wrapper">
-			<h1 title="Warning">Computer GPUs</h1>
-			<p>This page showcases a comprehensive collection of GPUS components. Feel free to scroll through and explore the available models.</p>
-			<div class="scroll-downs">
-			<div class="mousey">
-				<div class="scroller"></div>
-			</div>
-			</div>
-		</div>
-		{loading ? (
-			<div style={{ display: "block", justifyContent: "center", alignItems: "center", minHeight: "400" }}>
-				<CircularProgress color="inherit" size={100} thickness={20} />
-			</div>
-		) : (
-			<Grid container spacing={2} sx={{ justifyContent: "center" }}>
-			{gpus.map((gpuItem) => (
-				<Grid item xs={12} sm={6} md={3} key={gpuItem.ID}>
-				<Card sx={{ maxWidth: 345 }}>
-					<CardActionArea>
-					<CardMedia
-						component="img"
-						height="200"
-						image={`/product_images/${gpuItem.Image}`}
-						alt={gpuItem.Name}
-						sx={{
-						objectFit: "cover",
-						}}
-					/>
-					<CardContent>
-						<Typography gutterBottom variant="h6" component="div">
-						Name: {gpuItem.Name}
-						</Typography>
-						<Typography variant="body2" color="text.secondary">
-						<div>Manufacturer: {gpuItem.Manufacturer}</div>
-						<div>Price: {gpuItem.Price} €</div>
-						</Typography>
-					</CardContent>
-					</CardActionArea>
-				</Card>
-				</Grid>
-			))}
-			</Grid>
-		)}
-		</div>
-	);
+  return (
+    <Container style={{ maxWidth: "1000px", margin: "0 auto" }}>
+      <div className="wrapper">
+        <h1 title="Warning">Computer GPUs</h1>
+        <p>This page showcases a comprehensive collection of GPU components. Feel free to scroll through and explore the available models.</p>
+        <div className="scroll-downs">
+          <div className="mousey">
+            <div className="scroller"></div>
+          </div>
+        </div>
+      </div>
+      {loading ? (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "400px" }}>
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <Row className="justify-content-center">
+          {gpus.map((gpuItem) => (
+            <Col xs={12} sm={6} md={3} key={gpuItem.ID}>
+              <Card style={{ maxWidth: "345px", marginBottom: "20px" }}>
+                <Card.Img
+                  variant="top"
+                  src={`/product_images/${gpuItem.Image}`}
+                  style={{ height: "200px", objectFit: "cover" }}
+                  alt={gpuItem.Name}
+                />
+                <Card.Body>
+                  <Card.Title>Name: {gpuItem.Name}</Card.Title>
+                  <Card.Text>
+                    <div>Manufacturer: {gpuItem.Manufacturer}</div>
+                    <div>Price: {gpuItem.Price} €</div>
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
+    </Container>
+  );
 };
 
 export default RenderGpus;

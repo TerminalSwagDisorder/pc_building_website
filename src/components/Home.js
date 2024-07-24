@@ -1,6 +1,4 @@
 import React from "react";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import { Link } from 'react-router-dom';
 
 const Home = ({ currentUser }) => {
@@ -20,14 +18,14 @@ const Home = ({ currentUser }) => {
 	  	 <p>To use the <strong>Computer Builder</strong> please <Link to="/signin">sign in</Link></p>
   		)}
 		<br></br>
-      <ButtonGroup
+      <a
         variant="contained"
         aria-label="outlined primary button group"
         
       >
 	  
-        <Button><Link to="components">Components</Link></Button>
-      </ButtonGroup>
+        <button><Link to="components">Components</Link></button>
+      </a>
     </div>
   );
 };

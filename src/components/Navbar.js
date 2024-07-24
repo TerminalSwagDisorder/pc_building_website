@@ -1,16 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
-import "../style/nav.scss";
+import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
 
-const Navbar = ({ onClick, setCurrentUser, currentUser, handleSignout }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const handleToggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-  // Async function for signout
+const NavBar = ({ setCurrentUser, currentUser, handleSignout }) => {
   const handleLogout = async () => {
     try {
       await handleSignout();
@@ -21,82 +13,56 @@ const Navbar = ({ onClick, setCurrentUser, currentUser, handleSignout }) => {
   };
 
   return (
-	// Check the secreen size
-    <div className={`container ${isMenuOpen ? "menu-open" : ""}`}>
-      <div className={`menu-toggle ${isMenuOpen ? "active" : ""}`} onClick={handleToggleMenu}>
-        <div className="bar"></div>
-        <div className="bar"></div>
-        <div className="bar"></div>
-      </div>
-      <ul className={`main-nav ${isMenuOpen ? "active" : ""}`}>
-        <li>
-          <Link to="/">
-            <i className="fas fa-home icon" /> Home
-          </Link>
-        </li>
-        <li>
-          <div className="dropdown">
-            <li className="dropbtn">
-              <Link to="/components">Components</Link>
-            </li>
-			{/* Dropdown for all components */}
-            <div className="dropdown-content">
-              <Link to="cpu">Cpu</Link>
-              <Link to="cases">Cases</Link>
-              <Link to="cpuCoolers">CpuCoolers</Link>
-              <Link to="gpus">Gpus</Link>
-              <Link to="memories">Memories</Link>
-              <Link to="motherboards">Motherboards</Link>
-              <Link to="psus">Psus</Link>
-              <Link to="storages">Storages</Link>
-            </div>
-          </div>
-        </li>
-		{/* Check if user is logged in */}
-	  	{/* If true do this */}
-        {currentUser ? (
-          <>
-            <li className="dropdown">
-              <Link to="/computerwizard">Computer Wizard</Link>
-            </li>
-            <li>
-              <Link to="/" onClick={handleLogout}>
-                Log out
-              </Link>
-            </li>
-            {currentUser && currentUser.isAdmin && (
-              <div className="dropdown">
-                <li className="dropbtn">
-                  <Link to="admin">Dashboard</Link>
-                </li>
-                <div className="dropdown-content">
-                  <Link to="admin/users">All users</Link>
-                  <Link to="admin/components">All components</Link>
-                </div>
-              </div>
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <Container>
+        {/* Logo on the left */}
+        <Navbar.Brand as={Link} to="/">coconut.</Navbar.Brand>
+        
+        {/* Navbar toggle button for mobile view */}
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        
+        {/* Navbar collapse */}
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mx-auto">
+            {/* Home and Components in the middle */}
+            <Nav.Link as={Link} to="/">Home</Nav.Link>
+            <NavDropdown title="Components" id="basic-nav-dropdown">
+              <NavDropdown.Item as={Link} to="/cpu">Cpu</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/cases">Cases</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/cpuCoolers">CpuCoolers</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/gpus">Gpus</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/memories">Memories</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/motherboards">Motherboards</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/psus">Psus</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/storages">Storages</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+          
+          {/* Sign In, Sign Up, and Log Out on the right */}
+          <Nav>
+            {currentUser ? (
+              <>
+                <Nav.Link as={Link} to="/" onClick={handleLogout}>Log Out</Nav.Link>
+                {currentUser.isAdmin && (
+                  <NavDropdown title="Admin" id="admin-nav-dropdown">
+                    <NavDropdown.Item as={Link} to="/admin">Dashboard</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/admin/users">All users</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/admin/components">All components</NavDropdown.Item>
+                  </NavDropdown>
+                )}
+                <Nav.Link as={Link} to="/profile">{currentUser.Name}</Nav.Link>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={Link} to="/signin">Sign In</Nav.Link>
+                <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
+              </>
             )}
-            <Stack direction="row" spacing={2}>
-              <Avatar
-                alt={currentUser.Name}
-                src={`/images/${currentUser.Profile_image}`}
-              />
-            </Stack>
-			<li style={{color:"white"}}><span><Link to="profile">{currentUser.Name}</Link></span></li>
-          </>
-        ) : (
-          <ul>
-			{/* If false do this */}
-            <li style={{ color: "white" }}>
-              <Link to="signin">Not signed in</Link>
-            </li>
-            <li style={{ color: "white" }}>
-              <Link to="signup">Signup</Link>
-            </li>
-          </ul>
-        )}
-      </ul>
-    </div>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default NavBar;

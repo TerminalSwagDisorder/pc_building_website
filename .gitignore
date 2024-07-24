@@ -21,10 +21,3 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-.env
-./secrettoken.js
-
-#db 
-pcbuildwebsite_db.db
-user_data.dbno

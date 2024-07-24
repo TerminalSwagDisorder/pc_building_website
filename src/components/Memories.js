@@ -1,69 +1,57 @@
 import React, { useState, useEffect } from "react";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
-import { CardActionArea } from "@mui/material";
+import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
+import '../style/style.scss';
 
-// Function for rendering memories, which takes memories as a prop from api
+// Function for rendering memories, which takes memories as a prop from API
 const RenderMemories = ({ memories }) => {
-	const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-	// Display loading icon when the array has no data
-	useEffect(() => {
-	  if (memories.length > 0) {
-		setLoading(false);
-	  }
-	}, [memories]);
+  // Display loading icon when the array has no data
+  useEffect(() => {
+    if (memories.length > 0) {
+      setLoading(false);
+    }
+  }, [memories]);
 
-	return (
-		<div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-      <div class="wrapper">
+  return (
+    <Container style={{ maxWidth: "1000px", margin: "0 auto" }}>
+      <div className="wrapper">
         <h1 title="Warning">Computer Memories</h1>
-        <p>This page showcases a comprehensive collection of MEMORIES components. Feel free to scroll through and explore the available models.</p>
-        <div class="scroll-downs">
-        <div class="mousey">
-          <div class="scroller"></div>
-        </div>
+        <p>This page showcases a comprehensive collection of MEMORY components. Feel free to scroll through and explore the available models.</p>
+        <div className="scroll-downs">
+          <div className="mousey">
+            <div className="scroller"></div>
+          </div>
         </div>
       </div>
       {loading ? (
-        <div style={{ display: "block", justifyContent: "center", alignItems: "center", minHeight: "400" }}>
-          <CircularProgress color="inherit" size={100} thickness={20} />
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "400px" }}>
+          <Spinner animation="border" />
         </div>
       ) : (
-        <Grid container spacing={2} sx={{ justifyContent: "center" }}>
+        <Row className="justify-content-center">
           {memories.map((memorieItem) => (
-            <Grid item xs={12} sm={6} md={3} key={memorieItem.ID}>
-              <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="200" // Increase height for larger images
-                    image={`/product_images/${memorieItem.Image}`}
-                    alt={memorieItem.Name}
-                    sx={{
-                      objectFit: "cover",
-                    }}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h6" component="div">
-                      Name: {memorieItem.Name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      <div>Manufacturer: {memorieItem.Manufacturer}</div>
-                      <div>Price: {memorieItem.Price} €</div>
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
+            <Col xs={12} sm={6} md={3} key={memorieItem.ID}>
+              <Card style={{ maxWidth: "345px", marginBottom: "20px" }}>
+                <Card.Img
+                  variant="top"
+                  src={`/product_images/${memorieItem.Image}`}
+                  style={{ height: "200px", objectFit: "cover" }}
+                  alt={memorieItem.Name}
+                />
+                <Card.Body>
+                  <Card.Title>Name: {memorieItem.Name}</Card.Title>
+                  <Card.Text>
+                    <div>Manufacturer: {memorieItem.Manufacturer}</div>
+                    <div>Price: {memorieItem.Price} €</div>
+                  </Card.Text>
+                </Card.Body>
               </Card>
-            </Grid>
+            </Col>
           ))}
-        </Grid>
+        </Row>
       )}
-    </div>
+    </Container>
   );
 };
 

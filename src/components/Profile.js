@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Input } from "@mui/material";
-import Button from "@mui/material/Button";
-import "../style/nav.scss";
 
 const Profile = ({ setCurrentUser, currentUser, onSubmit, handleCredentialChange, handleSignout, refreshProfileData }) => {
 		const [currentOperation, setCurrentOperation] = useState("");

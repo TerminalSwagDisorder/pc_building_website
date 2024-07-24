@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { Input } from '@mui/material';
-import Button from '@mui/material/Button';
-
 
 const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponentChangeAdmin, handleComponentDeleteAdmin, chassis, cpus, cpuCoolers, gpus, memories, motherboards, psus, storages }) => {
 	const [currentComponent, setCurrentComponent] = useState("");
@@ -219,9 +216,9 @@ const ComponentsAdmin = ({ currentUser, handleComponentAddAdmin, handleComponent
 
 			{renderDynamicFormFields()}
 		<div>
-		  <Button variant="contained" type="submit">
+		  <button variant="contained" type="submit">
 			{currentOperation} {currentComponent}
-		  </Button>
+		  </button>
 		</div>
 		</form>
 	  </div>

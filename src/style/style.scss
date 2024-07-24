@@ -3,6 +3,11 @@ $backgroundFo: #2A2438;
 $color: #ccc;
 $align: center;
 
+* {
+	padding: 0;
+	margin: 0;
+}
+
 .Home-Container {
 	width: 50%;
 	margin: 0 auto;
@@ -408,6 +413,7 @@ span {
 		display: block;
 		overflow: auto;
 		padding: 25px;
+
 		.closeForm {
 			background-color: #000412d6;
 			color: #fff;
@@ -419,10 +425,12 @@ span {
 			border: none;
 			border-radius: 25%;
 			cursor: pointer;
+
 			&:hover {
 				background-color: red;
 			}
 		}
+
 		label {
 			color: white;
 		}
@@ -440,48 +448,29 @@ span {
 
 .Form-Container {
 	display: flex;
-	width: 50%;
-	padding: 50px;
-	margin: 0 auto;
-
+	width: 500px !important;
+	height: 80vh;
+	margin: auto;
+	flex-direction: column;
+    justify-content: center;
 	form {
-		background-color: #000d12d6;
-		width: 80%;
-		justify-items: center;
-		color: #fff !important;
-		border-radius: 5px;
-		box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-		padding-top: 20px;
-		padding-bottom: 20px;
-
-		label {
-			text-align: left !important;
-		}
-
-		input {
-			background-color: #b3121200;
-			width: 80%;
-			border: none;
-			border-bottom: 1px solid #0e002e !important;
-			height: 35px;
-			color: #fff;
-			padding: 10px;
-		}
-
-		input::placeholder {
-			color: #fff !important;
-		}
-
-		button {
-			width: 50%;
-		}
+		padding: 20px;
+		background-color: #f8f9fa;
+		border-radius: 8px;
 	}
+}
 
+.text-center {
+	text-align: center;
+}
+
+.mb-4 {
+	margin-bottom: 1.5rem;
 }
 
 @media screen and (max-width:800px) {
 	.Form-Container {
-		width: 100%;
+		width: 100% !important;
 	}
 
 	.Profile-info {

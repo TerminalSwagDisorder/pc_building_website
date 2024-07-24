@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
 
 const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerWizard, refreshProfileData }) => {
   const [currentOperation, setCurrentOperation] = useState("wizard");
@@ -213,9 +212,9 @@ const ComputerWizard = ({ onSubmit, currentUser, setCurrentUser, handleComputerW
             {renderAdvancedComputerWizard()}
             <br></br>
 
-            <Button variant="contained" type="submit">
+            <button variant="contained" type="submit">
               Build computer!
-            </Button>
+            </button>
           </form>
         </div>
       );
